@@ -1,6 +1,7 @@
 <template>
     <div class="father">
-       <button @click="chuangshuju(message)">向子组件传递信息</button>
+       <router-link to="/erzi">嵌套内部向儿子跳转</router-link>
+      
     </div>
 </template>
 
