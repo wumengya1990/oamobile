@@ -1,5 +1,5 @@
 <template>
-     <h1>这里是孙子的内容</h1>
+     <h1>这里是子的内容</h1>
 </template>
 
 <script>

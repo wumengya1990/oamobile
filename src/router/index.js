@@ -3,7 +3,8 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import father from '@/components/father'
 import children from '@/components/children'
-import sunzi from '@/components/sunzi'
+import { resolve } from 'upath';
+// import sunzi from '@/components/sunzi'
 
 Vue.use(Router)
 
@@ -20,14 +21,14 @@ export default new Router({
       name: 'die',
       component: father
     },{
-      path: '/erzi',
+      path: '/erzi/:id',
       name: 'erzi',
       component: children ,
       children:[
         {
           path:'sunzi',
           name:'sunzi',
-          component: sunzi
+          component: resolve => require(['@/components/sunzi'],resolve)
         }
       ]
     }

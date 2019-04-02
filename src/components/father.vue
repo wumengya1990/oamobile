@@ -1,7 +1,7 @@
 <template>
     <div class="father">
-       <router-link to="/erzi">嵌套内部向儿子跳转</router-link>
-      
+       <router-link :to="{path:`/erzi/1`}">嵌套内部向儿子跳转</router-link>
+       <span style="display:block;" @click="dqid(id)">嵌套内部向儿子跳转2</span>
     </div>
 </template>
 
@@ -10,17 +10,15 @@ export default {
     name:'father',
     data () {
         return {
-            message:"你好吗?"
+            message:"你好吗?",
+            id:3301
         }
     },
     methods:{
-        chuangshuju:function(cdxx){
-             this.$router.push({
-                name: 'children',
-                params: {
-                    cdxx:cdxx
-                }
-                })
+        dqid(nr){
+            this.$router.push({
+                path: `/erzi/${nr}`,
+            })
         }
     }
 }
