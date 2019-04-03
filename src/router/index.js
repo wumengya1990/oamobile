@@ -15,10 +15,11 @@ export default new Router({
       path: '/',
       name: 'HelloWorld',
       component: HelloWorld,
-      redirect:'/die'
+      redirect:'/die'     //路由重定向
     },{
       path: '/die',
       name: 'die',
+      alias: '/baba',
       component: father
     },{
       path: '/erzi/:id',
