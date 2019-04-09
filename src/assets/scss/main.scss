@@ -14,3 +14,58 @@ a { text-decoration: none; color:#444; cursor:pointer; transition: all 0.4s; -we
 a:hover { text-decoration: underline;color:#f30;}
 img{border:0px;}
 .clear{ clear: both; padding: 0; margin: 0; line-height: 0;}
+
+$mainColor:#609eff;
+
+.posR{position: relative;}
+.posA{ position: absolute;}
+.posCenter{ left: 0; top: 0; right: 0; bottom: 0; margin: auto;}
+.bgMain{ background: #F5F5F5;}
+.boxShdow{ box-shadow: 0 1px 1px #efebeb;}
+
+.listPage, .detailed{ @extend .posA, .posCenter, .bgMain; z-index: 100;}
+nav{
+    background:#FFF; display: flex; display:-webkit-box; @extend .boxShdow;
+    a{ 
+        display: block; flex: 1; text-align: center; height: 40px; line-height: 40px; text-decoration: none;
+        &.on{color: #1bb1fb; font-weight: bold; font-size: 1.1rem; border-bottom:2px solid #1bb1fb;}
+    }
+}
+
+.List{
+    min-height: 200px;
+    ul{
+        // @extend .posA;
+        // left: 0; top:54px; right: 0; bottom: 0; margin: auto; overflow: hidden; overflow-y: auto;
+        li{ 
+            background: #FFF; margin: 9px 10px; padding: 10px;
+            h3{ text-align: justify; font-weight: normal; color: #333;}
+            p{ 
+                padding: 5px 0 0; color: #999;
+                time{ float: right;}
+            }
+        }
+    }
+}
+.noMessage{
+    text-align: center; color: #dedede; padding:10em 0;
+    dt{font-size:6em; letter-spacing:-3px; font-weight: bold; font-style: italic; height: 100px;}
+    dd{ 
+        font-size: 1.2em;
+        span{ font-size: 1.4em;}
+        p{  
+            display: inline-block; padding: 10px; border-radius: 3px; margin: 20px 0 0;
+        }
+    }
+
+}
+
+.xuanfu{
+    position: fixed; right: 0; bottom: 0;
+    span{ display: block; width: 20px; height: 20px; text-align: center; line-height: 20px; background: rgba(255,255,255,0.6); border-radius: 50%; color:$mainColor; box-shadow: 0 1px 2px #C5C5C5;}
+
+}
+
+.van-tabs__line{ background: $mainColor;}
+// .van-tabs{ @extend .posA, .posCenter;}
+// .van-tabs__content--animated{ position: absolute; left: 0; top: 44px; right: 0; bottom: 0; margin: auto;}

@@ -1,10 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
-import father from '@/components/father'
 import children from '@/components/children'
 import { resolve } from 'upath';
-// import sunzi from '@/components/sunzi'
 
 Vue.use(Router)
 
@@ -15,16 +13,27 @@ export default new Router({
       path: '/',
       name: 'HelloWorld',
       component: HelloWorld,
-      redirect:'/die'     //路由重定向
+      redirect:'/noticeList'     //路由重定向
+    },{
+      path: '/noticeList',
+      name: 'noticeList',
+      component: resolve => require(['@/components/notice/listPage'],resolve),
+    },{
+      path: '/detailed',
+      name: 'detailed',
+      component: resolve => require(['@/components/notice/detailed'],resolve)
     },{
       path: '/die',
       name: 'die',
-      alias: '/baba',
-      component: father
+      alias: ['/baba','/baba1'],
+      component: resolve => require(['@/components/father'],resolve)
     },{
       path: '/erzi/:id',
       name: 'erzi',
       component: children ,
+      meta:{
+        login:true
+      },
       children:[
         {
           path:'sunzi',
