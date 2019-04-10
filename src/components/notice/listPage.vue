@@ -57,7 +57,7 @@
             </van-tab>
         </van-tabs>
         <div class="xuanfu">
-            <span><van-icon name="arrow-up" /></span>
+            <span @click="backTop"><van-icon name="arrow-up" /></span>
         </div>
     </div>
 </template>
@@ -122,6 +122,10 @@ export default {
                     id:nq
                 }
             })
+        },
+        backTop:function(){
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
         }
     }
 }
