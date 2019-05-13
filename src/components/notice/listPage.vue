@@ -1,6 +1,6 @@
 <template>
     <div class="listPage">
-        <van-tabs v-model="active" animated swipeable>
+        <van-tabs v-model="active" animated>
             <van-tab title="收件箱">
                   <div class="List">
                         <dl class="noMessage" v-if="noticeMessList.length == 0">
@@ -20,8 +20,14 @@
                             </van-search>
                             <ul>
                                 <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
-                                    <h3>{{n.title}}</h3>
-                                    <p><span>发送人：{{n.sentPeo}}</span><time>{{n.time}}</time></p>
+                                    <van-swipe-cell :right-width="50">
+                                    <h3>{{index++}}、{{n.title}}</h3>
+                                    <p>
+                                        <span>发送人：{{n.sentPeo}}</span>
+                                        <span>{{n.noticeTypeName}}</span>
+                                        <time>{{n.time}}</time></p>
+                                     <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
+                                    </van-swipe-cell>
                                 </li>
                             </ul>
                         </div>
@@ -47,8 +53,15 @@
                             </van-search>
                             <ul>
                                 <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
+                                    <van-swipe-cell :right-width="50">
                                     <h3>{{n.title}}</h3>
-                                    <p><span>发送人：{{n.sentPeo}}</span><time>{{n.time}}</time></p>
+                                    <p>
+                                        <span>发送人：{{n.sentPeo}}</span>
+                                        <span>{{n.noticeTypeName}}</span>
+                                        <time>{{n.time}}</time>
+                                    </p>
+                                    <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
+                                    </van-swipe-cell>
                                 </li>
                             </ul>
                         </div>
@@ -57,8 +70,25 @@
             </van-tab>
         </van-tabs>
         <div class="xuanfu">
+            <span @click="screen"><van-icon name="filter-o" /></span>
             <span @click="backTop"><van-icon name="arrow-up" /></span>
         </div>
+        <van-popup v-model="layerShow" position="right">
+            <van-radio-group v-model="mrradio">
+                <van-cell-group>
+                    <van-cell title="已读" clickable @click="mrradio = '1'">
+                    <van-radio name="1" />
+                    </van-cell>
+                    <van-cell title="未读" clickable @click="mrradio = '2'">
+                    <van-radio name="2" />
+                    </van-cell>
+                </van-cell-group>
+            </van-radio-group>
+            <div class="bts">
+            <van-button @click="layerShow=false" hairline size="small" style="width:120px;">取消</van-button>
+            <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
+            </div>
+        </van-popup>
     </div>
 </template>
 
@@ -69,42 +99,60 @@ export default {
         return {
             active:2,
             value:'',
+            layerShow:false,
+            mrradio:'',
             noticeMessList:[
                 { 
-                    title:'1通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    sentPeo:'张洋',
+                    noticeType:1,
+                    noticeTypeName:"普通消息",
+                    time:'2019-01-22'
+                },{ 
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    sentPeo:'张洋',
+                    noticeType:1,
+                    noticeTypeName:"普通消息",
+                    time:'2019-01-22'
+                },{ 
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    sentPeo:'张洋',
+                    noticeType:2,
+                    noticeTypeName:"会议通知",
+                    time:'2019-01-22'
+                },{ 
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    sentPeo:'张洋',
+                    noticeType:1,
+                    noticeTypeName:"普通消息",
+                    time:'2019-01-22'
+                },{ 
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     time:'2019-01-22'
                 },{ 
-                    title:'2通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
+                    noticeType:1,
+                    noticeTypeName:"普通消息",
                     time:'2019-01-22'
                 },{ 
-                    title:'3通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
+                    noticeType:1,
+                    noticeTypeName:"普通消息",
                     time:'2019-01-22'
                 },{ 
-                    title:'4通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
+                    noticeType:1,
+                    noticeTypeName:"普通消息",
                     time:'2019-01-22'
                 },{ 
-                    title:'5通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
-                    time:'2019-01-22'
-                },{ 
-                    title:'6通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    time:'2019-01-22'
-                },{ 
-                    title:'6通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    time:'2019-01-22'
-                },{ 
-                    title:'6通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    time:'2019-01-22'
-                },{ 
-                    title:'6通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
+                    noticeType:1,
+                    noticeTypeName:"普通消息",
                     time:'2019-01-22'
                 }
             ]
@@ -114,12 +162,24 @@ export default {
         onSearch:function(){
 
         },
+        screen(){
+            this.layerShow = true;
+        },
+        validationScreening(){
+            this.loadList();
+        },
+        loadList(){
+            let me = this;
+            if(me.mrradio!=""||me.mrradio!=null||me.mrradio!=undefined){
+                
+            }
+        },
         enterDetailed:function(nq){
             let me = this;
             me.$router.push({
                 name:'detailed',
                 params:{
-                    id:nq
+                    id:"321"
                 }
             })
         },
@@ -131,6 +191,14 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+.van-popup {
+    box-sizing: border-box;
+    padding: 20px;
+    &--right{
+        width:70%;
+        height:100%;
+        .bts{ position:absolute; left: 0; top: auto; right: 0; bottom: 0; text-align:center; padding: 10px 0;}
+    }
+}
 </style>

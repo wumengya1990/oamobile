@@ -8,11 +8,13 @@ import router from './router'
 import Axios from 'axios'
 import Vuex from 'vuex'
 import store from './store/store'
+import {post,fetch,patch,put} from './htttp'
 
 // 设置axios跨域
-Vue.prototype.$axios = Axios
-Axios.defaults.baseURL = '/api'
-Axios.defaults.headers.post['Content-Type'] = 'application/json';
+Vue.prototype.$post=post;
+Vue.prototype.$fetch=fetch;
+Vue.prototype.$patch=patch;
+Vue.prototype.$put=put;
 // 设置axios跨域结束
 
 Vue.config.productionTip = false
