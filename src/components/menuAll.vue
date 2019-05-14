@@ -1,5 +1,5 @@
 <template>
-<div class="menu">
+<div class="menuAll">
     <router-link to="/noticeList">通知列表</router-link>
     <router-link to="/gwnoticeList">公文列表</router-link>
     </div>
@@ -7,7 +7,7 @@
 
 <script>
 export default {
-    name:'menu'
+    name:'menuAll'
 }
 </script>
 
