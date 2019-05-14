@@ -9,6 +9,7 @@ import Axios from 'axios'
 import Vuex from 'vuex'
 import store from './store/store'
 import {post,fetch,patch,put} from './htttp'
+require("./assets/fonts/iconfont.css")
 
 // 设置axios跨域
 Vue.prototype.$post=post;

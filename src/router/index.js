@@ -11,7 +11,11 @@ export default new Router({
       path: '/',
       name: 'HelloWorld',
       component: HelloWorld,
-      redirect:'/noticeList'     //路由重定向
+      redirect:'/menuAll'     //路由重定向
+    },{
+      path: '/menuAll',
+      name: 'menuAll',
+      component: resolve => require(['@/components/menuAll'],resolve),
     },{
       path: '/noticeList',
       name: 'noticeList',
@@ -20,6 +24,18 @@ export default new Router({
       path: '/detailed',
       name: 'detailed',
       component: resolve => require(['@/components/notice/detailed'],resolve)
+    },{
+      path: '/gwnoticeList',
+      name: 'gwnoticeList',
+      component: resolve => require(['@/components/document/listPage'],resolve),
+    },{
+      path: '/gwdetailed',
+      name: 'gwdetailed',
+      component: resolve => require(['@/components/document/detailed'],resolve)
+    },{
+      path: '/gwaddnew',
+      name: 'gwaddnew',
+      component: resolve => require(['@/components/document/addnew'],resolve)
     }
   ]
 })

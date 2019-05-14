@@ -3,7 +3,7 @@
         <van-tabs v-model="active" animated>
             <van-tab title="收件箱">
                 <van-tabs v-model="active1" class="nei" animated>
-                    <van-tab title="未读">
+                    <van-tab title="待办">
                         <div class="List">
                             <dl class="noMessage" v-if="noticeMessList.length == 0">
                                 <dt>OA</dt>
@@ -26,7 +26,7 @@
                             </div>
                         </div>
                     </van-tab>
-                    <van-tab title="已读">
+                    <van-tab title="已办">
                         <div class="List">
                             <dl class="noMessage" v-if="noticeMessList.length == 0">
                                 <dt>OA</dt>
@@ -90,7 +90,7 @@
             </van-tab>
         </van-tabs>
         <div class="xuanfu">
-            <!-- <span @click="screen"><van-icon name="filter-o" /></span> -->
+            <span @click="addnew"><van-icon name="add-o" /></span>
             <span @click="backTop"><van-icon name="arrow-up" /></span>
         </div>
         <!-- <van-popup v-model="layerShow" position="right">
@@ -183,8 +183,11 @@ export default {
         onSearch:function(){
 
         },
-        screen(){
-            this.layerShow = true;
+        addnew(){
+            let me = this;
+            me.$router.push({
+                name:'gwaddnew'
+            })
         },
         validationScreening(){
             this.loadList();
@@ -208,6 +211,7 @@ export default {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
             document.getElementsByClassName("listPage")[0].scrollTop=0;
+            
         }
     }
 }

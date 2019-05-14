@@ -22,6 +22,7 @@ $mainColor:#609eff;
 .posCenter{ left: 0; top: 0; right: 0; bottom: 0; margin: auto;}
 .bgMain{ background: #F5F5F5;}
 .boxShdow{ box-shadow: 0 1px 1px #efebeb;}
+.pad10{padding: 10px;}
 
 .listPage, .detailed{ @extend .posA, .posCenter, .bgMain; z-index: 100; overflow: hidden; overflow-y: auto;}
 nav{
@@ -38,7 +39,7 @@ nav{
         // @extend .posA;
         // left: 0; top:54px; right: 0; bottom: 0; margin: auto; overflow: hidden; overflow-y: auto;
         li{ 
-            background: #FFF; margin: 9px 10px; padding: 10px;
+            background: #FFF; margin:1px 0; padding: 10px;
             span{
                 &.drop{
                     float:right; background: #F30; width: 40px; height: 40px; line-height: 55px; color:#FFF; border-radius:50px; display: block; text-align: center; position: absolute; left: 0; top: 0; right: 0; bottom: 0; margin: auto 10px;
@@ -96,12 +97,82 @@ nav{
         
     }
     .attachment{
+        .attachmentList{
+            ul{
+                padding: 10px 0; white-space: nowrap; overflow: hidden; overflow-x: auto; font-size:0;
+                li{ 
+                    display: inline-block; width:50%; font-size:13px; box-sizing: border-box; padding: 0 5px;
+                    .fileImg{ 
+                        float: left; width: 45px; height: 45px; border-radius: 5px; margin:5px; line-height: 45px; text-align: center; background: #1bb1fb;
+                        i{ color: #FFF; font-size: 2rem;}
+                    }
+                    .fileMessage{
+                        overflow: hidden; position: relative; padding: 0 30px 0 0; max-height:45px;
+                        h5{ padding: 8px 5px 5px 0; font-weight:normal; white-space: normal; font-size: 14px;}
+                        dl{ 
+                            position: absolute; top: 0; right: 0; width: 30px; left: auto; bottom: 0; text-align: center;
+                            dt{
+                                i{ font-size: 24px; color: #76b9ff;}
+                            }
+                            dd{ color: #999; font-size: 12px; margin: -5px 0 0;}
+                        }
 
+                    }
+                }
+            }
+        }
     }
     .replyBox{
-        .bts{ padding:5px 0;}
+        .replyBoxCon{
+            ul{
+                padding:5px 0;
+                li{
+                    margin: 0 0 5px;
+                    .peo{ float: left; width: 60px; margin: 0 10px 0 0; text-align: right; padding: 3px 0 0;}
+                    .rightCon{
+                         overflow: hidden;
+                         .replyBoxMes{ 
+                             background: #f5f5f5; border-radius:3px; margin: 0 10px 0 10px; position: relative;
+                             &::after{ 
+                                 position: absolute; content:""; width: 0; height:0;  top:5px; left:-16px;
+                                 border:{ style:solid; width: 6px 8px; color: transparent #f5f5f5 transparent transparent;}
+                                }
+                                .replyBoxMes_1{ padding: 10px;}
+                             .fileBar{
+                                border-top:1px solid #dedede; padding: 10px;
+                                 span{ float: left; vertical-align: middle; margin: -2px 5px 0 0;}
+                                 p{ overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: block;}
+                             }
+                            }
+                    }
+                    
+                }
+            }
+        }
+        .bts{ padding:10px 0;}
     }
     
+}
+
+// 表格通用样式
+.tableStyle{
+    border: 1px solid #dedede; border-collapse:collapse;
+    tr{
+        th{ border:1px solid #4c94e0; background: #52a5fd;height:2.5em; font-weight: normal; color:#FFF;}
+        td{border:1px solid #c1dfff; text-align: center; padding: .6em 0;}
+    }
+
+}
+
+// 弹层用样式
+.layerBox{
+    .stateBar{
+         text-align: center;padding: .5rem;
+         span{ padding: 0 10px;}
+    }
+    .watchShowBox{
+        span{ background:#1bb1fb; color: #FFF; margin:5px;height:30px; line-height: 30px; border-radius: 3px; display: inline-block; padding: 0 10px;}
+    }
 }
 
 .xuanfu{
