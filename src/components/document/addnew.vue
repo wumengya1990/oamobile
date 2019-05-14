@@ -30,6 +30,7 @@ export default {
                 title:'',
                 docNum:'',
                 InternalNum:'',
+                peoList:[]
                 
             }
         }
