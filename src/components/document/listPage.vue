@@ -69,7 +69,7 @@
                                 shape="round"
                                 @search="onSearch"
                                 >
-                            <div slot="action" @click="onSearch">搜索</div>
+                            <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
                             </van-search>
                             <ul>
                                 <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
@@ -201,7 +201,7 @@ export default {
         enterDetailed:function(nq){
             let me = this;
             me.$router.push({
-                name:'detailed',
+                name:'gwdetailed',
                 params:{
                     id:"321"
                 }

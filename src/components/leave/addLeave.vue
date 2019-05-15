@@ -2,38 +2,24 @@
     <div class="gwaddnew bgMain posA posCenter">
         <div class="addForm">
         <van-cell-group>
-            <van-field v-model="gongwen.title" type="text" label="公文标题" placeholder="请输入公文标题" required />
-            <van-field v-model="gongwen.docNum" type="text" label="文件编码" placeholder="请输入文件编码" required />
-            <van-field v-model="gongwen.InternalNum" type="text" label="内部文号" placeholder="请输入内部文号" required />
-            <van-field v-model="gongwen.contentMes" type="textarea" label="公文内容" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="gongwen.title" type="text" label="请假人" placeholder="请输入公文标题" required />
+            <van-field v-model="gongwen.docNum" type="text" label="联系电话" placeholder="请输入文件编码" required />
+            <van-field v-model="gongwen.InternalNum" type="text" label="所属部门" placeholder="请输入内部文号" required />
+            <van-field v-model="gongwen.InternalNum" type="text" label="职务" placeholder="请输入内部文号" required />
+            <van-field v-model="gongwen.InternalNum" type="text" label="离开时间" placeholder="请输入内部文号" required />
+            <van-field v-model="gongwen.InternalNum" type="text" label="返回时间" placeholder="请输入内部文号" required />
+            <van-field v-model="gongwen.contentMes" type="textarea" label="外出地点" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="gongwen.contentMes" type="textarea" label="外出事由" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="gongwen.contentMes" type="textarea" label="行程安排" rows="5" placeholder="请输入公文内容" autosize />
+        </van-cell-group>
+        <van-cell-group>
+            <h2>临时主持工作的负责同志</h2>
+            <van-field v-model="gongwen.title" type="text" label="姓名" placeholder="请输入公文标题" required />
+            <van-field v-model="gongwen.docNum" type="text" label="职务" placeholder="请输入文件编码" required />
+            <van-field v-model="gongwen.InternalNum" type="text" label="联系电话" placeholder="请输入内部文号" required />
         </van-cell-group>
 
-        <van-cell-group>
-            <div class="addBox">
-                <em>拟办人</em>
-                <div class="rightCon">
-                    <div class="peolist"><span v-for="(a,index) in gongwen.peoList" @click="dropPeo(index)" :key="index">{{a}}</span></div>
-                    <p>点击人员名称可删除</p>
-                    <a class="appendPeo" @click="layerShow = true"><van-icon name="friends" />添加拟办人</a>
-                    <span class="duanxin">手机端短信提醒<van-switch v-model="gongwen.dxchecked" size="14px" /></span>
-                </div>
-            </div>
-            <div class="addBox">
-                <em>上传附件</em>
-                <div class="rightCon">
-                    <div class="fileAdd">
-                        <label class="upButton"><input @change="readyFile($event)" type="file" multiple /><van-icon name="send-gift-o" />选择上传文件</label>
-                        <ul class="fileList">
-                            <li v-for="(a,index) in gongwen.fileList" :key="index"><van-button size="mini" @click="dropFile(index)" round type="danger"><van-icon name="delete" /></van-button><span>{{a.name}}</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </van-cell-group>
-
-        <van-cell-group>
-            
-        </van-cell-group>
+        
 
         </div>
 

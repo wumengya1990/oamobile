@@ -71,6 +71,50 @@ nav{
 
 }
 
+//新建内容
+.addForm{
+    .addBox{
+        padding: 10px 15px;
+        em{ float: left; width:90px; }
+        .rightCon{ 
+            overflow: hidden;
+            .peolist{ 
+                margin: 0 0 5px;
+                span{ display: inline-block; border: 1px dotted #eaeaee; padding: 5px 15px; margin:0 5px 5px 0; border-radius: 3px;}
+            }
+            p{ background: #f5f5f5; text-align: center; padding: 5px 0; color: #999; font-size: 12px; margin: 0 0 10px;}
+            .appendPeo{  
+                background: #1bb1fb; height: 30px; line-height: 30px; padding: 0 10px; border-radius: 3px; display:inline-block; text-align: center; color: #FFF;
+                i{color:#FFF; font-size: 16px; vertical-align: middle; margin: -2px 5px 0 0;}
+            }
+            .duanxin{
+                margin: 0 0 0 10px;
+                .van-switch{vertical-align: middle; margin: -2px 0 0 5px;}
+            }
+            .fileAdd{
+                label{
+                    &.upButton{ 
+                        background: #1bb1fb; color: #FFF; border-radius: 3px; padding:5px 10px; position: relative; display:inline-block;
+                        i{vertical-align: middle; margin: -2px 5px 0 0; font-size: 16px;}
+                        input{ position: absolute; opacity: 0;}
+                    }
+                }
+                .fileList{
+                    li{ 
+                        height:35px; line-height: 35px; border-bottom:1px solid #eaeaee;
+                        span{ display: block; overflow: hidden; white-space:nowrap; text-overflow: ellipsis;}
+                        button{ 
+                            float: right; margin: 5px 0 0 10px;
+                            i{ vertical-align: middle; font-size:14px;}
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 详情内容
 .detailedContent{
     .detailsBox{
         background: #FFF; margin: 10px 0;
@@ -122,6 +166,8 @@ nav{
             }
         }
     }
+
+    // 回复内容
     .replyBox{
         .replyBoxCon{
             ul{
@@ -150,6 +196,30 @@ nav{
             }
         }
         .bts{ padding:10px 0;}
+    }
+
+    //送阅意见
+    .opinionBox{
+        .opinionBoxList{
+            padding:5px 10px;
+            li{
+                .message{ width: 100%; padding: 10px; font-size: 15px; box-sizing: border-box; min-height:100px; max-height:150px; overflow: hidden; overflow-y: auto; background: #F5F5F5;}
+                dl{text-align: right; padding: 5px 0;}
+            }
+        }
+    }
+
+    .department{
+        .departmentList{
+            padding: 5px 10px;
+            li{
+                display: flex; line-height: 35px;
+                span{
+                    flex:1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+                    &:last-child{text-align: right;}
+                }
+            }
+        }
     }
     
 }
@@ -182,5 +252,6 @@ nav{
 }
 
 .van-tabs__line{ background: $mainColor;}
+.van-cell-group{ margin: 0 0 10px;}
 // .van-tabs{ @extend .posA, .posCenter;}
 // .van-tabs__content--animated{ position: absolute; left: 0; top: 44px; right: 0; bottom: 0; margin: auto;}

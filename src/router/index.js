@@ -36,6 +36,18 @@ export default new Router({
       path: '/gwaddnew',
       name: 'gwaddnew',
       component: resolve => require(['@/components/document/addnew'],resolve)
+    },{
+      path: '/leaveList',
+      name: 'leaveList',
+      component: resolve => require(['@/components/leave/listPage'],resolve),
+    },{
+      path: '/leaveDetailed',
+      name: 'leaveDetailed',
+      component: resolve => require(['@/components/leave/detailed'],resolve),
+    },{
+      path: '/addLeave',
+      name: 'addLeave',
+      component: resolve => require(['@/components/leave/addLeave'],resolve)
     }
   ]
 })

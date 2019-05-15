@@ -1,10 +1,17 @@
 <template>
     <div class="listPage">
         <van-tabs v-model="active" animated>
-            <van-tab title="收件箱">
-                <van-tabs v-model="active1" class="nei" animated>
-                    <van-tab title="未读">
-                        <div class="List">
+            <van-tab title="待办事项">
+                <van-search
+                    v-model="value"
+                    placeholder="请输入搜索关键词"
+                    show-action
+                    shape="round"
+                    @search="onSearch"
+                    >
+                <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
+                </van-search>
+                 <div class="List">
                             <dl class="noMessage" v-if="noticeMessList.length == 0">
                                 <dt>OA</dt>
                                 <dd><span>办公管理系统</span></dd>
@@ -25,36 +32,11 @@
                                 </ul>
                             </div>
                         </div>
-                    </van-tab>
-                    <van-tab title="已读">
-                        <div class="List">
-                            <dl class="noMessage" v-if="noticeMessList.length == 0">
-                                <dt>OA</dt>
-                                <dd><span>办公管理系统</span></dd>
-                                <dd><p>暂无数据内容请刷新重试</p></dd>
-                            </dl>
-                            <div class="listBox">
-                                <ul>
-                                    <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
-                                        <van-swipe-cell :right-width="50">
-                                        <h3>{{index+=2}}、{{n.title}}</h3>
-                                        <p>
-                                            <span>发送人：{{n.sentPeo}}</span>
-                                            <span>{{n.noticeTypeName}}</span>
-                                            <time>{{n.time}}</time></p>
-                                        <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
-                                        </van-swipe-cell>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </van-tab>
-                </van-tabs>
                   
 
             
             </van-tab>
-            <van-tab title="发件箱">
+            <van-tab title="已办事项">
                  <div class="List">
                      <dl class="noMessage" v-if="noticeMessList.length == 0">
                             <dt>OA</dt>
@@ -90,7 +72,7 @@
             </van-tab>
         </van-tabs>
         <div class="xuanfu">
-            <!-- <span @click="screen"><van-icon name="filter-o" /></span> -->
+            <span @click="addnew"><van-icon name="add-o" /></span>
             <span @click="backTop"><van-icon name="arrow-up" /></span>
         </div>
         <!-- <van-popup v-model="layerShow" position="right">
@@ -183,8 +165,11 @@ export default {
         onSearch:function(){
 
         },
-        screen(){
-            this.layerShow = true;
+        addnew(){
+            let me = this;
+            me.$router.push({
+                name:'addLeave'
+            })
         },
         validationScreening(){
             this.loadList();
@@ -198,7 +183,7 @@ export default {
         enterDetailed:function(nq){
             let me = this;
             me.$router.push({
-                name:'detailed',
+                name:'leaveDetailed',
                 params:{
                     id:"321"
                 }

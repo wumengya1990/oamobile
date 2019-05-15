@@ -65,40 +65,6 @@
                 </div>
             </div>
 
-            <div class="detailsBox opinionBox">
-                 <h4><span>送阅意见</span></h4>
-                 <ul class="opinionBoxList">
-                     <li>
-                         <div class="message" placeholder="暂无送阅意见">
-                             {{songyueyijian}}
-                         </div>
-                         <dl>
-                             <dt>张洋</dt>
-                             <dd>2019-03-22&nbsp;&nbsp;15:00</dd>
-                         </dl>
-                     </li>
-                     <li>
-                         <div class="message" placeholder="暂无送阅意见">
-                             {{songyueyijian}}
-                         </div>
-                         <dl>
-                             <dt>张洋</dt>
-                             <dd>2019-03-22&nbsp;&nbsp;15:00</dd>
-                         </dl>
-                     </li>
-                 </ul>
-            </div>
-
-            <div class="detailsBox department">
-                 <h4><span>处室办理</span></h4>
-                 <ul class="departmentList">
-                     <li><span>徐州市第一中学</span><span>已阅</span><span>2019-03-22&nbsp;&nbsp;15:00</span></li>
-                     <li><span>徐州市第一中学</span><span>已阅</span><span>2019-03-22&nbsp;&nbsp;15:00</span></li>
-                     <li><span>徐州市第一中学</span><span>已阅</span><span>2019-03-22&nbsp;&nbsp;15:00</span></li>
-                     <li><span>徐州市第一中学</span><span>已阅</span><span>2019-03-22&nbsp;&nbsp;15:00</span></li>
-                 </ul>
-            </div>
-
             <div class="detailsBox replyBox">
                 <h4><span>回复内容</span></h4>
                 <div class="replyBoxCon">
@@ -140,8 +106,6 @@
                     <van-button type="primary" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">回复</van-button>
                     </div>
             </div>
-            
-
         </div>
 
         <van-popup v-model="watchShow" position="right">
@@ -222,13 +186,12 @@
 
 <script>
 export default {
-    name:'gwdetailed',
+    name:'detailed',
     data() {
         return {
             message:'',
             watchShow:false,
             submittedShow:false,
-            songyueyijian:'cacacacacacacaca',
             neiHeight:'',
             fileDetails:{
                 title:'关于召开2019年工作汇报预备体通知',
