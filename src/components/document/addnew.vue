@@ -29,10 +29,9 @@
                     </div>
                 </div>
             </div>
-        </van-cell-group>
-
-        <van-cell-group>
-            
+            <div class="bts">
+                <van-button type="primary" size="large">提交</van-button>
+            </div>
         </van-cell-group>
 
         </div>

@@ -2,28 +2,51 @@
     <div class="gwaddnew bgMain posA posCenter">
         <div class="addForm">
         <van-cell-group>
-            <van-field v-model="gongwen.title" type="text" label="请假人" placeholder="请输入公文标题" required />
-            <van-field v-model="gongwen.docNum" type="text" label="联系电话" placeholder="请输入文件编码" required />
-            <van-field v-model="gongwen.InternalNum" type="text" label="所属部门" placeholder="请输入内部文号" required />
-            <van-field v-model="gongwen.InternalNum" type="text" label="职务" placeholder="请输入内部文号" required />
-            <van-field v-model="gongwen.InternalNum" type="text" label="离开时间" placeholder="请输入内部文号" required />
-            <van-field v-model="gongwen.InternalNum" type="text" label="返回时间" placeholder="请输入内部文号" required />
-            <van-field v-model="gongwen.contentMes" type="textarea" label="外出地点" rows="5" placeholder="请输入公文内容" autosize />
-            <van-field v-model="gongwen.contentMes" type="textarea" label="外出事由" rows="5" placeholder="请输入公文内容" autosize />
-            <van-field v-model="gongwen.contentMes" type="textarea" label="行程安排" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="leaves.peoName" type="text" label="请假人" placeholder="请输入公文标题" required />
+            <van-field v-model="leaves.telephoneNum" type="text" label="联系电话" placeholder="请输入文件编码" required />
+            <van-field v-model="leaves.department" type="text" label="所属部门" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.duties" type="text" label="职务" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.leaveTime" @focus="choLeaveTime" type="text" label="离开时间" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.backTime" @focus="choBackTime" type="text" label="返回时间" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.goingLocation" type="textarea" label="外出地点" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="leaves.goingReasons" type="textarea" label="外出事由" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="leaves.arrangement" type="textarea" label="行程安排" rows="5" placeholder="请输入公文内容" autosize />
         </van-cell-group>
         <van-cell-group>
             <h2>临时主持工作的负责同志</h2>
-            <van-field v-model="gongwen.title" type="text" label="姓名" placeholder="请输入公文标题" required />
-            <van-field v-model="gongwen.docNum" type="text" label="职务" placeholder="请输入文件编码" required />
-            <van-field v-model="gongwen.InternalNum" type="text" label="联系电话" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.handoverPeo" type="text" label="姓名" placeholder="请输入公文标题" required />
+            <van-field v-model="leaves.handoverDuties" type="text" label="职务" placeholder="请输入文件编码" required />
+            <van-field v-model="leaves.handovertelephoneNum" type="text" label="联系电话" placeholder="请输入内部文号" required />
+            <div class="bts">
+                <van-button type="primary" size="large">提交</van-button>
+                <van-button type="default" @click="$router.back(-1)" size="large">返回</van-button>
+            </div>
         </van-cell-group>
 
         
 
         </div>
-
-        <van-popup v-model="layerShow" position="right">
+        <van-popup v-model="leaveTimeShow" position="bottom">
+            <van-datetime-picker
+                v-model="wleaveTime"
+                type="datetime"
+                :min-date="minDate"
+                @change="leaveChange"
+                @confirm="leaveSure"
+                @cancel="leaveNo"
+            />
+        </van-popup>
+        <van-popup v-model="backTimeShow" position="bottom">
+            <van-datetime-picker
+                v-model="wbackTime"
+                type="datetime"
+                :min-date="minDate"
+                @change="backChange"
+                @confirm="backSure"
+                @cancel="backNo"
+            />
+        </van-popup>
+        <!-- <van-popup v-model="layerShow" position="right">
             <div class="layerBox">
                 <van-search
                 v-model="searcgValue"
@@ -65,7 +88,7 @@
             <van-button @click="layerShow=false" hairline size="small" style="width:120px;">取消</van-button>
             <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
             </div>
-        </van-popup>
+        </van-popup> -->
     </div>
 </template>
 
@@ -74,23 +97,24 @@ export default {
     name:'gwaddnew',
     data() {
         return {
-            activeNames:[],
-            searcgValue:'',
-            layerShow:false,
-            result3: [],
-            list: [
-                'a',
-                'b',
-                'c'
-            ],
-            gongwen:{
-                title:'',
-                docNum:'',
-                InternalNum:'',
-                contentMes:'',
-                dxchecked:true,
-                peoList:["张洋","张洋","张洋","张洋","张洋","张洋","张洋"],
-                fileList:[]
+            leaveTimeShow:false,
+            backTimeShow:false,
+            wbackTime:new Date(),
+            wleaveTime:new Date(),
+            minDate:new Date(),
+            leaves:{
+                peoName:'张洋',
+                telephoneNum:'',
+                department:'',
+                duties:'',
+                leaveTime:'',
+                backTime:'',
+                goingLocation:'',
+                goingReasons:'',
+                arrangement:'',
+                handoverPeo:'',
+                handoverDuties:'',
+                handovertelephoneNum:''
             }
         }
     },
@@ -102,8 +126,40 @@ export default {
         validationScreening(){
             
         },
-        onSearch(){
-             this.$toast(this.searcgValue);
+        choLeaveTime(){
+            this.leaveTimeShow =  true;
+        },
+        choBackTime(){
+            this.backTimeShow = true;
+        },
+        // 选择离开时间
+        leaveChange(e){
+             let timeList =[];
+             timeList = e.getValues()
+             this.leaves.leaveTime = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
+             console.log(this.leaves.leaveTime );
+        },
+        // 确定选择离开时间
+        leaveSure(){
+            this.leaveTimeShow =  false;
+            
+        },
+        // 取消选择离开时间
+        leaveNo(){
+            this.leaveTimeShow =  false;
+        },
+        // 选择返回时间
+        backChange(e){
+           let timeList =[];
+            timeList = e.getValues()
+            this.leaves.backTime = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
+            console.log(this.leaves.backTime );
+        },
+        backSure(){
+             this.backTimeShow =  false;
+        },
+        backNo(){
+            this.backTimeShow =  false;
         },
         toggle(index) {
             this.$refs.checkboxes[index].toggle();
@@ -111,9 +167,9 @@ export default {
         dropPeo(suoyin){
             this.$dialog.confirm({
                 title:"删除提示",
-                message:"您确定要删除已选拟办人"+this.gongwen.peoList[suoyin]
+                message:"您确定要删除已选拟办人"+this.leaves.peoList[suoyin]
             }).then(()=>{
-                this.gongwen.peoList.splice(suoyin,1);
+                this.leaves.peoList.splice(suoyin,1);
                 this.$toast.success({
                     duration:1000,
                     message:'人员已删除'
@@ -131,15 +187,15 @@ export default {
             let newList=[];
             for(let i=0;i<fileList.length;i++){
                 newList.push(fileList[i]);
-                //this.gongwen.fileList.push(fileList[i]);
+                //this.leaves.fileList.push(fileList[i]);
             }
             let sd = new Set(newList);
-            this.gongwen.fileList.push(...sd);
-            console.log(this.gongwen.fileList);
+            this.leaves.fileList.push(...sd);
+            console.log(this.leaves.fileList);
 
         },
         dropFile(suoyin){
-            this.gongwen.fileList.splice(suoyin,1);
+            this.leaves.fileList.splice(suoyin,1);
         }
     }
 }

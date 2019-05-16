@@ -21,10 +21,9 @@
                                 <ul>
                                     <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
                                         <van-swipe-cell :right-width="50">
-                                        <h3>{{index++}}、{{n.title}}</h3>
+                                        <h3>请假人、{{n.title}}</h3>
                                         <p>
-                                            <span>发送人：{{n.sentPeo}}</span>
-                                            <span>{{n.noticeTypeName}}</span>
+                                            <span>所属部门：{{n.sentPeo}}</span>
                                             <time>{{n.time}}</time></p>
                                         <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                                         </van-swipe-cell>

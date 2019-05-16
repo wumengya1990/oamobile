@@ -93,22 +93,7 @@
             <span @click="addnew"><van-icon name="add-o" /></span>
             <span @click="backTop"><van-icon name="arrow-up" /></span>
         </div>
-        <!-- <van-popup v-model="layerShow" position="right">
-            <van-radio-group v-model="mrradio">
-                <van-cell-group>
-                    <van-cell title="已读" clickable @click="mrradio = '1'">
-                    <van-radio name="1" />
-                    </van-cell>
-                    <van-cell title="未读" clickable @click="mrradio = '2'">
-                    <van-radio name="2" />
-                    </van-cell>
-                </van-cell-group>
-            </van-radio-group>
-            <div class="bts">
-            <van-button @click="layerShow=false" hairline size="small" style="width:120px;">取消</van-button>
-            <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
-            </div>
-        </van-popup> -->
+        
     </div>
 </template>
 

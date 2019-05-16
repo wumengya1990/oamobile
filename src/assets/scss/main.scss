@@ -73,6 +73,7 @@ nav{
 
 //新建内容
 .addForm{
+    h2{ text-align: center; font-weight:normal; font-size: 16px; padding: 10px 0;}
     .addBox{
         padding: 10px 15px;
         em{ float: left; width:90px; }
@@ -111,6 +112,10 @@ nav{
                 }
             }
         }
+    }
+    .bts{
+         padding:10px 10px 0;
+         button{ height:45px; line-height:45px; font-size:15px; margin: 0 0 10px;}
     }
 }
 
@@ -224,6 +229,19 @@ nav{
     
 }
 
+// 请假详情
+.leaveDetaileBox{
+    margin: 0 0 10px; background: #FFF;
+    h3{font-size: 16px; font-weight:normal; text-align: center; padding: 10px 0;}
+    ul{
+        li{ 
+            padding: 5px 0; min-height:30px;
+            em{ float: left; width: 100px; padding: 0 10px; color: #666; box-sizing: border-box;}
+            .rightCon{ overflow: hidden;}
+        }
+    }
+}
+
 // 表格通用样式
 .tableStyle{
     border: 1px solid #dedede; border-collapse:collapse;
@@ -252,6 +270,8 @@ nav{
 }
 
 .van-tabs__line{ background: $mainColor;}
-.van-cell-group{ margin: 0 0 10px;}
+.van-cell-group{ 
+    margin: 0 0 10px;
+}
 // .van-tabs{ @extend .posA, .posCenter;}
 // .van-tabs__content--animated{ position: absolute; left: 0; top: 44px; right: 0; bottom: 0; margin: auto;}
