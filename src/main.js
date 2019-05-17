@@ -10,6 +10,8 @@ import Vuex from 'vuex'
 import store from './store/store'
 import {post,fetch,patch,put} from './htttp'
 require("./assets/fonts/iconfont.css")
+import element from 'element-ui'
+require('element-ui/lib/theme-chalk/index.css')
 
 // 设置axios跨域
 Vue.prototype.$post=post;
@@ -20,6 +22,7 @@ Vue.prototype.$put=put;
 
 Vue.config.productionTip = false
 
+Vue.use(element);
 Vue.use(Vant);          //使用Vant
 Vue.use(Vuex);          //使用Vuex
 

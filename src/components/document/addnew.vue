@@ -48,29 +48,12 @@
                 <div slot="action" @click="onSearch">搜索</div>
                 </van-search>
                 <van-collapse v-model="activeNames">
-                    <van-collapse-item title="有赞微商城" name="1">
-                        <van-checkbox-group v-model="result3">
-                            <van-cell-group>
-                            <van-cell
-                                v-for="(item, index) in list"
-                                clickable
-                                :key="index"
-                                :title="`复选框${item}`"
-                                @click="toggle(index)"
-                            >
-                                <van-checkbox
-                                ref="checkboxes"
-                                :name="item"
-                                />
-                            </van-cell>
-                            </van-cell-group>
-                        </van-checkbox-group>
-                    </van-collapse-item>
-                    <van-collapse-item title="有赞零售" name="2">
-                        网店吸粉获客、会员分层营销、一机多种收款，告别经营低效和客户流失
-                    </van-collapse-item>
-                    <van-collapse-item title="有赞美业" name="3">
-                        线上拓客，随时预约，贴心顺手的开单收银
+                    <van-collapse-item :title="peo.jigouName" name="1" v-for="(peo,index) in choPeoList" :key="index">
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange(index)">全选</el-checkbox>
+                        <div style="margin: 15px 0;"></div>
+                        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                            <el-checkbox v-for="(ry) in peo.renyuan" :label="ry" :key="ry">{{ry}}</el-checkbox>
+                        </el-checkbox-group>
                     </van-collapse-item>
                 </van-collapse>
             </div>
@@ -83,6 +66,8 @@
 </template>
 
 <script>
+
+const cityOptions = ['上海', '北京', '广州', '深圳'];
 export default {
     name:'gwaddnew',
     data() {
@@ -95,6 +80,40 @@ export default {
                 'a',
                 'b',
                 'c'
+            ],
+            checkAll: false,
+            checkedCities: ['上海', '北京'],
+            cities: cityOptions,
+            isIndeterminate: true,
+            choPeoList:[
+                {
+                    jigouName:'徐州市第一中学',
+                    checkAll: false,
+                    isIndeterminate: true,
+                    checkedCities: ['张三', '李四'],
+                    renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
+                },
+                {
+                    jigouName:'徐州市第二中学',
+                    checkAll: false,
+                    isIndeterminate: true,
+                    checkedCities: ['张三', '李四'],
+                    renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
+                },
+                {
+                    jigouName:'徐州市第三中学',
+                    checkAll: false,
+                    isIndeterminate: true,
+                    checkedCities: ['张三', '李四'],
+                    renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
+                },
+                {
+                    jigouName:'徐州市第四中学',
+                    checkAll: false,
+                    isIndeterminate: true,
+                    checkedCities: ['张三', '李四'],
+                    renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
+                }
             ],
             gongwen:{
                 title:'',
@@ -153,7 +172,16 @@ export default {
         },
         dropFile(suoyin){
             this.gongwen.fileList.splice(suoyin,1);
-        }
+        },
+        handleCheckAllChange(val) {
+            this.checkedCities = val ? cityOptions : [];
+            this.isIndeterminate = false;
+      },
+      handleCheckedCitiesChange(value) {
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.cities.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
+      }
     }
 }
 </script>
@@ -163,10 +191,12 @@ export default {
     box-sizing: border-box;
     padding: 10px;
     &--right{
-        width:70%;
+        width:80%;
         height:100%;
         .bts{ position:absolute; left: 0; top: auto; right: 0; bottom: 0; text-align:center; padding: 10px 0;}
     }
 }
+
+.van-collapse-item__content{ padding: 0 10px;}
 
 </style>

@@ -1,8 +1,9 @@
 import axios from 'axios'
-import {Notify} from 'vant'
+import QS from 'qs'
+import { Toast } from 'vant'
 
 axios.defaults.timeout = 5000;
-axios.defaults.baseURL = '';
+
 
 // http拦截器
 
