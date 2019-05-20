@@ -9,6 +9,7 @@ import Axios from 'axios'
 import Vuex from 'vuex'
 import store from './store/store'
 import {post,fetch,patch,put} from './htttp'
+import api from './https'
 require("./assets/fonts/iconfont.css")
 import element from 'element-ui'
 require('element-ui/lib/theme-chalk/index.css')
@@ -18,6 +19,7 @@ Vue.prototype.$post=post;
 Vue.prototype.$fetch=fetch;
 Vue.prototype.$patch=patch;
 Vue.prototype.$put=put;
+Vue.prototype.$api=api;
 // 设置axios跨域结束
 
 Vue.config.productionTip = false

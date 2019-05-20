@@ -1,8 +1,30 @@
 <template>
 <div class="menuAll">
-    <router-link to="/noticeList">通知列表</router-link>
-    <router-link to="/gwnoticeList">公文列表</router-link>
-    <router-link to="/leaveList">请假列表</router-link>
+    <router-link to="/noticeList">
+    <em><i class="icon iconfont icontongzhi1"></i></em>
+    <span>通知列表</span>
+    </router-link>
+    <router-link to="/gwnoticeList">
+    <em><i class="icon iconfont iconai-briefcase"></i></em>
+    <span>公文列表</span>
+    </router-link>
+    <router-link to="/leaveList">
+    <em><i class="icon iconfont iconZ"></i></em>
+    <span>请假列表</span>
+    </router-link>
+
+    <router-link to="/noticeList">
+    <em><i class="icon iconfont icontongzhi1"></i></em>
+    <span>通知列表</span>
+    </router-link>
+    <router-link to="/gwnoticeList">
+    <em><i class="icon iconfont iconai-briefcase"></i></em>
+    <span>公文列表</span>
+    </router-link>
+    <router-link to="/leaveList">
+    <em><i class="icon iconfont iconZ"></i></em>
+    <span>请假列表</span>
+    </router-link>
     
     </div>
 </template>
@@ -15,6 +37,14 @@ export default {
 
 <style lang="scss">
 .menuAll{
-    a{ display:block; background:#F30; color: #FFF; line-height: 40px; margin: 10px 10px 0; text-align:center;}
+    display: flex; flex-wrap: wrap; width:100%;
+    a{ 
+        flex: 1; width:25%; max-width: 25%; min-width: 25%; text-align:center; text-decoration: none; 
+        em{ 
+            padding:5px 0; display: block;
+            i{display: block; font-size:40px; color:#1f8bff;}
+        }
+        span{ font-size: 12px;}
+    }
 }
 </style>

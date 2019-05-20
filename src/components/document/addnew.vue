@@ -47,19 +47,22 @@
                 >
                 <div slot="action" @click="onSearch">搜索</div>
                 </van-search>
+                <div class="layerBoxScroll">
                 <van-collapse v-model="activeNames">
-                    <van-collapse-item :title="peo.jigouName" name="1" v-for="(peo,index) in choPeoList" :key="index">
-                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange(index)">全选</el-checkbox>
-                        <div style="margin: 15px 0;"></div>
-                        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                    <van-collapse-item :title="peo.jigouName" :name="index++" v-for="(peo,index) in choPeoList" :key="index">
+                        <div style="margin:10px 0;"></div>
+                        <el-checkbox :indeterminate="peo.isIndeterminate" v-model="peo.checkAll" @change="handleCheckAllChange($event,index)">全选</el-checkbox>
+                        <div style="margin:10px 0;"></div>
+                        <el-checkbox-group v-model="peo.checkedCities" @change="handleCheckedCitiesChange($event,index)">
                             <el-checkbox v-for="(ry) in peo.renyuan" :label="ry" :key="ry">{{ry}}</el-checkbox>
                         </el-checkbox-group>
                     </van-collapse-item>
                 </van-collapse>
+                </div>
             </div>
             <div class="bts">
             <van-button @click="layerShow=false" hairline size="small" style="width:120px;">取消</van-button>
-            <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
+            <van-button @click="validationScreening" hairline size="small" type="info" style="width:120px;">确定</van-button>
             </div>
         </van-popup>
     </div>
@@ -89,29 +92,29 @@ export default {
                 {
                     jigouName:'徐州市第一中学',
                     checkAll: false,
-                    isIndeterminate: true,
-                    checkedCities: ['张三', '李四'],
+                    isIndeterminate: false,
+                    checkedCities: [],
                     renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
                 },
                 {
                     jigouName:'徐州市第二中学',
                     checkAll: false,
-                    isIndeterminate: true,
-                    checkedCities: ['张三', '李四'],
-                    renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
+                    isIndeterminate: false,
+                    checkedCities: [],
+                    renyuan:["张三","李四","王五王五","丁三","杨四","钱五","孙六","陈七"]
                 },
                 {
                     jigouName:'徐州市第三中学',
                     checkAll: false,
-                    isIndeterminate: true,
-                    checkedCities: ['张三', '李四'],
+                    isIndeterminate: false,
+                    checkedCities: [],
                     renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
                 },
                 {
                     jigouName:'徐州市第四中学',
                     checkAll: false,
-                    isIndeterminate: true,
-                    checkedCities: ['张三', '李四'],
+                    isIndeterminate: false,
+                    checkedCities: [],
                     renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
                 }
             ],
@@ -121,7 +124,7 @@ export default {
                 InternalNum:'',
                 contentMes:'',
                 dxchecked:true,
-                peoList:["张洋","张洋","张洋","张洋","张洋","张洋","张洋"],
+                peoList:[],
                 fileList:[]
             }
         }
@@ -132,7 +135,18 @@ export default {
     },
     methods: {
         validationScreening(){
-            
+            let me = this;
+            let sd = []
+            for(let i=0, peolen=me.choPeoList.length;i<peolen;i++){
+                
+                for(let j=0, peolenN=me.choPeoList[i].checkedCities.length;j<peolenN;j++){
+                    sd.push(me.choPeoList[i].checkedCities[j]);
+                }
+            }
+            let sz = new Set(sd);
+            me.gongwen.peoList.push(...sz);
+            console.log(me.gongwen.peoList);
+            me.layerShow = false;
         },
         onSearch(){
              this.$toast(this.searcgValue);
@@ -173,14 +187,18 @@ export default {
         dropFile(suoyin){
             this.gongwen.fileList.splice(suoyin,1);
         },
-        handleCheckAllChange(val) {
-            this.checkedCities = val ? cityOptions : [];
-            this.isIndeterminate = false;
+        handleCheckAllChange(event,suoyin) {
+            let me = this;
+            suoyin = suoyin-1;
+            me.choPeoList[suoyin].checkedCities = event ? me.choPeoList[suoyin].renyuan : [];
+            me.choPeoList[suoyin].isIndeterminate = false;
       },
-      handleCheckedCitiesChange(value) {
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.cities.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
+      handleCheckedCitiesChange(event,suoyin) {
+        let me = this;
+        suoyin = suoyin-1;
+        let checkedCount = event.length;
+        me.choPeoList[suoyin].checkAll = checkedCount ===  me.choPeoList[suoyin].renyuan.length;
+        me.choPeoList[suoyin].isIndeterminate = checkedCount > 0 && checkedCount < me.choPeoList[suoyin].renyuan.length;
       }
     }
 }

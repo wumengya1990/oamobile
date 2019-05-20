@@ -13,6 +13,10 @@ export default new Router({
       component: HelloWorld,
       redirect:'/menuAll'     //路由重定向
     },{
+      path: '/login',
+      name: 'login',
+      component: resolve => require(['@/components/login'],resolve),
+    },{
       path: '/menuAll',
       name: 'menuAll',
       component: resolve => require(['@/components/menuAll'],resolve),

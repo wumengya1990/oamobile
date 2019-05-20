@@ -242,6 +242,19 @@ nav{
     }
 }
 
+// 登陆样式
+
+.login{
+    .loginM{
+        padding: 0 10px;
+        h3{ border-left: 1px solid #dedede;  font-size: 22px; font-weight: normal; padding: 0 10px; margin: 80px 40px;}
+        form{
+            padding: 0 30px;
+        }
+    }
+    
+}
+
 // 表格通用样式
 .tableStyle{
     border: 1px solid #dedede; border-collapse:collapse;
@@ -254,12 +267,16 @@ nav{
 
 // 弹层用样式
 .layerBox{
+    .layerBoxScroll{ position: absolute; left: 0; top: 60px; bottom: 50px; right: 0; overflow-y: auto;}
     .stateBar{
          text-align: center;padding: .5rem;
          span{ padding: 0 10px;}
     }
     .watchShowBox{
         span{ background:#1bb1fb; color: #FFF; margin:5px;height:30px; line-height: 30px; border-radius: 3px; display: inline-block; padding: 0 10px;}
+    }
+    .el-checkbox-group{
+        label{ margin: 0 30px 10px 0;}
     }
 }
 
