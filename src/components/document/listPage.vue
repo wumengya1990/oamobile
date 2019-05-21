@@ -74,7 +74,7 @@
                             <ul>
                                 <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
                                     <van-swipe-cell :right-width="50">
-                                    <h3>{{n.title}}</h3>
+                                    <h3 :class="{haveN:n.hasN}">{{n.title}}</h3>
                                     <p>
                                         <span>发送人：{{n.sentPeo}}</span>
                                         <span>{{n.noticeTypeName}}</span>
@@ -113,53 +113,62 @@ export default {
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22'
+                    time:'2019-01-22',
+                    hasN:true
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22'
+                    time:'2019-01-22',
+                    hasN:false
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:2,
                     noticeTypeName:"会议通知",
-                    time:'2019-01-22'
+                    time:'2019-01-22',
+                    hasN:false
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22'
+                    time:'2019-01-22',
+                    hasN:false
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
+                    time:'2019-01-22',
+                    hasN:false
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22'
+                    time:'2019-01-22',
+                    hasN:false
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22'
+                    time:'2019-01-22',
+                    hasN:false
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22'
+                    time:'2019-01-22',
+                    hasN:false
+                },{ 
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    sentPeo:'张洋',
+                    noticeType:1,
+                    noticeTypeName:"普通消息",
+                    time:'2019-01-22',
+                    hasN:false
                 }
             ]
         }
