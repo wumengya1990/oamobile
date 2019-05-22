@@ -11,14 +11,19 @@
                                 <dd><p>暂无数据内容请刷新重试</p></dd>
                             </dl>
                             <div class="listBox">
+                                <van-list
+                                    v-model="loading"
+                                    :finished="finished"
+                                    finished-text="没有更多了"
+                                ></van-list>
                                 <ul>
-                                    <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
+                                    <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID)">
                                         <van-swipe-cell :right-width="50">
-                                        <h3>{{index++}}、{{n.title}}</h3>
+                                        <h3>{{++index}}、{{n.title}}</h3>
                                         <p>
-                                            <span>发送人：{{n.sentPeo}}</span>
-                                            <span>{{n.noticeTypeName}}</span>
-                                            <time>{{n.time}}</time></p>
+                                            <span>发送人：{{n.senduserName}}</span>
+                                            <span>{{n.notice_Type}}</span>
+                                            <time>{{n.beginDate.replace(/T/g,' ')}}</time></p>
                                         <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                                         </van-swipe-cell>
                                     </li>
@@ -35,13 +40,13 @@
                             </dl>
                             <div class="listBox">
                                 <ul>
-                                    <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
+                                    <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID)">
                                         <van-swipe-cell :right-width="50">
                                         <h3>{{index+=2}}、{{n.title}}</h3>
                                         <p>
                                             <span>发送人：{{n.sentPeo}}</span>
-                                            <span>{{n.noticeTypeName}}</span>
-                                            <time>{{n.time}}</time></p>
+                                            <span>{{n.notice_Type}}</span>
+                                            <time>{{n.beginDate.replace(/T/g,' ')}}</time></p>
                                         <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                                         </van-swipe-cell>
                                     </li>
@@ -72,12 +77,12 @@
                             <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
                             </van-search>
                             <ul>
-                                <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
+                                <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID)">
                                     <van-swipe-cell :right-width="50">
                                     <h3>{{n.title}}</h3>
                                     <p>
                                         <span>发送人：{{n.sentPeo}}</span>
-                                        <span>{{n.noticeTypeName}}</span>
+                                        <span>{{n.notice_Type}}</span>
                                         <time>{{n.time}}</time>
                                     </p>
                                     <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
@@ -122,54 +127,11 @@ export default {
             value:'',
             layerShow:false,
             mrradio:'',
+            loading: false,
+            finished: false,
+            pageIndex:1,
             noticeMessList:[
                 { 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:2,
-                    noticeTypeName:"会议通知",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
@@ -178,6 +140,9 @@ export default {
                 }
             ]
         }
+    },
+    mounted() {
+        this.loadList(true);
     },
     methods:{
         onSearch:function(){
@@ -189,18 +154,45 @@ export default {
         validationScreening(){
             this.loadList();
         },
-        loadList(){
+        loadList(isInit){
             let me = this;
-            if(me.mrradio!=""||me.mrradio!=null||me.mrradio!=undefined){
-                
+            if(me.loading == false){
+                me.loading = true;
+            }else{
+                return false
             }
+            if (isInit == true) {
+                me.finished = false;
+                me.pageIndex = 1;
+                me.noticeMessList = [];
+            }
+
+            let url = '/api/Notic/inbox';
+            let params = { pageSize:10, pageIndex:me.pageIndex, State:0};
+            me.$api.get(url, params,res=>{
+                console.log(res);
+                let resCount = res.length;
+                if(isInit == true){
+                     me.noticeMessList = res.data;
+                }else{
+                    me.noticeMessList = me.noticeMessList.concat(res.data)
+                }
+                me.loading = false;
+                me.pageIndex++;
+                if (resCount < 10) {
+                    me.finished = true;
+                }
+            })
+            
+            
+            
         },
-        enterDetailed:function(nq){
+        enterDetailed:function(tzid){
             let me = this;
             me.$router.push({
                 name:'detailed',
                 params:{
-                    id:"321"
+                    tzid:tzid
                 }
             })
         },
@@ -208,6 +200,11 @@ export default {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
             document.getElementsByClassName("listPage")[0].scrollTop=0;
+        }
+    },
+    filters:{
+        xx(v){
+
         }
     }
 }

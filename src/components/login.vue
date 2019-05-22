@@ -3,11 +3,11 @@
         <div class="loginM">
             <h3>徐州市教育局OA系统</h3>
             <el-form :model="loginForm" status-icon :rules="loginRule" ref="loginForm" label-width="100px" label-position="top" class="demo-ruleForm">
-                <el-form-item label="用户名" prop="useName">
-                    <el-input type="text" v-model="loginForm.useName" auto-complete="off" clearable></el-input>
+                <el-form-item label="用户名" prop="username">
+                    <el-input type="text" v-model="loginForm.username" auto-complete="off" clearable></el-input>
                 </el-form-item>
-                <el-form-item label="密码" prop="usePwd">
-                    <el-input type="password" v-model="loginForm.usePwd" auto-complete="off" clearable></el-input>
+                <el-form-item label="密码" prop="username">
+                    <el-input type="password" v-model="loginForm.pwd" auto-complete="off" clearable></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm" style="width:100%">登录</el-button>
@@ -35,15 +35,15 @@ data() {
     return {
         
         loginForm:{
-            useName:'',
-            usePwd:'',
+            username:'',
+            pwd:'',
             
         },
         loginRule:{
-            useName:[
+            username:[
                 {required:true,message:'请输入用户名',trigger:'blur'}
             ],
-            usePwd:[
+            pwd:[
                 {required:true,message:'请输入密码',trigger:'blur'}
             ]
         }
@@ -52,13 +52,20 @@ data() {
 methods: {
     submitForm(){
         let me = this;
-        me.$router.push({
-            name:'menuAll'
-        })
-        let url='';
-        let prmair={}
-        me.$api.get(url,prmair,res=>{
+        let url='/api/user/login';
+        me.$api.get(url,me.loginForm,res=>{
             console.log(res);
+            if(res.code==200){
+                me.$store.commit("saveToken", res.token);      //保存 token
+                me.$store.commit("saveLogin", true);           //保存登录状态
+                me.$store.commit("saveUid", res.data.autoID);
+                me.$router.push({
+                    name:'noticeList',
+                    params:{
+                        uid:res.data.autoID
+                    }
+                }) 
+            }
         })
     }
 }

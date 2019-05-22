@@ -253,7 +253,8 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$route.params.id);
+        console.log(this.$route.params.tzid);
+        this.loadxaingqing();
     },
     methods:{
         setHeight(){
@@ -264,6 +265,14 @@ export default {
         },
         validationScreening(){
             
+        },
+        loadxaingqing(){
+            let me = this;
+            let url = '/api/Notic';
+            let params = { autoid:me.$route.params.tzid};
+            me.$api.get(url,params,res=>{
+                console.log(res);
+            })
         }
     }
 }
