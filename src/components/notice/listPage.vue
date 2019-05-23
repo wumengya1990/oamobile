@@ -1,8 +1,8 @@
 <template>
     <div class="listPage">
-        <van-tabs v-model="active" animated>
+        <van-tabs v-model="shoufaBox" @click="shoufaClick" animated>
             <van-tab title="收件箱">
-                <van-tabs v-model="active1" class="nei" animated>
+                <van-tabs v-model="readState" @click="readStateClick" class="nei" animated>
                     <van-tab title="未读">
                         <div class="List">
                             <dl class="noMessage" v-if="noticeMessList.length == 0">
@@ -15,19 +15,21 @@
                                     v-model="loading"
                                     :finished="finished"
                                     finished-text="没有更多了"
-                                ></van-list>
+                                >
                                 <ul>
                                     <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID)">
                                         <van-swipe-cell :right-width="50">
                                         <h3>{{++index}}、{{n.title}}</h3>
                                         <p>
                                             <span>发送人：{{n.senduserName}}</span>
-                                            <span>{{n.notice_Type}}</span>
-                                            <time>{{n.beginDate.replace(/T/g,' ')}}</time></p>
+                                            <span v-if="n.notice_Type==0">普通通知</span>
+                                            <span style="color:#F30;" v-else>会议通知</span>
+                                            <time>{{ n.beginDate | shijianZ }}</time></p>
                                         <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                                         </van-swipe-cell>
                                     </li>
                                 </ul>
+                                </van-list>
                             </div>
                         </div>
                     </van-tab>
@@ -46,7 +48,7 @@
                                         <p>
                                             <span>发送人：{{n.sentPeo}}</span>
                                             <span>{{n.notice_Type}}</span>
-                                            <time>{{n.beginDate.replace(/T/g,' ')}}</time></p>
+                                            <time>{{n.beginDate}}</time></p>
                                         <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                                         </van-swipe-cell>
                                     </li>
@@ -67,7 +69,7 @@
                             <dd><p>暂无数据内容请刷新重试</p></dd>
                         </dl>
                         <div class="listBox">
-                            <van-search
+                            <!-- <van-search
                                 v-model="value"
                                 placeholder="请输入搜索关键词"
                                 show-action
@@ -75,9 +77,9 @@
                                 @search="onSearch"
                                 >
                             <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
-                            </van-search>
+                            </van-search> -->
                             <ul>
-                                <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID)">
+                                <li v-for="(n,index) in outboxList" :key="index" @click="enterDetailed(n.autoID)">
                                     <van-swipe-cell :right-width="50">
                                     <h3>{{n.title}}</h3>
                                     <p>
@@ -95,25 +97,9 @@
             </van-tab>
         </van-tabs>
         <div class="xuanfu">
-            <!-- <span @click="screen"><van-icon name="filter-o" /></span> -->
             <span @click="backTop"><van-icon name="arrow-up" /></span>
         </div>
-        <!-- <van-popup v-model="layerShow" position="right">
-            <van-radio-group v-model="mrradio">
-                <van-cell-group>
-                    <van-cell title="已读" clickable @click="mrradio = '1'">
-                    <van-radio name="1" />
-                    </van-cell>
-                    <van-cell title="未读" clickable @click="mrradio = '2'">
-                    <van-radio name="2" />
-                    </van-cell>
-                </van-cell-group>
-            </van-radio-group>
-            <div class="bts">
-            <van-button @click="layerShow=false" hairline size="small" style="width:120px;">取消</van-button>
-            <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
-            </div>
-        </van-popup> -->
+        
     </div>
 </template>
 
@@ -122,9 +108,11 @@ export default {
     name:'listPage',
     data() {
         return {
-            active:0,
-            active1:0,
-            value:'',
+            shoufaBox:0,            //收件箱发件箱切换
+            readState:0,            //收件箱已读未读切换
+            pageIndex:1,            //默认分页页数
+            pageSize:10,            //默认分页条数
+            value:'',               
             layerShow:false,
             mrradio:'',
             loading: false,
@@ -138,13 +126,26 @@ export default {
                     noticeTypeName:"普通消息",
                     time:'2019-01-22'
                 }
-            ]
+            ],
+            outboxList:[]
         }
     },
+    
     mounted() {
-        this.loadList(true);
+        this.loadReadList(true);
     },
     methods:{
+        shoufaClick(index,title){
+            let me =  this;
+            if(index==0){
+                me.loadReadList(true);
+            }else{
+                me.loadOutboxList(true);
+            }
+        },
+        readStateClick(index,title){
+            this.loadReadList(true);
+        },
         onSearch:function(){
 
         },
@@ -152,23 +153,23 @@ export default {
             this.layerShow = true;
         },
         validationScreening(){
-            this.loadList();
+            this.loadReadList();
         },
-        loadList(isInit){
+        // 获取收件箱内容
+        loadReadList(isInit){
             let me = this;
-            if(me.loading == false){
+            if(me.loading == false){            //判断列表是否处于加载状态
                 me.loading = true;
             }else{
                 return false
             }
-            if (isInit == true) {
+            if (isInit == true) {               //是否需要清空当前列表
                 me.finished = false;
                 me.pageIndex = 1;
                 me.noticeMessList = [];
             }
-
             let url = '/api/Notic/inbox';
-            let params = { pageSize:10, pageIndex:me.pageIndex, State:0};
+             let params = { pageSize:me.pageSize, pageIndex:me.pageIndex, State:me.readState};
             me.$api.get(url, params,res=>{
                 console.log(res);
                 let resCount = res.length;
@@ -183,10 +184,39 @@ export default {
                     me.finished = true;
                 }
             })
-            
-            
-            
         },
+        // 获取发件箱内容
+        loadOutboxList(isInit){
+            let me = this;
+            if(me.loading == false){            //判断列表是否处于加载状态
+                me.loading = true;
+            }else{
+                return false
+            }
+            if (isInit == true) {               //是否需要清空当前列表
+                me.finished = false;
+                me.pageIndex = 1;
+                me.outboxList = [];
+            }
+            let url = '/api/Notic/outbox';
+            let params = { pageSize:me.pageSize, pageIndex:me.pageIndex, State:me.readState};
+            me.$api.get(url, params,res=>{
+                console.log("fajianxiang")
+                console.log(res);
+                let resCount = res.length;
+                if(isInit == true){
+                     me.outboxList = res.data;
+                }else{
+                    me.outboxList = me.outboxList.concat(res.data)
+                }
+                me.loading = false;
+                me.pageIndex++;
+                if (resCount < 10) {
+                    me.finished = true;
+                }
+            })
+        },
+        // 进入详情详情页面传参
         enterDetailed:function(tzid){
             let me = this;
             me.$router.push({
@@ -203,8 +233,10 @@ export default {
         }
     },
     filters:{
-        xx(v){
-
+        shijianZ:function(value){
+        let qd = new RegExp('T');
+        let jieguo = value.replace(qd," ")
+        return jieguo;
         }
     }
 }
