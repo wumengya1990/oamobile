@@ -15,11 +15,13 @@
                                     v-model="loading"
                                     :finished="finished"
                                     finished-text="没有更多了"
+                                    @load="onLoad"
+                                    :offset="100"
                                 >
                                 <ul>
-                                    <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID)">
+                                    <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID,shoufaBox,n.notice_Type)">
                                         <van-swipe-cell :right-width="50">
-                                        <h3>{{++index}}、{{n.title}}</h3>
+                                        <h3><span :style="{color:n.typebf=='紧急'? '#F30' : '#333'}">[{{n.typebf}}]</span>{{n.title}}</h3>
                                         <p>
                                             <span>发送人：{{n.senduserName}}</span>
                                             <span v-if="n.notice_Type==0">普通通知</span>
@@ -42,7 +44,7 @@
                             </dl>
                             <div class="listBox">
                                 <ul>
-                                    <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID)">
+                                    <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID,shoufaBox,n.notice_Type)">
                                         <van-swipe-cell :right-width="50">
                                         <h3>{{index+=2}}、{{n.title}}</h3>
                                         <p>
@@ -79,7 +81,7 @@
                             <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
                             </van-search> -->
                             <ul>
-                                <li v-for="(n,index) in outboxList" :key="index" @click="enterDetailed(n.autoID)">
+                                <li v-for="(n,index) in outboxList" :key="index" @click="enterDetailed(n.autoID,shoufaBox,n.notice_Type)">
                                     <van-swipe-cell :right-width="50">
                                     <h3>{{n.title}}</h3>
                                     <p>
@@ -155,6 +157,9 @@ export default {
         validationScreening(){
             this.loadReadList();
         },
+        onLoad(){
+
+        },
         // 获取收件箱内容
         loadReadList(isInit){
             let me = this;
@@ -171,6 +176,7 @@ export default {
             let url = '/api/Notic/inbox';
              let params = { pageSize:me.pageSize, pageIndex:me.pageIndex, State:me.readState};
             me.$api.get(url, params,res=>{
+                console.log("收件箱");
                 console.log(res);
                 let resCount = res.length;
                 if(isInit == true){
@@ -201,7 +207,7 @@ export default {
             let url = '/api/Notic/outbox';
             let params = { pageSize:me.pageSize, pageIndex:me.pageIndex, State:me.readState};
             me.$api.get(url, params,res=>{
-                console.log("fajianxiang")
+                console.log("发件箱");
                 console.log(res);
                 let resCount = res.length;
                 if(isInit == true){
@@ -217,12 +223,14 @@ export default {
             })
         },
         // 进入详情详情页面传参
-        enterDetailed:function(tzid){
+        enterDetailed:function(tzid,liebiaoType,xinxiType){
             let me = this;
             me.$router.push({
                 name:'detailed',
                 params:{
-                    tzid:tzid
+                    tzid:tzid,
+                    listType:liebiaoType,
+                    mesType:xinxiType
                 }
             })
         },
@@ -234,9 +242,9 @@ export default {
     },
     filters:{
         shijianZ:function(value){
-        let qd = new RegExp('T');
-        let jieguo = value.replace(qd," ")
-        return jieguo;
+        // let qd = new RegExp('T');
+        // let jieguo = value.replace(qd," ")
+        return value;
         }
     }
 }

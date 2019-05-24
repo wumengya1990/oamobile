@@ -11,6 +11,7 @@ require("./assets/fonts/iconfont.css")
 import element from 'element-ui'
 require('element-ui/lib/theme-chalk/index.css')
 import api from './http'
+import qs from 'qs'
 
 // 设置axios跨域
 
@@ -19,6 +20,7 @@ import api from './http'
 Vue.config.productionTip = false
 
 Vue.prototype.$api = api;
+Vue.prototype.$qs = qs;
 
 
 Vue.use(element);

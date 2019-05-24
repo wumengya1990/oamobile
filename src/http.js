@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import router from './router'
 import axios from 'axios'
+import QS from 'qs'
+
 // 配置API接口地址
 var root = window.localStorage.ApiUrl;
 

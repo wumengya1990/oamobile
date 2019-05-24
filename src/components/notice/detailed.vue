@@ -3,64 +3,43 @@
         <!-- {{$route.params.id}} -->
         <div class="detailedContent">
             <div class="synopsis">
-                <h3>{{fileDetails.title}}</h3>
+                <h3>{{$route.params.listType==0 ? fileDetails.Title : outFileDetails.Title}}</h3>
                 <ul>
-                    <li><em>文件编号：</em><div class="rightCon"><p>{{fileDetails.fileID}}</p></div></li>
-                    <li><em>内部文号：</em><div class="rightCon"><p>{{fileDetails.fileIDN}}</p></div></li>
-                    <li><em>发送人：</em><div class="rightCon"><p>{{fileDetails.publisher}}</p></div></li>
-                    <li><em>收文日期：</em><div class="rightCon"><p>{{fileDetails.getTime}}</p></div></li>
+                    <li><em>通知类型：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.Notice_Type : outFileDetails.Notice_Type }}</p></div></li>
+                    <li><em>发送人：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.UserName : outFileDetails.UserName }}</p></div></li>
+                    <li><em>发送日期：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.BeginDate : outFileDetails.BeginDate}}</p></div></li>
                     <li><em>通知详情：</em>
                         <div class="rightConNoOver">
-                            <p>{{fileDetails.particulars}}</p>
+                            <!-- <p>{{fileDetails.particulars}}</p> -->
+                            <iframe :src="$route.params.listType==0 ? fileDetails.Content : outFileDetails.Content" frameborder="0" width="100%" height="100%" scrolling="auto"></iframe>
                         </div>
                     </li>
                     <li>
                         <div class="detailsState">
-                            <van-button type="info" plain hairline size="small" @click="watchShow=true"><van-icon name="eye" />阅读情况100/200</van-button>
-                            <van-button type="info" plain hairline size="small" @click="submittedShow=true"><van-icon name="column" />查看报送情况</van-button>
+                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1" @click="watchShow=true"><van-icon name="eye" />阅读情况100/200</van-button>
+                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1" @click="submittedShow=true"><van-icon name="column" />查看报送情况</van-button>
+                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==0&&$route.params.mesType==1" @click="submittedShow=true"><van-icon name="column" />报送</van-button>
                         </div>
                     </li>
                 </ul>
             </div>
 
-            <div class="detailsBox attachment">
-
+            <div class="detailsBox attachment" v-if="fujianName.length!=0">
                 <h4><span>附件列表</span></h4>
                 <div class="attachmentList">
                     <ul>
-                        <li>
+                        <li v-for="(fj, index) in fujianName" :key="index">
                             <div class="fileImg"><i class="icon iconfont iconfujian"></i></div>
                             <div class="fileMessage">
-                                <h5>标题标题标题标题标题标题标题标题</h5>
+                                <h5>{{fj}}</h5>
                                 <p></p>
                                 <dl>
-                                    <dt><i class="icon iconfont iconxiazai"></i></dt>
+                                    <dt><a :href="fujianURL[index]"><i class="icon iconfont iconxiazai"></i></a></dt>
                                     <dd>200K</dd>
                                 </dl>
                             </div>
                         </li>
-                        <li>
-                            <div class="fileImg"><i class="icon iconfont iconfujian"></i></div>
-                            <div class="fileMessage">
-                                <h5>标题标题标题标题标题标题标题标题</h5>
-                                <p></p>
-                                <dl>
-                                    <dt><i class="icon iconfont iconxiazai"></i></dt>
-                                    <dd>200K</dd>
-                                </dl>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="fileImg"><i class="icon iconfont iconfujian"></i></div>
-                            <div class="fileMessage">
-                                <h5>标题标题标题标题标题标题标题标题</h5>
-                                <p></p>
-                                <dl>
-                                    <dt><i class="icon iconfont iconxiazai"></i></dt>
-                                    <dd>200K</dd>
-                                </dl>
-                            </div>
-                        </li>
+                        
                     </ul>
                 </div>
             </div>
@@ -68,43 +47,31 @@
             <div class="detailsBox replyBox">
                 <h4><span>回复内容</span></h4>
                 <div class="replyBoxCon">
-                    <ul>
-                        <li>
+                    <ul v-if="$route.params.listType==1">
+                        <li v-for="hf in replyList" :key="hf.autoID">
                             <div class="peo">张洋</div>
                             <div class="rightCon">
                                 <div class="replyBoxMes">
                                     <div class="replyBoxMes_1">
-                                    <p>啊大大大大大大大大大大大大大大大大大</p>
+                                    <p>{{hf.feedBackIdea}}</p>
                                     </div>
-                                    <div class="fileBar">
+                                    <div class="fileBar" v-if="hf.path!=''">
                                         <span><i class="icon iconfont iconfujian"></i></span>
-                                        <p>文件名称</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="peo">张洋</div>
-                            <div class="rightCon">
-                                <div class="replyBoxMes">
-                                    <div class="replyBoxMes_1">
-                                    <p>啊大大大大大大大大大大大大大大大大大</p>
-                                    </div>
-                                    <div class="fileBar">
-                                        <span><i class="icon iconfont iconfujian"></i></span>
-                                        <p>文件名称</p>
+                                        <p>{{hf.path}}</p>
                                     </div>
                                 </div>
                             </div>
                         </li>
                     </ul>
                 </div>
+                <div v-if="$route.params.listType==0">
                 <van-cell-group>
-                    <van-field v-model="message" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
+                    <van-field v-model="backMessage" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
                 </van-cell-group>
                 <div class="bts">
-                    <van-button type="primary" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">回复</van-button>
+                    <van-button type="primary" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;" @click="huifu">回复</van-button>
                     </div>
+                </div>
             </div>
         </div>
 
@@ -189,18 +156,16 @@ export default {
     name:'detailed',
     data() {
         return {
-            message:'',
+            backMessage:'',                     //回复内容
+            filePath:'',
             watchShow:false,
             submittedShow:false,
             neiHeight:'',
-            fileDetails:{
-                title:'关于召开2019年工作汇报预备体通知',
-                fileID:'file20180513',
-                fileIDN:'BN20180513',
-                publisher:'张洋',
-                getTime:'2018-05-13',
-                particulars:'文本内容文本内容文本内容文本内容文本内容文本内容文本内容'
-            },
+            fileDetails:{},
+            outFileDetails:{},
+            fujianName:[],
+            fujianURL:[],
+            replyList:[],
             readList:{                  //弹层阅读详情内容
                 haveRead:[
                     {peoName:'张三',peoID:'u0001'},
@@ -254,6 +219,7 @@ export default {
     },
     mounted() {
         console.log(this.$route.params.tzid);
+        console.log(this.$route.params.listType);
         this.loadxaingqing();
     },
     methods:{
@@ -267,11 +233,48 @@ export default {
             
         },
         loadxaingqing(){
+            
             let me = this;
-            let url = '/api/Notic';
-            let params = { autoid:me.$route.params.tzid};
-            me.$api.get(url,params,res=>{
+            if(me.$route.params.listType==0){
+                let url = '/api/Notic/indetail';
+                let params = { autoid:me.$route.params.tzid};
+                me.$api.get(url,params,res=>{
+                    console.log(res);
+                    me.fileDetails = res.data;
+                    //me.replyList = res.replyList;
+                    let file = res.data.fjPath;
+                    let fileUrl = res.data.PathBase;
+                    me.fujianName = file.split(",");
+                    me.fujianURL = fileUrl.split(",");
+                    console.log(me.fujianName);
+                })
+            }else{
+                let url = '/api/Notic/outdetial';
+                let params = { autoid:me.$route.params.tzid};
+                me.$api.get(url,params,res=>{
+                    console.log(res);
+                    me.outFileDetails = res.data;
+                    me.replyList = res.replyList;
+                    //me.replyList = res.replyList;
+                    let file = me.outFileDetails.fjPath;
+                    //let fileUrl = me.outFileDetails.PathBase;
+                    //me.fujianURL = fileUrl.split(",");
+                    if(file==""||file==null||file==undefined){
+                         me.fujianName=[];
+                    }else{
+                        me.fujianName = file.split(",");
+                    }
+                    console.log(me.fujianName);
+                })
+            }
+        },
+        huifu(){
+            let me = this;
+            let url = '/api/Notic/reply';
+            let params = {autoID:me.$route.params.tzid,path:me.filePath,feedBackIdea:me.backMessage};
+            me.$api.post(url,params,res=>{
                 console.log(res);
+                me.backMessage="";
             })
         }
     }
