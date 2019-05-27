@@ -5,23 +5,20 @@
                 <van-tabs v-model="readState" @click="readStateClick" class="nei" animated>
                     <van-tab title="未读">
                         <div class="List">
+                            <!-- 没有内容提示 -->
                             <dl class="noMessage" v-if="noticeMessList.length == 0">
                                 <dt>OA</dt>
                                 <dd><span>办公管理系统</span></dd>
                                 <dd><p>暂无数据内容请刷新重试</p></dd>
                             </dl>
+                            <!-- 没有内容提示 -->
                             <div class="listBox">
-                                <van-list
-                                    v-model="loading"
-                                    :finished="finished"
-                                    finished-text="没有更多了"
-                                    @load="onLoad"
-                                    :offset="100"
-                                >
+                                <van-pull-refresh v-model="isRefresh" @refresh="onRefresh">
+                                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="shuaxin" :offset="100">
                                 <ul>
                                     <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID,shoufaBox,n.notice_Type)">
                                         <van-swipe-cell :right-width="50">
-                                        <h3><span :style="{color:n.typebf=='紧急'? '#F30' : '#333'}">[{{n.typebf}}]</span>{{n.title}}</h3>
+                                        <h3><span class="" :style="{color:n.typebf=='紧急'? '#F30' : '#333'}">[{{n.typebf}}]</span>{{n.title}}</h3>
                                         <p>
                                             <span>发送人：{{n.senduserName}}</span>
                                             <span v-if="n.notice_Type==0">普通通知</span>
@@ -32,6 +29,7 @@
                                     </li>
                                 </ul>
                                 </van-list>
+                                </van-pull-refresh>
                             </div>
                         </div>
                     </van-tab>
@@ -43,6 +41,8 @@
                                 <dd><p>暂无数据内容请刷新重试</p></dd>
                             </dl>
                             <div class="listBox">
+                                <van-pull-refresh v-model="isRefresh" @refresh="onRefresh">
+                                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="shuaxin" :offset="100">
                                 <ul>
                                     <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID,shoufaBox,n.notice_Type)">
                                         <van-swipe-cell :right-width="50">
@@ -55,6 +55,8 @@
                                         </van-swipe-cell>
                                     </li>
                                 </ul>
+                                </van-list>
+                                </van-pull-refresh>
                             </div>
                         </div>
                     </van-tab>
@@ -71,7 +73,8 @@
                             <dd><p>暂无数据内容请刷新重试</p></dd>
                         </dl>
                         <div class="listBox">
-                            <!-- <van-search
+                            <!--
+                                 <van-search
                                 v-model="value"
                                 placeholder="请输入搜索关键词"
                                 show-action
@@ -80,6 +83,8 @@
                                 >
                             <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
                             </van-search> -->
+                            <van-pull-refresh v-model="isRefresh" @refresh="onRefresh">
+                                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="shuaxin" :offset="100">
                             <ul>
                                 <li v-for="(n,index) in outboxList" :key="index" @click="enterDetailed(n.autoID,shoufaBox,n.notice_Type)">
                                     <van-swipe-cell :right-width="50">
@@ -93,6 +98,8 @@
                                     </van-swipe-cell>
                                 </li>
                             </ul>
+                                </van-list>
+                            </van-pull-refresh>
                         </div>
                  </div>
                  
@@ -119,7 +126,8 @@ export default {
             mrradio:'',
             loading: false,
             finished: false,
-            pageIndex:1,
+            isLoading:false,
+            isRefresh: false, //正在刷新数据
             noticeMessList:[
                 { 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
@@ -157,14 +165,30 @@ export default {
         validationScreening(){
             this.loadReadList();
         },
-        onLoad(){
-
+         //下拉重新加载
+        onRefresh(){
+            let me = this;                   
+            me.loading = false;
+            if(me.shoufaBox==0){
+                me.loadReadList(true);
+            }else{
+                me.loadOutboxList(true);
+            }
         },
+         //上滑刷新
+         shuaxin(){
+             let me = this;
+             if(me.shoufaBox==0){
+                me.loadReadList();
+            }else{
+                me.loadOutboxList();
+            }
+         },        
         // 获取收件箱内容
         loadReadList(isInit){
             let me = this;
-            if(me.loading == false){            //判断列表是否处于加载状态
-                me.loading = true;
+            if(me.isLoading == false){            //判断列表是否处于加载状态
+                me.isLoading = true;
             }else{
                 return false
             }
@@ -178,14 +202,16 @@ export default {
             me.$api.get(url, params,res=>{
                 console.log("收件箱");
                 console.log(res);
-                let resCount = res.length;
+                let resCount = res.data.length;
                 if(isInit == true){
                      me.noticeMessList = res.data;
                 }else{
                     me.noticeMessList = me.noticeMessList.concat(res.data)
                 }
-                me.loading = false;
                 me.pageIndex++;
+                me.loading = false;
+                me.isLoading =false;
+                me.isRefresh = false;
                 if (resCount < 10) {
                     me.finished = true;
                 }
@@ -194,8 +220,8 @@ export default {
         // 获取发件箱内容
         loadOutboxList(isInit){
             let me = this;
-            if(me.loading == false){            //判断列表是否处于加载状态
-                me.loading = true;
+            if(me.isLoading == false){            //判断列表是否处于加载状态
+                me.isLoading = true;
             }else{
                 return false
             }
@@ -215,8 +241,10 @@ export default {
                 }else{
                     me.outboxList = me.outboxList.concat(res.data)
                 }
-                me.loading = false;
                 me.pageIndex++;
+                me.loading = false;
+                me.isLoading =false;
+                me.isRefresh = false;
                 if (resCount < 10) {
                     me.finished = true;
                 }
@@ -255,7 +283,7 @@ export default {
     box-sizing: border-box;
     padding: 20px;
     &--right{
-        width:70%;
+        width:100%;
         height:100%;
         .bts{ position:absolute; left: 0; top: auto; right: 0; bottom: 0; text-align:center; padding: 10px 0;}
     }

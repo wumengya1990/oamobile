@@ -3,22 +3,22 @@
         <!-- {{$route.params.id}} -->
         <div class="detailedContent">
             <div class="synopsis">
-                <h3>{{$route.params.listType==0 ? fileDetails.Title : outFileDetails.Title}}</h3>
+                <h3>{{$route.params.listType==0 ? fileDetails.title : outFileDetails.title}}</h3>
                 <ul>
-                    <li><em>通知类型：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.Notice_Type : outFileDetails.Notice_Type }}</p></div></li>
-                    <li><em>发送人：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.UserName : outFileDetails.UserName }}</p></div></li>
-                    <li><em>发送日期：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.BeginDate : outFileDetails.BeginDate}}</p></div></li>
+                    <li><em>通知类型：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.notice_Type : outFileDetails.notice_Type }}</p></div></li>
+                    <li><em>发送人：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.userName : outFileDetails.userName }}</p></div></li>
+                    <li><em>发送日期：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.beginDate : outFileDetails.beginDate}}</p></div></li>
                     <li><em>通知详情：</em>
                         <div class="rightConNoOver">
                             <!-- <p>{{fileDetails.particulars}}</p> -->
-                            <iframe :src="$route.params.listType==0 ? fileDetails.Content : outFileDetails.Content" frameborder="0" width="100%" height="100%" scrolling="auto"></iframe>
+                            <iframe :src="$route.params.listType==0 ? fileDetails.content : outFileDetails.content" frameborder="0" width="100%" height="100%" scrolling="auto"></iframe>
                         </div>
                     </li>
                     <li>
                         <div class="detailsState">
                             <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1" @click="watchShow=true"><van-icon name="eye" />阅读情况100/200</van-button>
                             <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1" @click="submittedShow=true"><van-icon name="column" />查看报送情况</van-button>
-                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==0&&$route.params.mesType==1" @click="submittedShow=true"><van-icon name="column" />报送</van-button>
+                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==0&&$route.params.mesType==1" @click="openSBLayer"><van-icon name="column" />报送</van-button>
                         </div>
                     </li>
                 </ul>
@@ -146,6 +146,78 @@
                 <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
             </div>
         </van-popup>
+
+        <!-- 报送弹层 -->
+        <van-popup v-model="shangbaoShow" position="right">
+            <div class="remarksBox">
+                <p><span>备注</span>报送时间为{{fileDetails.Sign_Up_EndTime}},在此时间点前可进行报送修改</p>
+            </div>
+            <van-collapse v-model="activeNames">
+                <van-collapse-item title="参会人员名单" icon="friends" name="1">
+                     <table class="tableStyle" width="100%" cellpadding="0" cellspacing="0">
+                         <thead>
+                            <tr><th>姓名</th><th>职务</th><th>操作</th></tr>
+                            <tr v-for="(p,index) in canhuiPeoList" :key="index">
+                                <td>{{p.username}}</td>
+                                <td>{{p.userjob}}</td>
+                                <td width="30%"><van-button size="mini" @click="dropPep(p.autoID,index)" type="danger">删除</van-button></td>
+                            </tr>
+                        </thead>
+                     </table>
+                    <van-button plain hairline @click="canhuiShow=true" style="display:block; margin:10px auto; width:90%" size="small" type="info">添加人员</van-button>
+                </van-collapse-item>
+                <van-collapse-item title="请假人员名单" icon="friends" name="2">
+                    <van-button plain hairline style="display:block; margin:5px auto 0; width:90%" size="small" type="info">添加人员</van-button>
+                </van-collapse-item>
+            </van-collapse>
+            <div class="bts">
+                <van-button @click="shangbaoShow=false" hairline size="small" style="width:120px;">取消</van-button>
+                <van-button @click="validationScreening" hairline size="small" type='info' style="width:120px;">确定</van-button>
+            </div>
+        </van-popup>
+        <!-- 参会人员输入 -->
+        <van-dialog v-model="canhuiShow" title="填写参会人员" :before-close="shanghucan" show-cancel-button >
+            
+            <van-cell-group style="padding:20px 0;">
+                <van-field
+                    v-model="luruRenyuan.username"
+                    required
+                    clearable
+                    label="姓名"
+                    placeholder="请输入参会人员姓名"
+                />
+
+                <van-field
+                    v-model="luruRenyuan.userjob"
+                    label="职务"
+                    clearable
+                    placeholder="请输入参会人员职务"
+                    required
+                />
+            </van-cell-group>
+            
+        </van-dialog>
+        <!-- 请假人员输入 -->
+        <van-dialog v-model="qingjiaShow" title="填写请假人员" show-cancel-button >
+            <van-cell-group van-cell-group style="padding:20px 0;">
+            <van-field
+                    v-model="luruRenyuan.username"
+                    required
+                    clearable
+                    label="姓名"
+                    placeholder="请输入参会人员姓名"
+                />
+                <van-field
+                    v-model="luruRenyuan.userjob"
+                    label="职务"
+                    clearable
+                    placeholder="请输入参会人员职务"
+                    required
+                />
+            </van-cell-group>
+        </van-dialog>
+        
+
         
 
     </div>
@@ -156,17 +228,26 @@ export default {
     name:'detailed',
     data() {
         return {
+            canhuiShow:false,                   //参会人员弹层开关
+            qingjiaShow:false,                  //请假人员弹层开关
+            luruRenyuan:{                       //弹层添加人员输入内容
+                username:'',
+                userjob:''
+            },
+            canhuiPeoList:[],                   //参会人员列表
             backMessage:'',                     //回复内容
             filePath:'',
-            watchShow:false,
-            submittedShow:false,
+            watchShow:false,                    //人员查看弹层
+            submittedShow:false,                //提交情况弹层
+            shangbaoShow:false,                 //上报弹层
+            activeNames:["1"],                  //折叠层展开内容
             neiHeight:'',
             fileDetails:{},
             outFileDetails:{},
             fujianName:[],
             fujianURL:[],
             replyList:[],
-            readList:{                  //弹层阅读详情内容
+            readList:{                          //弹层阅读详情内容
                 haveRead:[
                     {peoName:'张三',peoID:'u0001'},
                     {peoName:'李四',peoID:'u0002'},
@@ -232,8 +313,8 @@ export default {
         validationScreening(){
             
         },
+        // 获取详情内容
         loadxaingqing(){
-            
             let me = this;
             if(me.$route.params.listType==0){
                 let url = '/api/Notic/indetail';
@@ -243,10 +324,15 @@ export default {
                     me.fileDetails = res.data;
                     //me.replyList = res.replyList;
                     let file = res.data.fjPath;
-                    let fileUrl = res.data.PathBase;
+                    let fileUrl = res.data.pathBase;
                     me.fujianName = file.split(",");
                     me.fujianURL = fileUrl.split(",");
-                    console.log(me.fujianName);
+                    if(file==""||file==null||file==undefined){
+                         me.fujianName=[];
+                    }else{
+                        me.fujianName = file.split(",");
+                    }
+                    // console.log(me.fujianName);
                 })
             }else{
                 let url = '/api/Notic/outdetial';
@@ -264,10 +350,11 @@ export default {
                     }else{
                         me.fujianName = file.split(",");
                     }
-                    console.log(me.fujianName);
+                    // console.log(me.fujianName);
                 })
             }
         },
+        //详情回复内容
         huifu(){
             let me = this;
             let url = '/api/Notic/reply';
@@ -276,6 +363,65 @@ export default {
                 console.log(res);
                 me.backMessage="";
             })
+        },
+        // 打开上报人员弹层加载上报详情
+        openSBLayer(){
+            this.shangbaoShow = true;
+            this.loadPeo();
+        },
+        //加载上报详情
+        loadPeo(){
+            let me = this;
+            let url = '/api/Notic/reportview';
+            let params = {autoID:me.$route.params.tzid};
+            me.$api.get(url,params,res=>{
+                console.log(res);
+                me.canhuiPeoList=res.data.list;
+            })
+        },
+        // 删除参与人员 
+        dropPep(uid,suoyin){
+            let me = this;
+            let url = '/api/Notic/reportdel';
+            let params = {autoID:uid};
+            me.$api.post(url,params,res=>{
+                console.log(res);
+            })
+        },
+        //添加参会人员
+        shanghucan(action,done){
+            let me = this;
+            if( action === 'confirm'){
+                if(!me.luruRenyuan.username||!me.luruRenyuan.userjob){
+                    me.$toast("请输入姓名和职务")
+                    done(false);
+                }else{
+                    let url='/api/Notic/report';
+                    let params = {PAutoID:me.$route.params.tzid,userName:me.luruRenyuan.username,post:me.luruRenyuan.userjob};
+                    me.$api.post(url,params,res=>{
+                        console.log(res);
+                        if(res.code==200){
+                            me.$toast("上传参会人员成功!")
+                            let newobg = {}
+                            newobg.username = me.luruRenyuan.username;
+                            newobg.userjob = me.luruRenyuan.userjob;
+                            newobg.autoID = res.autoID;
+                            me.canhuiPeoList.push(newobg);
+                            me.luruRenyuan.username='';
+                            me.luruRenyuan.userjob='';
+                            console.log(me.canhuiPeoList);
+                            done(true);
+                        }else{
+                             me.$toast(res.msg)
+                             me.luruRenyuan.username="";
+                             me.luruRenyuan.userjob="";
+                             done(false);
+                        }
+                    })
+                }
+            }else{
+                done(true);
+            }
         }
     }
 }
@@ -289,5 +435,8 @@ export default {
         height:100%;
         .bts{ position:absolute; left: 0; top: auto; right: 0; bottom: 0; text-align:center; padding: 10px 0;}
     }
+}
+.van-collapse-item__content{
+    padding:0;
 }
 </style>

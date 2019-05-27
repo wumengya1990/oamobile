@@ -263,9 +263,11 @@ nav{
 
 // 表格通用样式
 .tableStyle{
-    border: 1px solid #dedede; border-collapse:collapse;
+    border-collapse:collapse; border-radius: 5px; box-sizing: border-box;
     tr{
-        th{ border:1px solid #4c94e0; background: #52a5fd;height:2.5em; font-weight: normal; color:#FFF;}
+        th{ 
+            border:1px solid #4c94e0; background: #52a5fd;height:2.5em; font-weight: normal; color:#FFF;
+        }
         td{border:1px solid #c1dfff; text-align: center; padding: .6em 0;}
     }
 
