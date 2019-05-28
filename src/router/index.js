@@ -11,7 +11,7 @@ export default new Router({
       path: '/',
       name: 'HelloWorld',
       component: HelloWorld,
-      redirect:'/menuAll'     //路由重定向
+      redirect:'/login'     //路由重定向
     },{
       path: '/login',
       name: 'login',
@@ -20,7 +20,28 @@ export default new Router({
       path: '/menuAll',
       name: 'menuAll',
       component: resolve => require(['@/components/menuAll'],resolve),
-    },{
+    },
+    {
+      path: '/tzMain',
+      name: 'tzMain',
+      component: resolve => require(['@/components/notice/tzMain'],resolve),
+      children:[
+        {
+          path: 'tzTop',
+          name: 'tzTop',
+          component: resolve => require(['@/components/notice/top'],resolve)
+        },{
+          path: 'ztnoticeListS',
+          name: 'ztnoticeListS',
+          component: resolve => require(['@/components/notice/listPageS'],resolve)
+        },{
+          path: 'ztnoticeListF',
+          name: 'ztnoticeListF',
+          component: resolve => require(['@/components/notice/listPageF'],resolve)
+        }
+      ]
+    },
+    {
       path: '/noticeList',
       name: 'noticeList',
       component: resolve => require(['@/components/notice/listPage'],resolve),
@@ -29,18 +50,48 @@ export default new Router({
       name: 'detailed',
       component: resolve => require(['@/components/notice/detailed'],resolve)
     },{
-      path: '/gwnoticeList',
-      name: 'gwnoticeList',
-      component: resolve => require(['@/components/document/listPage'],resolve),
-    },{
-      path: '/gwdetailed',
-      name: 'gwdetailed',
-      component: resolve => require(['@/components/document/detailed'],resolve)
-    },{
-      path: '/gwaddnew',
-      name: 'gwaddnew',
-      component: resolve => require(['@/components/document/addnew'],resolve)
-    },{
+      path: '/gwMain',
+      name: 'gwMain',
+      redirect:'/gwMain/gwnoticeListS',
+      component: resolve => require(['@/components/document/gwMain'],resolve),
+      children:[
+        {
+          path: 'gwTop',
+          name: 'gwTop',
+          component: resolve => require(['@/components/document/top'],resolve)
+        },{
+          path: 'gwnoticeListS',
+          name: 'gwnoticeListS',
+          component: resolve => require(['@/components/document/listPageS'],resolve)
+        },{
+          path: 'gwnoticeListF',
+          name: 'gwnoticeListF',
+          component: resolve => require(['@/components/document/listPageF'],resolve)
+        },{
+          path: 'gwdetailed',
+          name: 'gwdetailed',
+          component: resolve => require(['@/components/document/detailed'],resolve)
+        },{
+          path: 'gwaddnew',
+          name: 'gwaddnew',
+          component: resolve => require(['@/components/document/addnew'],resolve)
+        }
+      ]
+    },
+    // {
+    //   path: '/gwnoticeList',
+    //   name: 'gwnoticeList',
+    //   component: resolve => require(['@/components/document/listPage'],resolve),
+    // },{
+    //   path: '/gwdetailed',
+    //   name: 'gwdetailed',
+    //   component: resolve => require(['@/components/document/detailed'],resolve)
+    // },{
+    //   path: '/gwaddnew',
+    //   name: 'gwaddnew',
+    //   component: resolve => require(['@/components/document/addnew'],resolve)
+    // },
+    {
       path: '/leaveList',
       name: 'leaveList',
       component: resolve => require(['@/components/leave/listPage'],resolve),

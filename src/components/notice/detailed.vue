@@ -382,10 +382,15 @@ export default {
         // 删除参与人员 
         dropPep(uid,suoyin){
             let me = this;
-            let url = '/api/Notic/reportdel';
-            let params = {autoID:uid};
+            let pm = {autoID:uid};
+            let canshu = me.$qs.stringify(pm)
+            let url = '/api/Notic/reportdel?'+canshu;
+            let params = '';
             me.$api.post(url,params,res=>{
                 console.log(res);
+                if(res.code==200){
+                    me.canhuiPeoList.splice(suoyin,1);
+                }
             })
         },
         //添加参会人员

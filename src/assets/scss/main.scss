@@ -32,6 +32,13 @@ nav{
         &.on{color: #1bb1fb; font-weight: bold; font-size: 1.1rem; border-bottom:2px solid #1bb1fb;}
     }
 }
+.topBts{
+     display: flex; width: 100%;
+     a{ 
+         display: block; flex: 1; text-align: center; line-height: 3em; text-decoration:none;
+        &.on{ color: #0084e4; font-weight: bold;}
+        }
+}
 
 .List{
     min-height: 200px;
@@ -259,6 +266,15 @@ nav{
         }
     }
     
+}
+
+// 头部样式
+.gwTop{
+     width: 100%; z-index: 1000; display: flex; background: #FFF;
+    a{
+        flex: 1; display: block; box-sizing: border-box; width: 100%; text-align: center; line-height:3rem;
+        &.on{ color: #0084e4; border-bottom:2px solid #0084e4;}
+    }
 }
 
 // 表格通用样式

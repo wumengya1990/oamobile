@@ -1,10 +1,17 @@
 <template>
     <div class="listPage">
         <van-tabs v-model="active" animated>
-            <van-tab title="收件箱">
-                <van-tabs v-model="active1" class="nei" animated>
-                    <van-tab title="待办">
-                        <div class="List">
+            <van-tab title="待办事项">
+                <van-search
+                    v-model="value"
+                    placeholder="请输入搜索关键词"
+                    show-action
+                    shape="round"
+                    @search="onSearch"
+                    >
+                <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
+                </van-search>
+                 <div class="List">
                             <dl class="noMessage" v-if="noticeMessList.length == 0">
                                 <dt>OA</dt>
                                 <dd><span>办公管理系统</span></dd>
@@ -14,10 +21,9 @@
                                 <ul>
                                     <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
                                         <van-swipe-cell :right-width="50">
-                                        <h3>{{index++}}、{{n.title}}</h3>
+                                        <h3>请假人、{{n.title}}</h3>
                                         <p>
-                                            <span>发送人：{{n.sentPeo}}</span>
-                                            <span>{{n.noticeTypeName}}</span>
+                                            <span>所属部门：{{n.sentPeo}}</span>
                                             <time>{{n.time}}</time></p>
                                         <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                                         </van-swipe-cell>
@@ -25,36 +31,11 @@
                                 </ul>
                             </div>
                         </div>
-                    </van-tab>
-                    <van-tab title="已办">
-                        <div class="List">
-                            <dl class="noMessage" v-if="noticeMessList.length == 0">
-                                <dt>OA</dt>
-                                <dd><span>办公管理系统</span></dd>
-                                <dd><p>暂无数据内容请刷新重试</p></dd>
-                            </dl>
-                            <div class="listBox">
-                                <ul>
-                                    <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
-                                        <van-swipe-cell :right-width="50">
-                                        <h3>{{index+=2}}、{{n.title}}</h3>
-                                        <p>
-                                            <span>发送人：{{n.sentPeo}}</span>
-                                            <span>{{n.noticeTypeName}}</span>
-                                            <time>{{n.time}}</time></p>
-                                        <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
-                                        </van-swipe-cell>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </van-tab>
-                </van-tabs>
                   
 
             
             </van-tab>
-            <van-tab title="发件箱">
+            <van-tab title="已办事项">
                  <div class="List">
                      <dl class="noMessage" v-if="noticeMessList.length == 0">
                             <dt>OA</dt>
@@ -74,7 +55,7 @@
                             <ul>
                                 <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
                                     <van-swipe-cell :right-width="50">
-                                    <h3 :class="{haveN:n.hasN}">{{n.title}}</h3>
+                                    <h3>{{n.title}}</h3>
                                     <p>
                                         <span>发送人：{{n.sentPeo}}</span>
                                         <span>{{n.noticeTypeName}}</span>
@@ -93,7 +74,22 @@
             <span @click="addnew"><van-icon name="add-o" /></span>
             <span @click="backTop"><van-icon name="arrow-up" /></span>
         </div>
-        
+        <!-- <van-popup v-model="layerShow" position="right">
+            <van-radio-group v-model="mrradio">
+                <van-cell-group>
+                    <van-cell title="已读" clickable @click="mrradio = '1'">
+                    <van-radio name="1" />
+                    </van-cell>
+                    <van-cell title="未读" clickable @click="mrradio = '2'">
+                    <van-radio name="2" />
+                    </van-cell>
+                </van-cell-group>
+            </van-radio-group>
+            <div class="bts">
+            <van-button @click="layerShow=false" hairline size="small" style="width:120px;">取消</van-button>
+            <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
+            </div>
+        </van-popup> -->
     </div>
 </template>
 
@@ -113,62 +109,53 @@ export default {
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22',
-                    hasN:true
+                    time:'2019-01-22'
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22',
-                    hasN:false
+                    time:'2019-01-22'
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:2,
                     noticeTypeName:"会议通知",
-                    time:'2019-01-22',
-                    hasN:false
+                    time:'2019-01-22'
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22',
-                    hasN:false
+                    time:'2019-01-22'
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
-                    time:'2019-01-22',
-                    hasN:false
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22',
-                    hasN:false
+                    time:'2019-01-22'
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22',
-                    hasN:false
+                    time:'2019-01-22'
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22',
-                    hasN:false
+                    time:'2019-01-22'
                 },{ 
                     title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22',
-                    hasN:false
+                    time:'2019-01-22'
+                },{ 
+                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    sentPeo:'张洋',
+                    noticeType:1,
+                    noticeTypeName:"普通消息",
+                    time:'2019-01-22'
                 }
             ]
         }
@@ -180,7 +167,7 @@ export default {
         addnew(){
             let me = this;
             me.$router.push({
-                name:'gwaddnew'
+                name:'addLeave'
             })
         },
         validationScreening(){
@@ -195,7 +182,7 @@ export default {
         enterDetailed:function(nq){
             let me = this;
             me.$router.push({
-                name:'gwdetailed',
+                name:'leaveDetailed',
                 params:{
                     id:"321"
                 }
@@ -205,7 +192,6 @@ export default {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
             document.getElementsByClassName("listPage")[0].scrollTop=0;
-            
         }
     }
 }

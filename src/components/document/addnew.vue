@@ -14,7 +14,7 @@
                 <div class="rightCon">
                     <div class="peolist"><span v-for="(a,index) in gongwen.peoList" @click="dropPeo(index)" :key="index">{{a}}</span></div>
                     <p>点击人员名称可删除</p>
-                    <a class="appendPeo" @click="layerShow = true"><van-icon name="friends" />添加拟办人</a>
+                    <a class="appendPeo" @click="choPeo"><van-icon name="friends" />添加拟办人</a>
                     <span class="duanxin">手机端短信提醒<van-switch v-model="gongwen.dxchecked" size="14px" /></span>
                 </div>
             </div>
@@ -49,12 +49,12 @@
                 </van-search>
                 <div class="layerBoxScroll">
                 <van-collapse v-model="activeNames">
-                    <van-collapse-item :title="peo.jigouName" :name="index++" v-for="(peo,index) in choPeoList" :key="index">
+                    <van-collapse-item :title="peo.deptName" :name="index++" v-for="(peo,index) in choPeoList" :key="index">
                         <div style="margin:10px 0;"></div>
                         <el-checkbox :indeterminate="peo.isIndeterminate" v-model="peo.checkAll" @change="handleCheckAllChange($event,index)">全选</el-checkbox>
                         <div style="margin:10px 0;"></div>
                         <el-checkbox-group v-model="peo.checkedCities" @change="handleCheckedCitiesChange($event,index)">
-                            <el-checkbox v-for="(ry) in peo.renyuan" :label="ry" :key="ry">{{ry}}</el-checkbox>
+                            <el-checkbox v-for="ry in peo.userList" :label="ry" :key="ry">{{ry.userName}}</el-checkbox>
                         </el-checkbox-group>
                     </van-collapse-item>
                 </van-collapse>
@@ -85,7 +85,7 @@ export default {
                 'c'
             ],
             checkAll: false,
-            checkedCities: ['上海', '北京'],
+            checkedCities: [],
             cities: cityOptions,
             isIndeterminate: true,
             choPeoList:[
@@ -134,6 +134,20 @@ export default {
         
     },
     methods: {
+        choPeo(){
+            this.layerShow=true;
+            this.loadpeo();
+        },
+        loadpeo(){
+            let me = this;
+            me.choPeoList=[]
+            let url = '/api/user/select';
+            let params={};
+            me.$api.get(url,params,res=>{
+                console.log(res);
+                me.choPeoList =res.data;
+            })
+        },
         validationScreening(){
             let me = this;
             let sd = []

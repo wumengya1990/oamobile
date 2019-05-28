@@ -301,6 +301,25 @@ export default {
         },
         validationScreening(){
             
+        },
+        loadxaingqing(){
+            let url = '/api/Office';
+            let params = { autoid:me.$route.params.tzid};
+            me.$api.get(url,params,res=>{
+                console.log(res);
+                me.fileDetails = res.data;
+                //me.replyList = res.replyList;
+                let file = res.data.fjPath;
+                let fileUrl = res.data.pathBase;
+                me.fujianName = file.split(",");
+                me.fujianURL = fileUrl.split(",");
+                if(file==""||file==null||file==undefined){
+                        me.fujianName=[];
+                }else{
+                    me.fujianName = file.split(",");
+                }
+                // console.log(me.fujianName);
+            })
         }
     }
 }

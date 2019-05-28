@@ -1,37 +1,28 @@
 <template>
 <div class="menuAll">
-    <router-link to="/noticeList">
+    <router-link v-if="$store.state.tzAuthority==1" to="/noticeList">
     <em><i class="icon iconfont icontongzhi1"></i></em>
     <span>通知列表</span>
     </router-link>
-    <router-link to="/gwnoticeList">
+    <router-link v-if="$store.state.gwAuthority==1" to="/gwMain">
     <em><i class="icon iconfont iconai-briefcase"></i></em>
     <span>公文列表</span>
     </router-link>
-    <router-link to="/leaveList">
+    <router-link v-if="$store.state.qjAuthority==1" to="/leaveList">
     <em><i class="icon iconfont iconZ"></i></em>
     <span>请假列表</span>
     </router-link>
-
-    <router-link to="/noticeList">
-    <em><i class="icon iconfont icontongzhi1"></i></em>
-    <span>通知列表</span>
-    </router-link>
-    <router-link to="/gwnoticeList">
-    <em><i class="icon iconfont iconai-briefcase"></i></em>
-    <span>公文列表</span>
-    </router-link>
-    <router-link to="/leaveList">
-    <em><i class="icon iconfont iconZ"></i></em>
-    <span>请假列表</span>
-    </router-link>
-    
     </div>
 </template>
 
 <script>
 export default {
-    name:'menuAll'
+    name:'menuAll',
+    mounted() {
+    },
+    methods: {
+        
+    },
 }
 </script>
 
