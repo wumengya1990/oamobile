@@ -58,6 +58,7 @@
                                     <div class="fileBar" v-if="hf.path!=''">
                                         <span><i class="icon iconfont iconfujian"></i></span>
                                         <p>{{hf.path}}</p>
+                                        <div class="clear"></div>
                                     </div>
                                 </div>
                             </div>
@@ -75,6 +76,7 @@
             </div>
         </div>
 
+        <!-- 阅读查看弹层 -->
         <van-popup v-model="watchShow" position="right">
             <van-tabs swipeable>
                 <van-tab title="已读">
@@ -98,7 +100,9 @@
                 <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
             </div>
         </van-popup>
+        <!-- 阅读查看弹层结束 -->
 
+        <!-- 报送详情弹层 -->
         <van-popup v-model="submittedShow" position="right">
             <van-tabs swipeable>
                 <van-tab title="参会人员信息">
@@ -117,9 +121,6 @@
                                 <td>{{b.peoName}}</td>
                                 <td>{{b.zhiwu}}</td>
                             </tr>
-                        <!-- <tr><td rowspan="3">徐州市第一中学</td><td>张洋</td><td>校长</td></tr>
-                        <tr><td>王五</td><td>语文组组长</td></tr>
-                        <tr><td>张三</td><td>数学组组长</td></tr> -->
                         </tbody>
                     </table>
                     </div>
@@ -146,11 +147,12 @@
                 <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
             </div>
         </van-popup>
+        <!-- 报送详情弹层结束 -->
 
         <!-- 报送弹层 -->
         <van-popup v-model="shangbaoShow" position="right">
             <div class="remarksBox">
-                <p><span>备注</span>报送时间为{{fileDetails.Sign_Up_EndTime}},在此时间点前可进行报送修改</p>
+                <p><span style="color:#F30; padding:0 5px 0 0;">备注:</span>报送时间为<span style="color:#F30; padding:0 5px">{{fileDetails.sign_Up_EndTime}}</span>,在此时间点前可进行报送修改</p>
             </div>
             <van-collapse v-model="activeNames">
                 <van-collapse-item title="参会人员名单" icon="friends" name="1">
@@ -158,8 +160,8 @@
                          <thead>
                             <tr><th>姓名</th><th>职务</th><th>操作</th></tr>
                             <tr v-for="(p,index) in canhuiPeoList" :key="index">
-                                <td>{{p.username}}</td>
-                                <td>{{p.userjob}}</td>
+                                <td>{{p.userName}}</td>
+                                <td>{{p.post}}</td>
                                 <td width="30%"><van-button size="mini" @click="dropPep(p.autoID,index)" type="danger">删除</van-button></td>
                             </tr>
                         </thead>
@@ -167,16 +169,27 @@
                     <van-button plain hairline @click="canhuiShow=true" style="display:block; margin:10px auto; width:90%" size="small" type="info">添加人员</van-button>
                 </van-collapse-item>
                 <van-collapse-item title="请假人员名单" icon="friends" name="2">
-                    <van-button plain hairline style="display:block; margin:5px auto 0; width:90%" size="small" type="info">添加人员</van-button>
+                    <table class="tableStyle" width="100%" cellpadding="0" cellspacing="0">
+                         <thead>
+                            <tr><th>姓名</th><th>职务</th><th>请假原因</th><th>操作</th></tr>
+                            <tr v-for="(p,index) in qingjiaPeoList" :key="index">
+                                <td>{{p.userName}}</td>
+                                <td>{{p.post}}</td>
+                                <td>{{p.reason}}</td>
+                                <td width="30%"><van-button size="mini" @click="dropPep(p.autoID,index)" type="danger">删除</van-button></td>
+                            </tr>
+                        </thead>
+                     </table>
+                    <van-button plain hairline @click="qingjiaShow=true" style="display:block; margin:10px auto; width:90%" size="small" type="info">添加人员</van-button>
                 </van-collapse-item>
             </van-collapse>
             <div class="bts">
                 <van-button @click="shangbaoShow=false" hairline size="small" style="width:120px;">取消</van-button>
-                <van-button @click="validationScreening" hairline size="small" type='info' style="width:120px;">确定</van-button>
+                <van-button @click="baosongSure" hairline size="small" type='info' style="width:120px;">确定111</van-button>
             </div>
         </van-popup>
         <!-- 参会人员输入 -->
-        <van-dialog v-model="canhuiShow" title="填写参会人员" :before-close="shanghucan" show-cancel-button >
+        <van-dialog v-model="canhuiShow" title="填写参会人员" :before-close="canhuiAdd" show-cancel-button >
             
             <van-cell-group style="padding:20px 0;">
                 <van-field
@@ -198,7 +211,7 @@
             
         </van-dialog>
         <!-- 请假人员输入 -->
-        <van-dialog v-model="qingjiaShow" title="填写请假人员" show-cancel-button >
+        <van-dialog v-model="qingjiaShow" title="填写请假人员" :before-close="qingjiaAdd" show-cancel-button >
             <van-cell-group van-cell-group style="padding:20px 0;">
             <van-field
                     v-model="luruRenyuan.username"
@@ -212,6 +225,13 @@
                     label="职务"
                     clearable
                     placeholder="请输入参会人员职务"
+                    required
+                />
+                <van-field
+                    v-model="luruRenyuan.yuanyin"
+                    label="请假原因"
+                    clearable
+                    placeholder="请输入请假原因"
                     required
                 />
             </van-cell-group>
@@ -232,15 +252,17 @@ export default {
             qingjiaShow:false,                  //请假人员弹层开关
             luruRenyuan:{                       //弹层添加人员输入内容
                 username:'',
-                userjob:''
+                userjob:'',
+                yuanyin:''
             },
             canhuiPeoList:[],                   //参会人员列表
+            qingjiaPeoList:[],
             backMessage:'',                     //回复内容
             filePath:'',
             watchShow:false,                    //人员查看弹层
             submittedShow:false,                //提交情况弹层
             shangbaoShow:false,                 //上报弹层
-            activeNames:["1"],                  //折叠层展开内容
+            activeNames:["1","2"],                  //折叠层展开内容
             neiHeight:'',
             fileDetails:{},
             outFileDetails:{},
@@ -301,6 +323,7 @@ export default {
     mounted() {
         console.log(this.$route.params.tzid);
         console.log(this.$route.params.listType);
+        this.setReadState();
         this.loadxaingqing();
     },
     methods:{
@@ -311,7 +334,29 @@ export default {
             me.neiHeight = nHeight;
         },
         validationScreening(){
-            
+        },
+        // 报送确定
+        baosongSure(){
+            let me = this;
+            let param = { autoID:me.$route.params.tzid};
+            let url = '/api/Notic/submit?'+me.$qs.stringify(param);
+            let params = {};
+            me.$api.post(url,params,res=>{
+                console.log(res);
+                if(res.code==200){
+                    me.shangbaoShow=false;
+                }
+            })
+        },
+        // 设置阅读状态
+        setReadState(){
+            let me = this;
+            let param = { autoid:me.$route.params.tzid};
+            let url = '/api/Notic?'+me.$qs.stringify(param);
+            let params={}
+            me.$api.post(url,params,res=>{
+                console.log(res);
+            })
         },
         // 获取详情内容
         loadxaingqing(){
@@ -369,14 +414,24 @@ export default {
             this.shangbaoShow = true;
             this.loadPeo();
         },
-        //加载上报详情
+        //加载上报人员列表
         loadPeo(){
             let me = this;
-            let url = '/api/Notic/reportview';
+            let url = '/api/Notic/upsign';
             let params = {autoID:me.$route.params.tzid};
+            me.qingjiaPeoList=[];
+            me.canhuiPeoList=[];
             me.$api.get(url,params,res=>{
-                console.log(res);
-                me.canhuiPeoList=res.data.list;
+                let renyuanList = res.data;
+                console.log(renyuanList);
+                for( let i=0,lenp=renyuanList.length;i<lenp;i++){
+                    if(renyuanList[i].s_Type == 1){
+                        me.qingjiaPeoList.push(renyuanList[i]);
+                    }else{
+                        me.canhuiPeoList.push(renyuanList[i]);
+                    }
+                }
+                // me.canhuiPeoList=res.data.list;
             })
         },
         // 删除参与人员 
@@ -389,37 +444,76 @@ export default {
             me.$api.post(url,params,res=>{
                 console.log(res);
                 if(res.code==200){
-                    me.canhuiPeoList.splice(suoyin,1);
+                    me.loadPeo();
                 }
             })
         },
         //添加参会人员
-        shanghucan(action,done){
+        canhuiAdd(action,done){
             let me = this;
             if( action === 'confirm'){
                 if(!me.luruRenyuan.username||!me.luruRenyuan.userjob){
-                    me.$toast("请输入姓名和职务")
+                    me.$toast("请输入姓名,职务,请假原因")
                     done(false);
                 }else{
                     let url='/api/Notic/report';
-                    let params = {PAutoID:me.$route.params.tzid,userName:me.luruRenyuan.username,post:me.luruRenyuan.userjob};
+                    let params = {pAutoID:me.$route.params.tzid,userName:me.luruRenyuan.username,post:me.luruRenyuan.userjob,s_Type:0};
                     me.$api.post(url,params,res=>{
                         console.log(res);
                         if(res.code==200){
-                            me.$toast("上传参会人员成功!")
-                            let newobg = {}
-                            newobg.username = me.luruRenyuan.username;
-                            newobg.userjob = me.luruRenyuan.userjob;
-                            newobg.autoID = res.autoID;
-                            me.canhuiPeoList.push(newobg);
+                            me.$toast("添加请假人员成功!");
+                            me.loadPeo();
+                            // let newobg = {}
+                            // newobg.username = me.luruRenyuan.username;
+                            // newobg.userjob = me.luruRenyuan.userjob;
+                            // newobg.autoID = res.autoID;
+                            // me.qingjiaPeoList.push(newobg);
                             me.luruRenyuan.username='';
                             me.luruRenyuan.userjob='';
+                            // console.log(me.canhuiPeoList);
+                            done(true);
+                        }else{
+                             me.$toast(res.msg);
+                             me.luruRenyuan.username="";
+                             me.luruRenyuan.userjob="";
+                             done(false);
+                        }
+                    })
+                }
+            }else{
+                done(true);
+            }
+        },
+        qingjiaAdd(action,done){
+            let me = this;
+            if( action === 'confirm'){
+                if(!me.luruRenyuan.username||!me.luruRenyuan.userjob||!me.luruRenyuan.yuanyin){
+                    me.$toast("请输入姓名,职务,请假原因")
+                    done(false);
+                }else{
+                    let url='/api/Notic/report';
+                    let params = {pAutoID:me.$route.params.tzid,userName:me.luruRenyuan.username,post:me.luruRenyuan.userjob,s_Type:1,reason:me.luruRenyuan.yuanyin};
+                    me.$api.post(url,params,res=>{
+                        console.log(res);
+                        if(res.code==200){
+                            me.$toast("添加请假人员成功!")
+                            me.loadPeo();
+                            // let newobg = {}
+                            // newobg.username = me.luruRenyuan.username;
+                            // newobg.userjob = me.luruRenyuan.userjob;
+                            // newobg.autoID = res.autoID;
+                            // newobg.yuanyin = me.luruRenyuan.yuanyin;
+                            // me.qingjiaPeoList.push(newobg);
+                            me.luruRenyuan.username='';
+                            me.luruRenyuan.userjob='';
+                            me.luruRenyuan.yuanyin='';
                             console.log(me.canhuiPeoList);
                             done(true);
                         }else{
                              me.$toast(res.msg)
                              me.luruRenyuan.username="";
                              me.luruRenyuan.userjob="";
+                             me.luruRenyuan.yuanyin="";
                              done(false);
                         }
                     })

@@ -272,7 +272,7 @@ nav{
 .gwTop{
      width: 100%; z-index: 1000; display: flex; background: #FFF;
     a{
-        flex: 1; display: block; box-sizing: border-box; width: 100%; text-align: center; line-height:3rem;
+        flex: 1; display: block; box-sizing: border-box; width: 100%; text-align: center; line-height:3rem; font-size:15px; text-decoration: none;
         &.on{ color: #0084e4; border-bottom:2px solid #0084e4;}
     }
 }

@@ -1,6 +1,10 @@
 <template>
 <div class="menuAll">
-    <router-link v-if="$store.state.tzAuthority==1" to="/noticeList">
+    <!-- <router-link v-if="$store.state.tzAuthority==1" to="/noticeList">
+    <em><i class="icon iconfont icontongzhi1"></i></em>
+    <span>通知列表</span>
+    </router-link> -->
+    <router-link v-if="$store.state.tzAuthority==1" to="/tzMain">
     <em><i class="icon iconfont icontongzhi1"></i></em>
     <span>通知列表</span>
     </router-link>

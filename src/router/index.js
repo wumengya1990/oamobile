@@ -24,6 +24,7 @@ export default new Router({
     {
       path: '/tzMain',
       name: 'tzMain',
+      redirect:'/tzMain/tznoticeListS',
       component: resolve => require(['@/components/notice/tzMain'],resolve),
       children:[
         {
@@ -31,13 +32,17 @@ export default new Router({
           name: 'tzTop',
           component: resolve => require(['@/components/notice/top'],resolve)
         },{
-          path: 'ztnoticeListS',
-          name: 'ztnoticeListS',
+          path: 'tznoticeListS',
+          name: 'tznoticeListS',
           component: resolve => require(['@/components/notice/listPageS'],resolve)
         },{
-          path: 'ztnoticeListF',
-          name: 'ztnoticeListF',
+          path: 'tznoticeListF',
+          name: 'tznoticeListF',
           component: resolve => require(['@/components/notice/listPageF'],resolve)
+        },{
+          path: 'tzdetailed',
+          name: 'tzdetailed',
+          component: resolve => require(['@/components/notice/detailed'],resolve)
         }
       ]
     },
