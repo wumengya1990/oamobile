@@ -3,9 +3,9 @@
         <div class="addForm">
         <van-cell-group>
             <van-field v-model="gongwen.title" type="text" label="公文标题" placeholder="请输入公文标题" required />
-            <van-field v-model="gongwen.docNum" type="text" label="文件编码" placeholder="请输入文件编码" required />
-            <van-field v-model="gongwen.InternalNum" type="text" label="内部文号" placeholder="请输入内部文号" required />
-            <van-field v-model="gongwen.contentMes" type="textarea" label="公文内容" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="gongwen.bumfcode" type="text" label="文件编码" placeholder="请输入文件编码" required />
+            <van-field v-model="gongwen.bumftop" type="text" label="内部文号" placeholder="请输入内部文号" required />
+            <van-field v-model="gongwen.content" type="textarea" label="公文内容" rows="5" placeholder="请输入公文内容" autosize />
         </van-cell-group>
 
         <van-cell-group>
@@ -15,16 +15,16 @@
                     <div class="peolist"><span v-for="(a,index) in gongwen.peoList" @click="dropPeo(index)" :key="index">{{a}}</span></div>
                     <p>点击人员名称可删除</p>
                     <a class="appendPeo" @click="choPeo"><van-icon name="friends" />添加拟办人</a>
-                    <span class="duanxin">手机端短信提醒<van-switch v-model="gongwen.dxchecked" size="14px" /></span>
+                    <span class="duanxin">手机端短信提醒<van-switch v-model="gongwen.bumfMode" size="14px" /></span>
                 </div>
             </div>
             <div class="addBox">
                 <em>上传附件</em>
                 <div class="rightCon">
                     <div class="fileAdd">
-                        <label class="upButton"><input @change="readyFile($event)" type="file" multiple /><van-icon name="send-gift-o" />选择上传文件</label>
+                        <label class="upButton"><input @change="readyFile($event)" type="file" /><van-icon name="send-gift-o" />选择上传文件</label>
                         <ul class="fileList">
-                            <li v-for="(a,index) in gongwen.fileList" :key="index"><van-button size="mini" @click="dropFile(index)" round type="danger"><van-icon name="delete" /></van-button><span>{{a.name}}</span></li>
+                            <li v-for="(a,index) in gongwen.fileList" :key="index"><van-button size="mini" @click="dropFile(index)" round type="danger"><van-icon name="delete" /></van-button><span>{{a.fileName}}</span></li>
                         </ul>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                         <el-checkbox :indeterminate="peo.isIndeterminate" v-model="peo.checkAll" @change="handleCheckAllChange($event,index)">全选</el-checkbox>
                         <div style="margin:10px 0;"></div>
                         <el-checkbox-group v-model="peo.checkedCities" @change="handleCheckedCitiesChange($event,index)">
-                            <el-checkbox v-for="ry in peo.userList" :label="ry" :key="ry">{{ry.userName}}</el-checkbox>
+                            <el-checkbox v-for="ry in peo.userList" :label="ry" :key="ry">{{ry}}</el-checkbox>
                         </el-checkbox-group>
                     </van-collapse-item>
                 </van-collapse>
@@ -90,42 +90,44 @@ export default {
             isIndeterminate: true,
             choPeoList:[
                 {
-                    jigouName:'徐州市第一中学',
+                    deptName:'徐州市第一中学',
                     checkAll: false,
                     isIndeterminate: false,
                     checkedCities: [],
-                    renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
+                    userList:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
                 },
                 {
-                    jigouName:'徐州市第二中学',
+                    deptName:'徐州市第二中学',
                     checkAll: false,
                     isIndeterminate: false,
                     checkedCities: [],
-                    renyuan:["张三","李四","王五王五","丁三","杨四","钱五","孙六","陈七"]
+                    userList:["张三","李四","王五王五","丁三","杨四","钱五","孙六","陈七"]
                 },
                 {
-                    jigouName:'徐州市第三中学',
+                    deptName:'徐州市第三中学',
                     checkAll: false,
                     isIndeterminate: false,
                     checkedCities: [],
-                    renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
+                    userList:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
                 },
                 {
-                    jigouName:'徐州市第四中学',
+                    deptName:'徐州市第四中学',
                     checkAll: false,
                     isIndeterminate: false,
                     checkedCities: [],
-                    renyuan:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
+                    userList:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
                 }
             ],
+            zpeoList:[],
+            zfujian:[],
             gongwen:{
                 title:'',
-                docNum:'',
-                InternalNum:'',
-                contentMes:'',
-                dxchecked:true,
-                peoList:[],
-                fileList:[]
+                bumfcode:'',
+                bumftop:'',
+                content:'',
+                bumfMode:true,
+                sendPro:[],
+                fjPath:[]
             }
         }
     },
@@ -140,27 +142,39 @@ export default {
         },
         loadpeo(){
             let me = this;
-            me.choPeoList=[]
             let url = '/api/user/select';
             let params={};
             me.$api.get(url,params,res=>{
                 console.log(res);
-                me.choPeoList =res.data;
+                let jieshou = [];
+                jieshou = res.data;
+                for(let n =0, lenn = jieshou.length; n<lenn; n++){
+                    jieshou[n].checkAll = false;
+                    jieshou[n].isIndeterminate = false;
+                    jieshou[n].checkedCities=[];
+                    for(let m=0, lennn=jieshou[n].userList.length;m<lennn;m++){
+                        jieshou[n].userList[m]=jieshou[n].userList[m].userName;
+                    }
+                }
+                me.choPeoList =jieshou;
+                console.log(me.choPeoList);
             })
         },
         validationScreening(){
-            let me = this;
-            let sd = []
-            for(let i=0, peolen=me.choPeoList.length;i<peolen;i++){
+            if(peoList.length>1){
                 
-                for(let j=0, peolenN=me.choPeoList[i].checkedCities.length;j<peolenN;j++){
-                    sd.push(me.choPeoList[i].checkedCities[j]);
-                }
             }
-            let sz = new Set(sd);
-            me.gongwen.peoList.push(...sz);
-            console.log(me.gongwen.peoList);
-            me.layerShow = false;
+            // let sd = []
+            // for(let i=0, peolen=me.choPeoList.length;i<peolen;i++){
+                
+            //     for(let j=0, peolenN=me.choPeoList[i].checkedCities.length;j<peolenN;j++){
+            //         sd.push(me.choPeoList[i].checkedCities[j]);
+            //     }
+            // }
+            // let sz = new Set(sd);
+            // me.gongwen.peoList.push(...sz);
+            // console.log(me.gongwen.peoList);
+            // me.layerShow = false;
         },
         onSearch(){
              this.$toast(this.searcgValue);
@@ -187,15 +201,21 @@ export default {
         },
         // 上传图片准备
         readyFile(event){
-            let fileList= event.target.files;
-            let newList=[];
-            for(let i=0;i<fileList.length;i++){
-                newList.push(fileList[i]);
-                //this.gongwen.fileList.push(fileList[i]);
-            }
-            let sd = new Set(newList);
-            this.gongwen.fileList.push(...sd);
-            console.log(this.gongwen.fileList);
+            let forms = new FormData()
+            let me = this;
+            let url = '/api/Upload';
+            forms.append('file',event.target.files[0]);
+            me.$api.uploadFile(url,forms,res=>{
+                if(res.code==200){
+                    let filed = {}
+                    filed.fileName = res.fileName;
+                    filed.url = res.url;
+                   me.gongwen.fileList.push(filed);
+                }
+            })
+            // let sd = new Set(newList);
+            // this.gongwen.fileList.push(...sd);
+            // console.log(this.gongwen.fileList);
 
         },
         dropFile(suoyin){
@@ -204,15 +224,15 @@ export default {
         handleCheckAllChange(event,suoyin) {
             let me = this;
             suoyin = suoyin-1;
-            me.choPeoList[suoyin].checkedCities = event ? me.choPeoList[suoyin].renyuan : [];
+            me.choPeoList[suoyin].checkedCities = event ? me.choPeoList[suoyin].userList : [];
             me.choPeoList[suoyin].isIndeterminate = false;
       },
       handleCheckedCitiesChange(event,suoyin) {
         let me = this;
         suoyin = suoyin-1;
         let checkedCount = event.length;
-        me.choPeoList[suoyin].checkAll = checkedCount ===  me.choPeoList[suoyin].renyuan.length;
-        me.choPeoList[suoyin].isIndeterminate = checkedCount > 0 && checkedCount < me.choPeoList[suoyin].renyuan.length;
+        me.choPeoList[suoyin].checkAll = checkedCount ===  me.choPeoList[suoyin].userList.length;
+        me.choPeoList[suoyin].isIndeterminate = checkedCount > 0 && checkedCount < me.choPeoList[suoyin].userList.length;
       }
     }
 }

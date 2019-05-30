@@ -12,6 +12,7 @@ import element from 'element-ui'
 require('element-ui/lib/theme-chalk/index.css')
 import api from './http'
 import qs from 'qs'
+import axios from 'axios'
 
 // 设置axios跨域
 
@@ -21,6 +22,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$api = api;
 Vue.prototype.$qs = qs;
+
 
 
 Vue.use(element);

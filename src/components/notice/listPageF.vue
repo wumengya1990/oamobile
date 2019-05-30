@@ -137,7 +137,7 @@ export default {
         enterDetailed:function(tzid,liebiaoType,xinxiType){
             let me = this;
             me.$router.push({
-                name:'detailed',
+                name:'tzdetailed',
                 params:{
                     tzid:tzid,
                     listType:liebiaoType,

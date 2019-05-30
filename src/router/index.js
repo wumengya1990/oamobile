@@ -47,14 +47,6 @@ export default new Router({
       ]
     },
     {
-      path: '/noticeList',
-      name: 'noticeList',
-      component: resolve => require(['@/components/notice/listPage'],resolve),
-    },{
-      path: '/detailed',
-      name: 'detailed',
-      component: resolve => require(['@/components/notice/detailed'],resolve)
-    },{
       path: '/gwMain',
       name: 'gwMain',
       redirect:'/gwMain/gwnoticeListS',
@@ -83,31 +75,30 @@ export default new Router({
         }
       ]
     },
-    // {
-    //   path: '/gwnoticeList',
-    //   name: 'gwnoticeList',
-    //   component: resolve => require(['@/components/document/listPage'],resolve),
-    // },{
-    //   path: '/gwdetailed',
-    //   name: 'gwdetailed',
-    //   component: resolve => require(['@/components/document/detailed'],resolve)
-    // },{
-    //   path: '/gwaddnew',
-    //   name: 'gwaddnew',
-    //   component: resolve => require(['@/components/document/addnew'],resolve)
-    // },
     {
-      path: '/leaveList',
-      name: 'leaveList',
-      component: resolve => require(['@/components/leave/listPage'],resolve),
-    },{
-      path: '/leaveDetailed',
-      name: 'leaveDetailed',
-      component: resolve => require(['@/components/leave/detailed'],resolve),
-    },{
-      path: '/addLeave',
-      name: 'addLeave',
-      component: resolve => require(['@/components/leave/addLeave'],resolve)
+      path: '/qjMain',
+      name: 'qjMain',
+      redirect:'/gwMain/gwnoticeListS',
+      component: resolve => require(['@/components/leave/qjMain'],resolve),
+      children:[
+        {
+          path: 'qjTop',
+          name: 'qjTop',
+          component: resolve => require(['@/components/leave/top'],resolve)
+        },{
+          path: 'qjTodoList',
+          name: 'qjTodoList',
+          component: resolve => require(['@/components/leave/listPageS'],resolve)
+        },{
+          path: 'qjHavedoList',
+          name: 'qjHavedoList',
+          component: resolve => require(['@/components/leave/listPageF'],resolve)
+        },{
+          path: 'applyFor',
+          name: 'applyFor',
+          component: resolve => require(['@/components/leave/addLeave'],resolve)
+        }
+      ]
     }
   ]
 })

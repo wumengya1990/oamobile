@@ -12,7 +12,7 @@
     <em><i class="icon iconfont iconai-briefcase"></i></em>
     <span>公文列表</span>
     </router-link>
-    <router-link v-if="$store.state.qjAuthority==1" to="/leaveList">
+    <router-link v-if="$store.state.qjAuthority==1" to="/qjMain">
     <em><i class="icon iconfont iconZ"></i></em>
     <span>请假列表</span>
     </router-link>

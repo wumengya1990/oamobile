@@ -115,16 +115,16 @@ function apiAxios(method, url, params, success, failure) {
 }
 //上传文件
 function axiosFile(url, params, success, failure) {
-  let formParam = new FormData();
-  for (const key in params) {
-    if (params.hasOwnProperty(key)) {
-      formParam.append(key, params[key]);
-    }
-  }
+  // let formParam = new FormData();
+  // for (const key in params) {
+  //   if (params.hasOwnProperty(key)) {
+  //     formParam.append(key, params[key]);
+  //   }
+  // }
   axios({
       method: 'post',
       url: url,
-      data: formParam,
+      data: params,
       baseURL: root,
       headers: {
         'Content-Type': 'multipart/form-data'

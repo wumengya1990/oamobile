@@ -5,7 +5,7 @@
             <div class="synopsis">
                 <h3>{{$route.params.listType==0 ? fileDetails.title : outFileDetails.title}}</h3>
                 <ul>
-                    <li><em>通知类型：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.notice_Type : outFileDetails.notice_Type }}</p></div></li>
+                    <li><em>通知类型：</em><div class="rightCon"><p><span :style="{color:outFileDetails.notice_Type=='会议通知'?'#F30':'#333'}">{{$route.params.listType==0 ? fileDetails.notice_Type : outFileDetails.notice_Type }}</span></p></div></li>
                     <li><em>发送人：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.userName : outFileDetails.userName }}</p></div></li>
                     <li><em>发送日期：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.beginDate : outFileDetails.beginDate}}</p></div></li>
                     <li><em>通知详情：</em>
@@ -16,8 +16,8 @@
                     </li>
                     <li>
                         <div class="detailsState">
-                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1" @click="watchShow=true"><van-icon name="eye" />阅读情况100/200</van-button>
-                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1" @click="submittedShow=true"><van-icon name="column" />查看报送情况</van-button>
+                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1"><van-icon name="eye" />阅读情况{{readNumbeState.total - readNumbeState.unread}}/{{readNumbeState.total}}</van-button>
+                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1&&$route.params.mesType=='会议通知'" @click="submitDetails"><van-icon name="column" />查看报送情况</van-button>
                             <van-button type="info" plain hairline size="small" v-if="$route.params.listType==0&&$route.params.mesType==1" @click="openSBLayer"><van-icon name="column" />报送</van-button>
                         </div>
                     </li>
@@ -49,7 +49,7 @@
                 <div class="replyBoxCon">
                     <ul v-if="$route.params.listType==1">
                         <li v-for="hf in replyList" :key="hf.autoID">
-                            <div class="peo">张洋</div>
+                            <div class="peo">{{hf.userName}}</div>
                             <div class="rightCon">
                                 <div class="replyBoxMes">
                                     <div class="replyBoxMes_1">
@@ -77,7 +77,7 @@
         </div>
 
         <!-- 阅读查看弹层 -->
-        <van-popup v-model="watchShow" position="right">
+        <!-- <van-popup v-model="watchShow" position="right">
             <van-tabs swipeable>
                 <van-tab title="已读">
                     <div class="layerBox">
@@ -99,7 +99,7 @@
                 <van-button @click="watchShow=false" hairline size="small" style="width:120px;">取消</van-button>
                 <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
             </div>
-        </van-popup>
+        </van-popup> -->
         <!-- 阅读查看弹层结束 -->
 
         <!-- 报送详情弹层 -->
@@ -143,8 +143,7 @@
                 </van-tab>
             </van-tabs>
             <div class="bts">
-                <van-button @click="submittedShow=false" hairline size="small" style="width:120px;">取消</van-button>
-                <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
+                <van-button @click="submittedShow=false" hairline size="small" style="width:120px;">确定</van-button>
             </div>
         </van-popup>
         <!-- 报送详情弹层结束 -->
@@ -255,6 +254,10 @@ export default {
                 userjob:'',
                 yuanyin:''
             },
+            readNumbeState:{
+                total:0,
+                unread:0
+            },
             canhuiPeoList:[],                   //参会人员列表
             qingjiaPeoList:[],
             backMessage:'',                     //回复内容
@@ -323,6 +326,7 @@ export default {
     mounted() {
         console.log(this.$route.params.tzid);
         console.log(this.$route.params.listType);
+        console.log(this.$route.params.mesType);
         this.setReadState();
         this.loadxaingqing();
     },
@@ -367,6 +371,8 @@ export default {
                 me.$api.get(url,params,res=>{
                     console.log(res);
                     me.fileDetails = res.data;
+                    me.readNumbeState.total = res.count;
+                    me.readNumbeState.unread = res.unread;
                     //me.replyList = res.replyList;
                     let file = res.data.fjPath;
                     let fileUrl = res.data.pathBase;
@@ -386,6 +392,8 @@ export default {
                     console.log(res);
                     me.outFileDetails = res.data;
                     me.replyList = res.replyList;
+                    me.readNumbeState.total = res.count;
+                    me.readNumbeState.unread = res.unread;
                     //me.replyList = res.replyList;
                     let file = me.outFileDetails.fjPath;
                     //let fileUrl = me.outFileDetails.PathBase;
@@ -407,6 +415,21 @@ export default {
             me.$api.post(url,params,res=>{
                 console.log(res);
                 me.backMessage="";
+            })
+        },
+        // 上报详情查看
+        submitDetails(){
+            this.submittedShow=true;
+            this.loadSubmitDetails();
+        },
+        // 加载上报详情查看
+        loadSubmitDetails(){
+            let me = this;
+            let url = '/api/Notic/reportview';
+            let params = {autoID:me.$route.params.tzid};
+            me.$api.get(url,params,res=>{
+                console.log("加载上报详情查看");
+                console.log(res);
             })
         },
         // 打开上报人员弹层加载上报详情
@@ -484,6 +507,7 @@ export default {
                 done(true);
             }
         },
+        // 添加请假人员
         qingjiaAdd(action,done){
             let me = this;
             if( action === 'confirm'){
