@@ -12,7 +12,7 @@
             <div class="addBox">
                 <em>拟办人</em>
                 <div class="rightCon">
-                    <div class="peolist"><span v-for="(a,index) in gongwen.peoList" @click="dropPeo(index)" :key="index">{{a}}</span></div>
+                    <div class="peolist"><span v-for="(a,index) in zpeoList" @click="dropPeo(index)" :key="index">{{a}}</span></div>
                     <p>点击人员名称可删除</p>
                     <a class="appendPeo" @click="choPeo"><van-icon name="friends" />添加拟办人</a>
                     <span class="duanxin">手机端短信提醒<van-switch v-model="gongwen.bumfMode" size="14px" /></span>
@@ -24,7 +24,7 @@
                     <div class="fileAdd">
                         <label class="upButton"><input @change="readyFile($event)" type="file" /><van-icon name="send-gift-o" />选择上传文件</label>
                         <ul class="fileList">
-                            <li v-for="(a,index) in gongwen.fileList" :key="index"><van-button size="mini" @click="dropFile(index)" round type="danger"><van-icon name="delete" /></van-button><span>{{a.fileName}}</span></li>
+                            <li v-for="(a,index) in zfujian" :key="index"><van-button size="mini" @click="dropFile(index)" round type="danger"><van-icon name="delete" /></van-button><span>{{a.fileName}}</span></li>
                         </ul>
                     </div>
                 </div>
@@ -118,15 +118,16 @@ export default {
                     userList:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
                 }
             ],
-            zpeoList:[],
-            zfujian:[],
+            zpeoList:[],            //暂存的人员列表
+            zfujian:[],             //暂存的附件列表
+            dzList:[],      //暂时存放燕来的数据
             gongwen:{
                 title:'',
                 bumfcode:'',
                 bumftop:'',
                 content:'',
-                bumfMode:true,
-                sendPro:[],
+                bumfMode:false,
+                sendPro:0,
                 fjPath:[]
             }
         }
@@ -139,6 +140,7 @@ export default {
         choPeo(){
             this.layerShow=true;
             this.loadpeo();
+            this.loadpeoyuan();
         },
         loadpeo(){
             let me = this;
@@ -153,28 +155,36 @@ export default {
                     jieshou[n].isIndeterminate = false;
                     jieshou[n].checkedCities=[];
                     for(let m=0, lennn=jieshou[n].userList.length;m<lennn;m++){
-                        jieshou[n].userList[m]=jieshou[n].userList[m].userName;
+                        jieshou[n].userList[m]=jieshou[n].userList[m].autoID;
                     }
                 }
                 me.choPeoList =jieshou;
                 console.log(me.choPeoList);
             })
         },
+        loadpeoyuan(){
+            let me = this;
+            let url = '/api/user/select';
+            let params={};
+            me.$api.get(url,params,res=>{
+                console.log(res);
+                me.dzList = res.data
+                console.log(me.dzList);
+            })
+        },
         validationScreening(){
-            if(peoList.length>1){
+            let me = this;
+            let sd = []
+            for(let i=0, peolen=me.choPeoList.length;i<peolen;i++){
                 
+                for(let j=0, peolenN=me.choPeoList[i].checkedCities.length;j<peolenN;j++){
+                    sd.push(me.choPeoList[i].checkedCities[j]);
+                }
             }
-            // let sd = []
-            // for(let i=0, peolen=me.choPeoList.length;i<peolen;i++){
-                
-            //     for(let j=0, peolenN=me.choPeoList[i].checkedCities.length;j<peolenN;j++){
-            //         sd.push(me.choPeoList[i].checkedCities[j]);
-            //     }
-            // }
-            // let sz = new Set(sd);
-            // me.gongwen.peoList.push(...sz);
-            // console.log(me.gongwen.peoList);
-            // me.layerShow = false;
+            let sz = new Set(sd);
+            me.zpeoList.push(...sz);
+            console.log(me.zpeoList);
+            me.layerShow = false;
         },
         onSearch(){
              this.$toast(this.searcgValue);
@@ -221,19 +231,21 @@ export default {
         dropFile(suoyin){
             this.gongwen.fileList.splice(suoyin,1);
         },
+        // 选择全部人员
         handleCheckAllChange(event,suoyin) {
             let me = this;
             suoyin = suoyin-1;
             me.choPeoList[suoyin].checkedCities = event ? me.choPeoList[suoyin].userList : [];
             me.choPeoList[suoyin].isIndeterminate = false;
-      },
-      handleCheckedCitiesChange(event,suoyin) {
-        let me = this;
-        suoyin = suoyin-1;
-        let checkedCount = event.length;
-        me.choPeoList[suoyin].checkAll = checkedCount ===  me.choPeoList[suoyin].userList.length;
-        me.choPeoList[suoyin].isIndeterminate = checkedCount > 0 && checkedCount < me.choPeoList[suoyin].userList.length;
-      }
+        },
+        // 修改选择人
+        handleCheckedCitiesChange(event,suoyin) {
+            let me = this;
+            suoyin = suoyin-1;
+            let checkedCount = event.length;
+            me.choPeoList[suoyin].checkAll = checkedCount ===  me.choPeoList[suoyin].userList.length;
+            me.choPeoList[suoyin].isIndeterminate = checkedCount > 0 && checkedCount < me.choPeoList[suoyin].userList.length;
+        }
     }
 }
 </script>
