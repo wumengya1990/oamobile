@@ -55,6 +55,7 @@ nav{
             }
             h3{ 
                 text-align: justify; font-weight: normal; color: #333;
+                span{ font-size:14px; padding: 5px 0 0;}
                 &.haveN{ 
                     position: relative; padding: 0 20px 0 0;
                     &::after{content:""; position: absolute; right: 0; top: 7px; display: block; width: 10px; height: 10px; border-radius: 50px; overflow: hidden; background: #F30;}
@@ -252,6 +253,33 @@ nav{
             em{ float: left; width: 100px; padding: 0 10px; color: #666; box-sizing: border-box;}
             .rightCon{ overflow: hidden;}
         }
+    }
+    .flowBox{
+        display: flex; width: 100%; padding: 10px 0 0;
+        p{ 
+            display: block; flex: 1; box-sizing:border-box; padding: 0 10px; position: relative;
+            span{ display:block; position: relative;  padding: 5px 0;}
+            &:nth-child(1){ 
+                flex:1.5; text-align: center;
+                span{ display:block; position: relative; background: #dceefb; padding: 5px; color:#228dda; margin: 0 0 5px;}
+                &::after{ content:""; display: block; height:30px; width: 2px; background: #99bcd6; margin:0 auto;}
+                &::before{ content:""; display: block; width: 0; height: 0; padding: 0; border: solid; border-color:#99bcd6 transparent transparent transparent; position: absolute; left: 0; top: auto; right: 0; bottom:-10px; margin: auto; border-width:8px 6px;}
+            }
+            &:nth-child(3){ flex:1.5; text-align: right;}
+            &:last-child{
+                &::after{ display: none;}
+                &::before{ display: none;}
+            }
+        }
+        &:last-child{
+            p{
+                &::after{ display: none;}
+                &::before{ display: none;}
+            }
+        }
+    }
+    .ApprovalBox{
+        .van-radio{ padding:5px 10px; float: left;}
     }
 }
 

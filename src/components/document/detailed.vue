@@ -8,7 +8,7 @@
                     <li><em>文件编号：</em><div class="rightCon"><p>{{fileDetails.fileID}}</p></div></li>
                     <li><em>内部文号：</em><div class="rightCon"><p>{{fileDetails.fileIDN}}</p></div></li>
                     <li><em>发送人：</em><div class="rightCon"><p>{{fileDetails.publisher}}</p></div></li>
-                    <li><em>收文日期：</em><div class="rightCon"><p>{{fileDetails.getTime}}</p></div></li>
+                    <li><em>收文日期：</em><div class="rightCon"><p>{{fileDetails.beginDate}}</p></div></li>
                     <li><em>通知详情：</em>
                         <div class="rightConNoOver">
                             <p>{{fileDetails.particulars}}</p>
@@ -138,7 +138,7 @@
                 </van-cell-group>
                 <div class="bts">
                     <van-button type="primary" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">回复</van-button>
-                    </div>
+                </div>
             </div>
             
 
@@ -291,6 +291,7 @@ export default {
     },
     mounted() {
         console.log(this.$route.params.id);
+        this.loadxaingqing();
     },
     methods:{
         setHeight(){
@@ -303,8 +304,9 @@ export default {
             
         },
         loadxaingqing(){
+            let me = this;
             let url = '/api/Office';
-            let params = { autoid:me.$route.params.tzid};
+            let params = { autoID:me.$route.params.id,type:me.$route.params.type};
             me.$api.get(url,params,res=>{
                 console.log(res);
                 me.fileDetails = res.data;

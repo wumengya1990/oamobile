@@ -4,7 +4,7 @@
         <qjTop></qjTop>
         
                 <van-search
-                    v-model="value"
+                    v-model="searchValue"
                     placeholder="请输入搜索关键词"
                     show-action
                     shape="round"
@@ -13,19 +13,19 @@
                 <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
                 </van-search>
                  <div class="List">
-                    <dl class="noMessage" v-if="noticeMessList.length == 0">
+                    <dl class="noMessage" v-if="qjUnHaveList.length == 0">
                         <dt>OA</dt>
                         <dd><span>办公管理系统</span></dd>
                         <dd><p>暂无数据内容请刷新重试</p></dd>
                     </dl>
                     <div class="listBox">
                         <ul>
-                            <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.title)">
+                            <li v-for="(n,index) in qjUnHaveList" :key="index" @click="enterDetailed(n.autoID)">
                                 <van-swipe-cell :right-width="50">
-                                <h3>请假人、{{n.title}}</h3>
+                                <h3>请假人、{{n.leave_People}}</h3>
                                 <p>
-                                    <span>所属部门：{{n.sentPeo}}</span>
-                                    <time>{{n.time}}</time></p>
+                                    <span>所属部门：{{n.dep}}</span>
+                                    <time>{{n.createAt}}</time></p>
                                 <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                                 </van-swipe-cell>
                             </li>
@@ -50,67 +50,27 @@ export default {
     },
     data() {
         return {
-            active:0,
-            active1:0,
-            value:'',
-            layerShow:false,
-            mrradio:'',
-            noticeMessList:[
+            searchValue:'',
+            pageIndex:1,
+            pageSize:10,
+            loading:false,
+            isLoading:false,
+            isRefresh:false,
+            finished:false,
+            qjUnHaveList:[
                 { 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
+                    title:'FFF通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
                     noticeType:1,
                     noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:2,
-                    noticeTypeName:"会议通知",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
-                },{ 
-                    title:'通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
-                    sentPeo:'张洋',
-                    noticeType:1,
-                    noticeTypeName:"普通消息",
-                    time:'2019-01-22'
+                    time:'2019-01-22',
+                    hasN:true
                 }
             ]
         }
+    },
+    mounted() {
+        this.loadList();
     },
     methods:{
         onSearch:function(){
@@ -119,7 +79,7 @@ export default {
         addnew(){
             let me = this;
             me.$router.push({
-                name:'addLeave'
+                name:'applyFor'
             })
         },
         validationScreening(){
@@ -127,16 +87,20 @@ export default {
         },
         loadList(){
             let me = this;
-            if(me.mrradio!=""||me.mrradio!=null||me.mrradio!=undefined){
-                
-            }
+            let url = '/api/Leave/todolist';
+            let params={pageSize:me.pageSize,pageIndex:me.pageIndex}
+            me.$api.get(url,params,res=>{
+                console.log(res);
+                me.qjUnHaveList = res.data;
+            })
         },
         enterDetailed:function(nq){
             let me = this;
             me.$router.push({
-                name:'leaveDetailed',
+                name:'qjDetails',
                 params:{
-                    id:"321"
+                    autoID:nq,
+                    listType:0
                 }
             })
         },

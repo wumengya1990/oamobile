@@ -16,6 +16,10 @@
     <em><i class="icon iconfont iconZ"></i></em>
     <span>请假列表</span>
     </router-link>
+    <router-link v-if="$store.state.qjAuthority==1" to="/qjMain/myApplyFor">
+    <em><i class="icon iconfont iconZ"></i></em>
+    <span>我的请假申请</span>
+    </router-link>
     </div>
 </template>
 

@@ -141,7 +141,8 @@ export default {
             me.$router.push({
                 name:'gwdetailed',
                 params:{
-                    id:nq
+                    id:nq,
+                    type:1
                 }
             })
         },

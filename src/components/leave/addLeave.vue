@@ -2,23 +2,23 @@
     <div class="gwaddnew bgMain posA posCenter">
         <div class="addForm">
         <van-cell-group>
-            <van-field v-model="leaves.peoName" type="text" label="请假人" placeholder="请输入公文标题" required />
-            <van-field v-model="leaves.telephoneNum" type="text" label="联系电话" placeholder="请输入文件编码" required />
-            <van-field v-model="leaves.department" type="text" label="所属部门" placeholder="请输入内部文号" required />
-            <van-field v-model="leaves.duties" type="text" label="职务" placeholder="请输入内部文号" required />
-            <van-field v-model="leaves.leaveTime" @focus="choLeaveTime" type="text" label="离开时间" placeholder="请输入内部文号" required />
-            <van-field v-model="leaves.backTime" @focus="choBackTime" type="text" label="返回时间" placeholder="请输入内部文号" required />
-            <van-field v-model="leaves.goingLocation" type="textarea" label="外出地点" rows="5" placeholder="请输入公文内容" autosize />
-            <van-field v-model="leaves.goingReasons" type="textarea" label="外出事由" rows="5" placeholder="请输入公文内容" autosize />
-            <van-field v-model="leaves.arrangement" type="textarea" label="行程安排" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="leaves.leave_People" type="text" label="请假人" placeholder="请输入公文标题" required />
+            <van-field v-model="leaves.link_Phone" type="text" label="联系电话" placeholder="请输入文件编码" required />
+            <van-field v-model="leaves.dep" type="text" label="所属部门" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.job" type="text" label="职务" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.leave_Time" @focus="choLeaveTime" type="text" label="离开时间" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.return_Time" @focus="choBackTime" type="text" label="返回时间" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.destination" type="textarea" label="外出地点" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="leaves.reason" type="textarea" label="外出事由" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="leaves.trip" type="textarea" label="行程安排" rows="5" placeholder="请输入公文内容" autosize />
         </van-cell-group>
         <van-cell-group>
             <h2>临时主持工作的负责同志</h2>
-            <van-field v-model="leaves.handoverPeo" type="text" label="姓名" placeholder="请输入公文标题" required />
-            <van-field v-model="leaves.handoverDuties" type="text" label="职务" placeholder="请输入文件编码" required />
-            <van-field v-model="leaves.handovertelephoneNum" type="text" label="联系电话" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.l_Name" type="text" label="姓名" placeholder="请输入公文标题" required />
+            <van-field v-model="leaves.l_Job" type="text" label="职务" placeholder="请输入文件编码" required />
+            <van-field v-model="leaves.l_Link_Phone" type="text" label="联系电话" placeholder="请输入内部文号" required />
             <div class="bts">
-                <van-button type="primary" size="large">提交</van-button>
+                <van-button type="primary" @click="applyForLeave" size="large">提交</van-button>
                 <van-button type="default" @click="$router.back(-1)" size="large">返回</van-button>
             </div>
         </van-cell-group>
@@ -46,49 +46,7 @@
                 @cancel="backNo"
             />
         </van-popup>
-        <!-- <van-popup v-model="layerShow" position="right">
-            <div class="layerBox">
-                <van-search
-                v-model="searcgValue"
-                placeholder="请输入搜索关键词"
-                show-action
-                shape="round"
-                @search="onSearch"
-                >
-                <div slot="action" @click="onSearch">搜索</div>
-                </van-search>
-                <van-collapse v-model="activeNames">
-                    <van-collapse-item title="有赞微商城" name="1">
-                        <van-checkbox-group v-model="result3">
-                            <van-cell-group>
-                            <van-cell
-                                v-for="(item, index) in list"
-                                clickable
-                                :key="index"
-                                :title="`复选框${item}`"
-                                @click="toggle(index)"
-                            >
-                                <van-checkbox
-                                ref="checkboxes"
-                                :name="item"
-                                />
-                            </van-cell>
-                            </van-cell-group>
-                        </van-checkbox-group>
-                    </van-collapse-item>
-                    <van-collapse-item title="有赞零售" name="2">
-                        网店吸粉获客、会员分层营销、一机多种收款，告别经营低效和客户流失
-                    </van-collapse-item>
-                    <van-collapse-item title="有赞美业" name="3">
-                        线上拓客，随时预约，贴心顺手的开单收银
-                    </van-collapse-item>
-                </van-collapse>
-            </div>
-            <div class="bts">
-            <van-button @click="layerShow=false" hairline size="small" style="width:120px;">取消</van-button>
-            <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
-            </div>
-        </van-popup> -->
+        
     </div>
 </template>
 
@@ -103,18 +61,18 @@ export default {
             wleaveTime:new Date(),
             minDate:new Date(),
             leaves:{
-                peoName:'张洋',
-                telephoneNum:'',
-                department:'',
-                duties:'',
-                leaveTime:'',
-                backTime:'',
-                goingLocation:'',
-                goingReasons:'',
-                arrangement:'',
-                handoverPeo:'',
-                handoverDuties:'',
-                handovertelephoneNum:''
+                leave_People:'',
+                link_Phone:'',
+                dep:'',
+                job:'',
+                leave_Time:'',
+                return_Time:'',
+                destination:'',
+                reason:'',
+                trip:'',
+                l_Name:'',
+                l_Job:'',
+                l_Link_Phone:''
             }
         }
     },
@@ -126,9 +84,26 @@ export default {
         validationScreening(){
             
         },
+        // 提交申请
+        applyForLeave(){
+            let me = this;
+            let url='/api/Leave';
+            let params = {entity:me.leaves};
+            me.$api.post(url,params,res=>{
+                console.log(res);
+                if(res.code==200){
+                    me.$router.push({
+                        name:'qjTodoList'
+                    })
+                }
+            })
+
+        },
+        // 选择离开事件
         choLeaveTime(){
             this.leaveTimeShow =  true;
         },
+        // 选择返回事件
         choBackTime(){
             this.backTimeShow = true;
         },
@@ -136,8 +111,8 @@ export default {
         leaveChange(e){
              let timeList =[];
              timeList = e.getValues()
-             this.leaves.leaveTime = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
-             console.log(this.leaves.leaveTime );
+             this.leaves.leave_Time = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
+             console.log(this.leaves.leave_Time );
         },
         // 确定选择离开时间
         leaveSure(){
@@ -152,8 +127,8 @@ export default {
         backChange(e){
            let timeList =[];
             timeList = e.getValues()
-            this.leaves.backTime = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
-            console.log(this.leaves.backTime );
+            this.leaves.return_Time = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
+            console.log(this.leaves.return_Time );
         },
         backSure(){
              this.backTimeShow =  false;

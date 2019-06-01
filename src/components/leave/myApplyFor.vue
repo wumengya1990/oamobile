@@ -1,10 +1,9 @@
 <template>
     
     <div class="listPage">
-        <qjTop></qjTop>
-        
+        <h3 style="text-align:center">我的申请</h3>
                 <van-search
-                    v-model="searchValue"
+                    v-model="value"
                     placeholder="请输入搜索关键词"
                     show-action
                     shape="round"
@@ -13,24 +12,16 @@
                 <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
                 </van-search>
                  <div class="List">
-                    <dl class="noMessage" v-if="qjHaveList.length == 0">
+                    <dl class="noMessage" v-if="qjUnHaveList.length == 0">
                         <dt>OA</dt>
                         <dd><span>办公管理系统</span></dd>
                         <dd><p>暂无数据内容请刷新重试</p></dd>
                     </dl>
                     <div class="listBox">
                         <ul>
-                            <li v-for="(n,index) in qjHaveList" :key="index" @click="enterDetailed(n.autoID)">
+                            <li v-for="(n,index) in qjUnHaveList" :key="index" @click="enterDetailed(n.title)">
                                 <van-swipe-cell :right-width="50">
-                                <h3>
-                                    请假人、{{n.leave_People}}
-                                    <span v-if="listPeorole==1" style="float:right;">我的审批：
-                                        <em v-if="n.state==0" style="color:#e4ab04;">未审批</em>
-                                        <em v-else-if="n.state==1" style="color:#1ac138;">同意</em>
-                                        <em v-else style="color:#F30">不同意</em>
-                                    </span>
-                                    <span v-else>流程状态{{}}</span>
-                                    </h3>
+                                <h3>请假人、{{n.leave_People}}</h3>
                                 <p>
                                     <span>所属部门：{{n.dep}}</span>
                                     <time>{{n.createAt}}</time></p>
@@ -58,15 +49,13 @@ export default {
     },
     data() {
         return {
-            searchValue:'',
             pageIndex:1,
             pageSize:10,
             loading:false,
             isLoading:false,
             isRefresh:false,
             finished:false,
-            listPeorole:0,
-            qjHaveList:[
+            qjUnHaveList:[
                 { 
                     title:'FFF通知标题通知标题通知标题通知标题通知标题通知标题通知标题',
                     sentPeo:'张洋',
@@ -77,9 +66,6 @@ export default {
                 }
             ]
         }
-    },
-    mounted() {
-        this.loadList();
     },
     methods:{
         onSearch:function(){
@@ -96,22 +82,19 @@ export default {
         },
         loadList(){
             let me = this;
-            let url = '/api/Leave/handlelist';
+            let url = '/api/Leave/applylist';
             let params={pageSize:me.pageSize,pageIndex:me.pageIndex}
             me.$api.get(url,params,res=>{
                 console.log(res);
-                me.qjHaveList = res.data;
-                me.listPeorole = res.type;
+                me.qjUnHaveList = res.data;
             })
-            
         },
         enterDetailed:function(nq){
             let me = this;
             me.$router.push({
-                name:'qjDetails',
+                name:'leaveDetailed',
                 params:{
-                    autoID:nq,
-                    listType:1
+                    id:"321"
                 }
             })
         },

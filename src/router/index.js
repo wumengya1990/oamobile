@@ -78,13 +78,17 @@ export default new Router({
     {
       path: '/qjMain',
       name: 'qjMain',
-      redirect:'/gwMain/gwnoticeListS',
+      redirect:'/qjMain/qjTodoList',
       component: resolve => require(['@/components/leave/qjMain'],resolve),
       children:[
         {
           path: 'qjTop',
           name: 'qjTop',
           component: resolve => require(['@/components/leave/top'],resolve)
+        },{
+          path: 'myApplyFor',
+          name: 'myApplyFor',
+          component: resolve => require(['@/components/leave/myApplyFor'],resolve)
         },{
           path: 'qjTodoList',
           name: 'qjTodoList',
@@ -93,6 +97,10 @@ export default new Router({
           path: 'qjHavedoList',
           name: 'qjHavedoList',
           component: resolve => require(['@/components/leave/listPageF'],resolve)
+        },{
+          path: 'qjDetails',
+          name: 'qjDetails',
+          component: resolve => require(['@/components/leave/detailed'],resolve)
         },{
           path: 'applyFor',
           name: 'applyFor',
