@@ -5,13 +5,13 @@
             <div class="synopsis">
                 <h3>{{fileDetails.title}}</h3>
                 <ul>
-                    <li><em>文件编号：</em><div class="rightCon"><p>{{fileDetails.fileID}}</p></div></li>
-                    <li><em>内部文号：</em><div class="rightCon"><p>{{fileDetails.fileIDN}}</p></div></li>
-                    <li><em>发送人：</em><div class="rightCon"><p>{{fileDetails.publisher}}</p></div></li>
+                    <li><em>文件编号：</em><div class="rightCon"><p>{{fileDetails.bumfcode}}</p></div></li>
+                    <li><em>内部文号：</em><div class="rightCon"><p>{{fileDetails.bumftop}}</p></div></li>
+                    <li><em>发送人：</em><div class="rightCon"><p>{{fileDetails.sendPro}}</p></div></li>
                     <li><em>收文日期：</em><div class="rightCon"><p>{{fileDetails.beginDate}}</p></div></li>
                     <li><em>通知详情：</em>
                         <div class="rightConNoOver">
-                            <p>{{fileDetails.particulars}}</p>
+                            <p>{{fileDetails.bumfType}}</p>
                         </div>
                     </li>
                     <li>
