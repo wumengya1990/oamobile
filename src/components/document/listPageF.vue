@@ -97,10 +97,10 @@ export default {
                 me.pageIndex = 1;
                 me.documentList = [];
             }
-            let url='/api/Office/inbox';
-            let params = { pageSize:me.pageSize, pageIndex:me.pageIndex, State:me.btState};
+            let url='/api/Office/outbox';
+            let params = { pageSize:me.pageSize, pageIndex:me.pageIndex};
             me.$api.get(url, params,res=>{
-                console.log("收件箱");
+                console.log("发件箱");
                 console.log(res);
                 let resCount = res.data.length;
                 if(isInit == true){
@@ -132,7 +132,8 @@ export default {
             me.$router.push({
                 name:'gwdetailed',
                 params:{
-                    id:"321"
+                    id:nq,
+                    type:0
                 }
             })
         },
@@ -151,7 +152,7 @@ export default {
     box-sizing: border-box;
     padding: 20px;
     &--right{
-        width:70%;
+        width:100%;
         height:100%;
         .bts{ position:absolute; left: 0; top: auto; right: 0; bottom: 0; text-align:center; padding: 10px 0;}
     }

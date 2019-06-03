@@ -49,8 +49,8 @@ export default {
         return {
             btState:0,              //已处理未处理状态
             zhuangtai:[
-                {name:'已处理',state:0},
-                {name:'未处理',state:1}
+                {name:'待办',state:0},
+                {name:'已办',state:1}
             ],
             pageIndex:1,
             loading:false,
@@ -82,6 +82,7 @@ export default {
         },
         changeState(zhuangtai){
             this.btState=zhuangtai;
+            this.loadList(true);
         },
         validationScreening(){
             this.loadList();
@@ -161,7 +162,7 @@ export default {
     box-sizing: border-box;
     padding: 20px;
     &--right{
-        width:70%;
+        width:100%;
         height:100%;
         .bts{ position:absolute; left: 0; top: auto; right: 0; bottom: 0; text-align:center; padding: 10px 0;}
     }

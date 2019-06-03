@@ -376,12 +376,12 @@ export default {
                     //me.replyList = res.replyList;
                     let file = res.data.fjPath;
                     let fileUrl = res.data.pathBase;
-                    me.fujianName = file.split(",");
-                    me.fujianURL = fileUrl.split(",");
+                    
                     if(file==""||file==null||file==undefined){
                          me.fujianName=[];
                     }else{
                         me.fujianName = file.split(",");
+                        me.fujianURL = fileUrl.split(",");
                     }
                     // console.log(me.fujianName);
                 })

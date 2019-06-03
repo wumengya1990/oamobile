@@ -1,266 +1,402 @@
 <template>
-    <div class="gwaddnew bgMain posA posCenter">
-        <div class="addForm">
-        <van-cell-group>
-            <van-field v-model="gongwen.title" type="text" label="公文标题" placeholder="请输入公文标题" required />
-            <van-field v-model="gongwen.bumfcode" type="text" label="文件编码" placeholder="请输入文件编码" required />
-            <van-field v-model="gongwen.bumftop" type="text" label="内部文号" placeholder="请输入内部文号" required />
-            <van-field v-model="gongwen.content" type="textarea" label="公文内容" rows="5" placeholder="请输入公文内容" autosize />
-        </van-cell-group>
+  <div class="gwaddnew bgMain posA posCenter">
+    <div class="addForm">
+      <van-cell-group>
+        <van-field v-model="gongwen.title" type="text" label="公文标题" placeholder="请输入公文标题" required/>
+        <van-field
+          v-model="gongwen.bumfcode"
+          type="text"
+          label="文件编码"
+          placeholder="请输入文件编码"
+          required
+        />
+        <van-field
+          v-model="gongwen.bumftop"
+          type="text"
+          label="内部文号"
+          placeholder="请输入内部文号"
+          required
+        />
+        <van-field
+          v-model="gongwen.contentDetail"
+          type="textarea"
+          label="公文内容"
+          rows="5"
+          placeholder="请输入公文内容"
+          autosize
+        />
+      </van-cell-group>
 
-        <van-cell-group>
-            <div class="addBox">
-                <em>拟办人</em>
-                <div class="rightCon">
-                    <div class="peolist"><span v-for="(a,index) in zpeoList" @click="dropPeo(index)" :key="index">{{a}}</span></div>
-                    <p>点击人员名称可删除</p>
-                    <a class="appendPeo" @click="choPeo"><van-icon name="friends" />添加拟办人</a>
-                    <span class="duanxin">手机端短信提醒<van-switch v-model="gongwen.bumfMode" size="14px" /></span>
-                </div>
+      <van-cell-group>
+        <div class="addBox">
+          <em>拟办人</em>
+          <div class="rightCon">
+            <div class="peolist">
+              <span v-for="(a,index) in zpeoList" @click="dropPeo(index)" :key="index">{{a}}</span>
             </div>
-            <div class="addBox">
-                <em>上传附件</em>
-                <div class="rightCon">
-                    <div class="fileAdd">
-                        <label class="upButton"><input @change="readyFile($event)" type="file" /><van-icon name="send-gift-o" />选择上传文件</label>
-                        <ul class="fileList">
-                            <li v-for="(a,index) in zfujian" :key="index"><van-button size="mini" @click="dropFile(index)" round type="danger"><van-icon name="delete" /></van-button><span>{{a.fileName}}</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="bts">
-                <van-button type="primary" size="large">提交</van-button>
-            </div>
-        </van-cell-group>
-
+            <p>点击人员名称可删除</p>
+            <a class="appendPeo" @click="choPeo">
+              <van-icon name="friends"/>添加拟办人
+            </a>
+            <span class="duanxin">
+              手机端短信提醒
+              <van-switch v-model="gongwen.bumfMode" size="14px"/>
+            </span>
+          </div>
         </div>
-
-        <van-popup v-model="layerShow" position="right">
-            <div class="layerBox">
-                <van-search
-                v-model="searcgValue"
-                placeholder="请输入搜索关键词"
-                show-action
-                shape="round"
-                @search="onSearch"
-                >
-                <div slot="action" @click="onSearch">搜索</div>
-                </van-search>
-                <div class="layerBoxScroll">
-                <van-collapse v-model="activeNames">
-                    <van-collapse-item :title="peo.deptName" :name="index++" v-for="(peo,index) in choPeoList" :key="index">
-                        <div style="margin:10px 0;"></div>
-                        <el-checkbox :indeterminate="peo.isIndeterminate" v-model="peo.checkAll" @change="handleCheckAllChange($event,index)">全选</el-checkbox>
-                        <div style="margin:10px 0;"></div>
-                        <el-checkbox-group v-model="peo.checkedCities" @change="handleCheckedCitiesChange($event,index)">
-                            <el-checkbox v-for="ry in peo.userList" :label="ry" :key="ry">{{ry}}</el-checkbox>
-                        </el-checkbox-group>
-                    </van-collapse-item>
-                </van-collapse>
-                </div>
+        <div class="addBox">
+          <em>上传附件</em>
+          <div class="rightCon">
+            <div class="fileAdd">
+              <label class="upButton">
+                <input @change="readyFile($event)" type="file">
+                <van-icon name="send-gift-o"/>选择上传文件
+              </label>
+              <ul class="fileList">
+                <li v-for="(a,index) in zfujian" :key="index">
+                  <van-button size="mini" @click="dropFile(index)" round type="danger">
+                    <van-icon name="delete"/>
+                  </van-button>
+                  <span>{{a.fileName}}</span>
+                </li>
+              </ul>
             </div>
-            <div class="bts">
-            <van-button @click="layerShow=false" hairline size="small" style="width:120px;">取消</van-button>
-            <van-button @click="validationScreening" hairline size="small" type="info" style="width:120px;">确定</van-button>
-            </div>
-        </van-popup>
+          </div>
+        </div>
+        <div class="bts">
+          <van-button type="primary" @click="release" size="large">提交</van-button>
+        </div>
+      </van-cell-group>
     </div>
+
+    <van-popup v-model="layerShow" position="right">
+      <div class="layerBox">
+        <van-search
+          v-model="searcgValue"
+          placeholder="请输入搜索关键词"
+          show-action
+          shape="round"
+          @search="onSearch"
+        >
+          <div slot="action" @click="onSearch">搜索</div>
+        </van-search>
+        <div class="layerBoxScroll">
+          <van-collapse v-model="activeNames">
+            <van-collapse-item
+              :title="peo.deptName"
+              :name="index++"
+              v-for="(peo,index) in choPeoList"
+              :key="index"
+            >
+              <div style="margin:10px 0;"></div>
+              <el-checkbox
+                :indeterminate="peo.isIndeterminate"
+                v-model="peo.checkAll"
+                @change="handleCheckAllChange($event,index)"
+              >全选</el-checkbox>
+              <div style="margin:10px 0;"></div>
+              <el-checkbox-group
+                v-model="peo.checkedCities"
+                @change="handleCheckedCitiesChange($event,index)"
+              >
+                <el-checkbox v-for="ry in peo.userList" :label="ry" :key="ry">{{ry}}</el-checkbox>
+              </el-checkbox-group>
+            </van-collapse-item>
+          </van-collapse>
+        </div>
+      </div>
+      <div class="bts">
+        <van-button @click="layerShow=false" hairline size="small" style="width:120px;">取消</van-button>
+        <van-button
+          @click="validationScreening"
+          hairline
+          size="small"
+          type="info"
+          style="width:120px;"
+        >确定</van-button>
+      </div>
+    </van-popup>
+  </div>
 </template>
 
 <script>
-
-const cityOptions = ['上海', '北京', '广州', '深圳'];
+const cityOptions = ["上海", "北京", "广州", "深圳"];
 export default {
-    name:'gwaddnew',
-    data() {
-        return {
-            activeNames:[],
-            searcgValue:'',
-            layerShow:false,
-            result3: [],
-            list: [
-                'a',
-                'b',
-                'c'
-            ],
-            checkAll: false,
-            checkedCities: [],
-            cities: cityOptions,
-            isIndeterminate: true,
-            choPeoList:[
-                {
-                    deptName:'徐州市第一中学',
-                    checkAll: false,
-                    isIndeterminate: false,
-                    checkedCities: [],
-                    userList:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
-                },
-                {
-                    deptName:'徐州市第二中学',
-                    checkAll: false,
-                    isIndeterminate: false,
-                    checkedCities: [],
-                    userList:["张三","李四","王五王五","丁三","杨四","钱五","孙六","陈七"]
-                },
-                {
-                    deptName:'徐州市第三中学',
-                    checkAll: false,
-                    isIndeterminate: false,
-                    checkedCities: [],
-                    userList:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
-                },
-                {
-                    deptName:'徐州市第四中学',
-                    checkAll: false,
-                    isIndeterminate: false,
-                    checkedCities: [],
-                    userList:["张三","李四","王五","丁三","杨四","钱五","孙六","陈七"]
-                }
-            ],
-            zpeoList:[],            //暂存的人员列表
-            zfujian:[],             //暂存的附件列表
-            dzList:[],      //暂时存放燕来的数据
-            gongwen:{
-                title:'',
-                bumfcode:'',
-                bumftop:'',
-                content:'',
-                bumfMode:false,
-                sendPro:0,
-                fjPath:[]
-            }
+  name: "gwaddnew",
+  data() {
+    return {
+      activeNames: [],
+      searcgValue: "",
+      layerShow: false,
+      result3: [],
+      list: ["a", "b", "c"],
+      checkAll: false,
+      checkedCities: [],
+      cities: cityOptions,
+      isIndeterminate: true,
+      choPeoList: [
+        {
+          deptName: "徐州市第一中学",
+          checkAll: false,
+          isIndeterminate: false,
+          checkedCities: [],
+          userList: [
+            "张三",
+            "李四",
+            "王五",
+            "丁三",
+            "杨四",
+            "钱五",
+            "孙六",
+            "陈七"
+          ]
+        },
+        {
+          deptName: "徐州市第二中学",
+          checkAll: false,
+          isIndeterminate: false,
+          checkedCities: [],
+          userList: [
+            "张三",
+            "李四",
+            "王五王五",
+            "丁三",
+            "杨四",
+            "钱五",
+            "孙六",
+            "陈七"
+          ]
+        },
+        {
+          deptName: "徐州市第三中学",
+          checkAll: false,
+          isIndeterminate: false,
+          checkedCities: [],
+          userList: [
+            "张三",
+            "李四",
+            "王五",
+            "丁三",
+            "杨四",
+            "钱五",
+            "孙六",
+            "陈七"
+          ]
+        },
+        {
+          deptName: "徐州市第四中学",
+          checkAll: false,
+          isIndeterminate: false,
+          checkedCities: [],
+          userList: [
+            "张三",
+            "李四",
+            "王五",
+            "丁三",
+            "杨四",
+            "钱五",
+            "孙六",
+            "陈七"
+          ]
         }
+      ],
+      zpeoList: [],                 //暂存的人员列表
+      zfujian: [],                  //暂存的附件列表
+      dzList: [],                   //暂时存放燕来的数据
+      gongwen: {
+        title: "",
+        bumfcode: "",
+        bumftop: "",
+        content: "",
+        contentDetail:"",
+        bumfMode: false,
+        sendPro: 0,
+        fjPath: ""
+      }
+    };
+  },
+  mounted() {},
+  methods: {
+    choPeo() {
+      this.layerShow = true;
+      this.loadpeo();
+      this.loadpeoyuan();
     },
-    mounted(){
-        
-        
+    loadpeo() {
+      let me = this;
+      let url = "/api/user/select";
+      let params = {};
+      me.$api.get(url, params, res => {
+        // console.log(res);
+        let jieshou = [];
+        jieshou = res.data;
+        for (let n = 0, lenn = jieshou.length; n < lenn; n++) {
+          jieshou[n].checkAll = false;
+          jieshou[n].isIndeterminate = false;
+          jieshou[n].checkedCities = [];
+          for (let m = 0, lennn = jieshou[n].userList.length; m < lennn; m++) {
+            jieshou[n].userList[m] = jieshou[n].userList[m].userName;
+          }
+        }
+        me.choPeoList = jieshou;
+        // console.log(me.choPeoList);
+      });
     },
-    methods: {
-        choPeo(){
-            this.layerShow=true;
-            this.loadpeo();
-            this.loadpeoyuan();
-        },
-        loadpeo(){
-            let me = this;
-            let url = '/api/user/select';
-            let params={};
-            me.$api.get(url,params,res=>{
-                console.log(res);
-                let jieshou = [];
-                jieshou = res.data;
-                for(let n =0, lenn = jieshou.length; n<lenn; n++){
-                    jieshou[n].checkAll = false;
-                    jieshou[n].isIndeterminate = false;
-                    jieshou[n].checkedCities=[];
-                    for(let m=0, lennn=jieshou[n].userList.length;m<lennn;m++){
-                        jieshou[n].userList[m]=jieshou[n].userList[m].autoID;
-                    }
-                }
-                me.choPeoList =jieshou;
-                console.log(me.choPeoList);
-            })
-        },
-        loadpeoyuan(){
-            let me = this;
-            let url = '/api/user/select';
-            let params={};
-            me.$api.get(url,params,res=>{
-                console.log(res);
-                me.dzList = res.data
-                console.log(me.dzList);
-            })
-        },
-        validationScreening(){
-            let me = this;
-            let sd = []
-            for(let i=0, peolen=me.choPeoList.length;i<peolen;i++){
-                
-                for(let j=0, peolenN=me.choPeoList[i].checkedCities.length;j<peolenN;j++){
-                    sd.push(me.choPeoList[i].checkedCities[j]);
-                }
+    loadpeoyuan() {
+      let me = this;
+      let url = "/api/user/select";
+      let params = {};
+      me.$api.get(url, params, res => {
+        // console.log(res);
+        me.dzList = res.data;
+        console.log(me.dzList);
+      });
+    },
+    validationScreening() {
+      let me = this;
+      let sd = [];
+      for (let i = 0, peolen = me.choPeoList.length; i < peolen; i++) {
+        for (
+          let j = 0, peolenN = me.choPeoList[i].checkedCities.length;
+          j < peolenN;
+          j++
+        ) {
+          sd.push(me.choPeoList[i].checkedCities[j]);
+        }
+      }
+      let sz = new Set(sd);
+      me.zpeoList.push(...sz);
+      console.log(me.zpeoList);
+      if (me.zpeoList.length > 1) {
+        me.$toast("拟办人只能选择一个");
+        me.zpeoList = [];
+        return false;
+      } else {
+        for (let m = 0; m < me.dzList.length; m++) {
+          for (let n = 0; n < me.dzList[m].userList.length; n++) {
+            if (me.zpeoList[0] == me.dzList[m].userList[n].userName) {
+              me.gongwen.sendPro = me.dzList[m].userList[n].autoID;
+              console.log(me.gongwen.sendPro);
             }
-            let sz = new Set(sd);
-            me.zpeoList.push(...sz);
-            console.log(me.zpeoList);
-            me.layerShow = false;
-        },
-        onSearch(){
-             this.$toast(this.searcgValue);
-        },
-        toggle(index) {
-            this.$refs.checkboxes[index].toggle();
-        },
-        dropPeo(suoyin){
-            this.$dialog.confirm({
-                title:"删除提示",
-                message:"您确定要删除已选拟办人"+this.gongwen.peoList[suoyin]
-            }).then(()=>{
-                this.gongwen.peoList.splice(suoyin,1);
-                this.$toast.success({
-                    duration:1000,
-                    message:'人员已删除'
-                });
-            }).catch(()=>{
-                this.$toast.fail({
-                    duration:1000,
-                    message:'取消删除人员'
-                });
-            })
-        },
-        // 上传图片准备
-        readyFile(event){
-            let forms = new FormData()
-            let me = this;
-            let url = '/api/Upload';
-            forms.append('file',event.target.files[0]);
-            me.$api.uploadFile(url,forms,res=>{
-                if(res.code==200){
-                    let filed = {}
-                    filed.fileName = res.fileName;
-                    filed.url = res.url;
-                   me.gongwen.fileList.push(filed);
-                }
-            })
-            // let sd = new Set(newList);
-            // this.gongwen.fileList.push(...sd);
-            // console.log(this.gongwen.fileList);
+          }
+        }
+        me.layerShow = false;
+      }
+    },
+    onSearch() {
+      this.$toast(this.searcgValue);
+    },
+    toggle(index) {
+      this.$refs.checkboxes[index].toggle();
+    },
+    dropPeo(suoyin) {
+      this.$dialog
+        .confirm({
+          title: "删除提示",
+          message: "您确定要删除已选拟办人" + this.gongwen.peoList[suoyin]
+        })
+        .then(() => {
+          this.gongwen.peoList.splice(suoyin, 1);
+          this.$toast.success({
+            duration: 1000,
+            message: "人员已删除"
+          });
+        })
+        .catch(() => {
+          this.$toast.fail({
+            duration: 1000,
+            message: "取消删除人员"
+          });
+        });
+    },
+    // 上传图片准备
+    readyFile(event) {
+      let forms = new FormData();
+      let me = this;
+      let url = "/api/Upload";
+      forms.append("file", event.target.files[0]);
+      me.$api.uploadFile(url, forms, res => {
+        if (res.code == 200) {
+          let filed = {};
+          filed.fileName = res.fileName;
+          filed.url = res.url;
+          me.zfujian.push(filed);
+        }
+      });
 
-        },
-        dropFile(suoyin){
-            this.gongwen.fileList.splice(suoyin,1);
-        },
-        // 选择全部人员
-        handleCheckAllChange(event,suoyin) {
-            let me = this;
-            suoyin = suoyin-1;
-            me.choPeoList[suoyin].checkedCities = event ? me.choPeoList[suoyin].userList : [];
-            me.choPeoList[suoyin].isIndeterminate = false;
-        },
-        // 修改选择人
-        handleCheckedCitiesChange(event,suoyin) {
-            let me = this;
-            suoyin = suoyin-1;
-            let checkedCount = event.length;
-            me.choPeoList[suoyin].checkAll = checkedCount ===  me.choPeoList[suoyin].userList.length;
-            me.choPeoList[suoyin].isIndeterminate = checkedCount > 0 && checkedCount < me.choPeoList[suoyin].userList.length;
+      // let sd = new Set(newList);
+      // this.gongwen.fileList.push(...sd);
+      // console.log(this.gongwen.fileList);
+    },
+    dropFile(suoyin) {
+      this.gongwen.fileList.splice(suoyin, 1);
+    },
+    // 选择全部人员
+    handleCheckAllChange(event, suoyin) {
+      let me = this;
+      suoyin = suoyin - 1;
+      me.choPeoList[suoyin].checkedCities = event
+        ? me.choPeoList[suoyin].userList
+        : [];
+      me.choPeoList[suoyin].isIndeterminate = false;
+    },
+    // 修改选择人
+    handleCheckedCitiesChange(event, suoyin) {
+      let me = this;
+      suoyin = suoyin - 1;
+      let checkedCount = event.length;
+      me.choPeoList[suoyin].checkAll =
+        checkedCount === me.choPeoList[suoyin].userList.length;
+      me.choPeoList[suoyin].isIndeterminate =
+        checkedCount > 0 &&
+        checkedCount < me.choPeoList[suoyin].userList.length;
+    },
+    release() {
+      let me = this;
+      for (let z = 0; z < me.zfujian.length; z++) {
+        me.gongwen.fjPath += me.zfujian[z].fileName + ",";
+      }
+      let obg = JSON.stringify(me.gongwen);
+      obg = JSON.parse(obg);
+      obg.bumfMode = obg.bumfMode ? 1 : 0;
+
+      let url = "/api/Office";
+      // let params = {bumf:me.gongwen};
+      let params = obg;
+      me.$api.post(url, params, res => {
+        if (res.code == 200) {
+          me.$router.push({
+            name: "gwnoticeListS"
+          });
+        } else {
+          me.$toast(res.msg);
         }
+      });
     }
-}
+  }
+};
 </script>
 
 <style lang="scss">
 .van-popup {
-    box-sizing: border-box;
-    padding: 10px;
-    &--right{
-        width:80%;
-        height:100%;
-        .bts{ position:absolute; left: 0; top: auto; right: 0; bottom: 0; text-align:center; padding: 10px 0;}
+  box-sizing: border-box;
+  padding: 10px;
+  &--right {
+    width: 80%;
+    height: 100%;
+    .bts {
+      position: absolute;
+      left: 0;
+      top: auto;
+      right: 0;
+      bottom: 0;
+      text-align: center;
+      padding: 10px 0;
     }
+  }
 }
 
-.van-collapse-item__content{ padding: 0 10px;}
-
+.van-collapse-item__content {
+  padding: 0 10px;
+}
 </style>

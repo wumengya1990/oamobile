@@ -81,7 +81,7 @@
         </div>
 
         <div class="bts">
-            <van-button type="primary" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">提交</van-button>
+            <van-button type="primary" @click="submit" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">提交</van-button>
         </div>
 
         <!-- 人员选择 -->
@@ -241,6 +241,24 @@ export default {
             let checkedCount = event.length;
             me.choPeoList[suoyin].checkAll = checkedCount ===  me.choPeoList[suoyin].userList.length;
             me.choPeoList[suoyin].isIndeterminate = checkedCount > 0 && checkedCount < me.choPeoList[suoyin].userList.length;
+        },
+        // 提交返回
+        submit(){
+            let me = this;
+
+            if(peoRole==1){
+                url ='/api/Leave/audititng';
+            }else if(peoRole==2){
+                url ='/api/Leave/forward';
+            }else if(peoRole==3){
+                url ='/api/Leave/file';
+            }else{
+                return false;
+            }
+            let params = {}
+            me.$api.post(url,params,res=>{
+                console.log(res);
+            })
         }
     }
 }

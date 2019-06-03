@@ -11,61 +11,40 @@
                     <li><em>收文日期：</em><div class="rightCon"><p>{{fileDetails.beginDate}}</p></div></li>
                     <li><em>通知详情：</em>
                         <div class="rightConNoOver">
-                            <p>{{fileDetails.bumfType}}</p>
+                            <p>{{fileDetails.contentDetail}}</p>
                         </div>
                     </li>
-                    <li>
+                    <!-- <li>
                         <div class="detailsState">
                             <van-button type="info" plain hairline size="small" @click="watchShow=true"><van-icon name="eye" />阅读情况100/200</van-button>
                             <van-button type="info" plain hairline size="small" @click="submittedShow=true"><van-icon name="column" />查看报送情况</van-button>
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
 
-            <div class="detailsBox attachment">
-
+            <div class="detailsBox attachment" v-if="fujianName.length!=0">
                 <h4><span>附件列表</span></h4>
                 <div class="attachmentList">
                     <ul>
-                        <li>
+                        <li v-for="(fj, index) in fujianName" :key="index">
                             <div class="fileImg"><i class="icon iconfont iconfujian"></i></div>
                             <div class="fileMessage">
-                                <h5>标题标题标题标题标题标题标题标题</h5>
+                                <h5>{{fj}}</h5>
                                 <p></p>
                                 <dl>
-                                    <dt><i class="icon iconfont iconxiazai"></i></dt>
+                                    <dt><a :href="fujianURL[index]"><i class="icon iconfont iconxiazai"></i></a></dt>
                                     <dd>200K</dd>
                                 </dl>
                             </div>
                         </li>
-                        <li>
-                            <div class="fileImg"><i class="icon iconfont iconfujian"></i></div>
-                            <div class="fileMessage">
-                                <h5>标题标题标题标题标题标题标题标题</h5>
-                                <p></p>
-                                <dl>
-                                    <dt><i class="icon iconfont iconxiazai"></i></dt>
-                                    <dd>200K</dd>
-                                </dl>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="fileImg"><i class="icon iconfont iconfujian"></i></div>
-                            <div class="fileMessage">
-                                <h5>标题标题标题标题标题标题标题标题</h5>
-                                <p></p>
-                                <dl>
-                                    <dt><i class="icon iconfont iconxiazai"></i></dt>
-                                    <dd>200K</dd>
-                                </dl>
-                            </div>
-                        </li>
+                        
                     </ul>
                 </div>
             </div>
-
-            <div class="detailsBox opinionBox">
+            
+            <!-- 送阅意见 -->
+            <div v-if="fileDetails.state==1" class="detailsBox opinionBox">
                  <h4><span>送阅意见</span></h4>
                  <ul class="opinionBoxList">
                      <li>
@@ -88,8 +67,33 @@
                      </li>
                  </ul>
             </div>
+            <!-- 送阅意见结束 -->
 
-            <div class="detailsBox department">
+            <!-- 领导批示 -->
+            <div v-if="fileDetails.state==2" class="detailsBox opinionBox">
+                 <h4><span>领导批示</span></h4>
+                 <ul class="opinionBoxList">
+                     <li v-for="(n,index) in fujiaList" :key="index">
+                         <div class="message" placeholder="暂无送阅意见">
+                             {{n.feedBackIdea}}
+                         </div>
+                         <dl>
+                             <dt>{{n.userName}}</dt>
+                             <dd>{{n.feedtime}}</dd>
+                         </dl>
+                     </li>
+                 </ul>
+                 <van-cell-group>
+                    <van-field v-model="message" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
+                </van-cell-group>
+                <div class="bts">
+                    <van-button type="primary" @click="feedback" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">回复</van-button>
+                </div>
+            </div>
+            <!-- 领导批示结束 -->
+
+            <!-- 处室办理 -->
+            <div v-if="fileDetails.state==3" class="detailsBox department">
                  <h4><span>处室办理</span></h4>
                  <ul class="departmentList">
                      <li><span>徐州市第一中学</span><span>已阅</span><span>2019-03-22&nbsp;&nbsp;15:00</span></li>
@@ -98,8 +102,9 @@
                      <li><span>徐州市第一中学</span><span>已阅</span><span>2019-03-22&nbsp;&nbsp;15:00</span></li>
                  </ul>
             </div>
+            <!-- 处室办理结束 -->
 
-            <div class="detailsBox replyBox">
+            <!-- <div class="detailsBox replyBox">
                 <h4><span>回复内容</span></h4>
                 <div class="replyBoxCon">
                     <ul>
@@ -139,83 +144,10 @@
                 <div class="bts">
                     <van-button type="primary" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">回复</van-button>
                 </div>
-            </div>
+            </div> -->
             
 
         </div>
-
-        <van-popup v-model="watchShow" position="right">
-            <van-tabs swipeable>
-                <van-tab title="已读">
-                    <div class="layerBox">
-                        <div class="watchShowBox">
-                            <span v-for="c in readList.haveRead" :key="c.peoID">{{c.peoName}}</span>
-                        </div>
-                    </div>
-                </van-tab>
-                <van-tab title="未读">
-                    <div class="layerBox">
-                    <div class="watchShowBox">
-                        <span v-for="d in readList.haveRead" :key="d.peoID">{{d.peoName}}</span>
-                    </div>
-                    </div>
-                </van-tab>
-            </van-tabs>
-
-            <div class="bts">
-                <van-button @click="watchShow=false" hairline size="small" style="width:120px;">取消</van-button>
-                <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
-            </div>
-        </van-popup>
-
-        <van-popup v-model="submittedShow" position="right">
-            <van-tabs swipeable>
-                <van-tab title="参会人员信息">
-                    <div class="layerBox">
-                    <div class="stateBar">
-                        <span>已报机构:{{10}}</span>
-                        <span>未报机构:{{5}}</span>
-                    </div>
-                    <table class="tableStyle" style="margin:10px 0 0;" width="100%" cellpadding="0" cellspacing="0">
-                        <thead>
-                        <tr><th width="35%">所属机构</th><th>姓名</th><th width="35%">职务</th></tr>
-                        </thead>
-                        <tbody v-for="a in submitted.attendList" :key="a.jigouID">
-                            <tr v-for="(b,index) in a.peoList" :key="b.peoID">
-                                <td v-if="index==0" :rowspan="a.peoList.length" align="center">{{a.jigou}}</td>
-                                <td>{{b.peoName}}</td>
-                                <td>{{b.zhiwu}}</td>
-                            </tr>
-                        <!-- <tr><td rowspan="3">徐州市第一中学</td><td>张洋</td><td>校长</td></tr>
-                        <tr><td>王五</td><td>语文组组长</td></tr>
-                        <tr><td>张三</td><td>数学组组长</td></tr> -->
-                        </tbody>
-                    </table>
-                    </div>
-                </van-tab>
-                <van-tab title="请假人员信息">
-                     <div class="layerBox">
-                         <table class="tableStyle" style="margin:10px 0 0;" width="100%" cellpadding="0" cellspacing="0">
-                        <thead>
-                        <tr><th width="35%">所属机构</th><th>姓名</th><th width="35%">职务</th></tr>
-                        </thead>
-                        <tbody v-for="a in submitted.attendList" :key="a.jigouID">
-                            <tr v-for="(b,index) in a.peoList" :key="b.peoID">
-                                <td v-if="index==0" :rowspan="a.peoList.length" align="center">{{a.jigou}}</td>
-                                <td>{{b.peoName}}</td>
-                                <td>{{b.zhiwu}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                     </div>
-                </van-tab>
-            </van-tabs>
-            <div class="bts">
-                <van-button @click="submittedShow=false" hairline size="small" style="width:120px;">取消</van-button>
-                <van-button @click="validationScreening" hairline size="small" style="width:120px;">确定</van-button>
-            </div>
-        </van-popup>
-        
 
     </div>
 </template>
@@ -238,6 +170,9 @@ export default {
                 getTime:'2018-05-13',
                 particulars:'文本内容文本内容文本内容文本内容文本内容文本内容文本内容'
             },
+            fujiaList:[],               //附件内容送阅意见,领导批示,处室办理
+            fujianName:[],              //附件名称
+            fujianURL:[],               //附件地址
             readList:{                  //弹层阅读详情内容
                 haveRead:[
                     {peoName:'张三',peoID:'u0001'},
@@ -291,18 +226,18 @@ export default {
     },
     mounted() {
         console.log(this.$route.params.id);
+        console.log(this.$route.params.type);
         this.loadxaingqing();
     },
     methods:{
+        // 设置高度
         setHeight(){
             let me = this;
             let layerHeight = window.getComputedStyle(me.$refs.layerHeight).height;
             let nHeight = parseInt(layerHeight)-100+"px";
             me.neiHeight = nHeight;
         },
-        validationScreening(){
-            
-        },
+        //加载详情
         loadxaingqing(){
             let me = this;
             let url = '/api/Office';
@@ -310,18 +245,24 @@ export default {
             me.$api.get(url,params,res=>{
                 console.log(res);
                 me.fileDetails = res.data;
+                me.fujiaList = res.list;
                 //me.replyList = res.replyList;
                 let file = res.data.fjPath;
-                let fileUrl = res.data.pathBase;
-                me.fujianName = file.split(",");
-                me.fujianURL = fileUrl.split(",");
+                let fileUrl = res.data.path;
                 if(file==""||file==null||file==undefined){
                         me.fujianName=[];
                 }else{
                     me.fujianName = file.split(",");
+                    me.fujianURL = fileUrl.split(",");
                 }
                 // console.log(me.fujianName);
             })
+        },
+        //回复
+        feedback(){
+            let me = this;
+            let url = '/api/Office/reply';
+            let params = {};
         }
     }
 }

@@ -2,21 +2,21 @@
     <div class="gwaddnew bgMain posA posCenter">
         <div class="addForm">
         <van-cell-group>
-            <van-field v-model="leaves.leave_People" type="text" label="请假人" placeholder="请输入公文标题" required />
-            <van-field v-model="leaves.link_Phone" type="text" label="联系电话" placeholder="请输入文件编码" required />
-            <van-field v-model="leaves.dep" type="text" label="所属部门" placeholder="请输入内部文号" required />
-            <van-field v-model="leaves.job" type="text" label="职务" placeholder="请输入内部文号" required />
-            <van-field v-model="leaves.leave_Time" @focus="choLeaveTime" type="text" label="离开时间" placeholder="请输入内部文号" required />
-            <van-field v-model="leaves.return_Time" @focus="choBackTime" type="text" label="返回时间" placeholder="请输入内部文号" required />
-            <van-field v-model="leaves.destination" type="textarea" label="外出地点" rows="5" placeholder="请输入公文内容" autosize />
-            <van-field v-model="leaves.reason" type="textarea" label="外出事由" rows="5" placeholder="请输入公文内容" autosize />
-            <van-field v-model="leaves.trip" type="textarea" label="行程安排" rows="5" placeholder="请输入公文内容" autosize />
+            <van-field v-model="leaves.leave_People" type="text" label="请假人" placeholder="请输入请假人" required />
+            <van-field v-model="leaves.link_Phone" @blur="wathchTel(leaves.link_Phone)" type="text" label="联系电话" placeholder="请输入联系电话" required />
+            <van-field v-model="leaves.dep" type="text" label="所属部门" placeholder="请输入所属部门" required />
+            <van-field v-model="leaves.job" type="text" label="职务" placeholder="请输入职务" required />
+            <van-field v-model="leaves.leave_Time" @focus="choLeaveTime" type="text" label="离开时间" placeholder="请输入离开时间" required />
+            <van-field v-model="leaves.return_Time" @focus="choBackTime" type="text" label="返回时间" placeholder="请输入返回时间" required />
+            <van-field v-model="leaves.destination" type="textarea" label="外出地点" rows="5" placeholder="请输入外出地点" autosize />
+            <van-field v-model="leaves.reason" type="textarea" label="外出事由" rows="5" placeholder="请输入外出事由" autosize />
+            <van-field v-model="leaves.trip" type="textarea" label="行程安排" rows="5" placeholder="请输入行程安排" autosize />
         </van-cell-group>
         <van-cell-group>
             <h2>临时主持工作的负责同志</h2>
-            <van-field v-model="leaves.l_Name" type="text" label="姓名" placeholder="请输入公文标题" required />
-            <van-field v-model="leaves.l_Job" type="text" label="职务" placeholder="请输入文件编码" required />
-            <van-field v-model="leaves.l_Link_Phone" type="text" label="联系电话" placeholder="请输入内部文号" required />
+            <van-field v-model="leaves.l_Name" type="text" label="姓名" placeholder="请输入临时负责人员姓名" required />
+            <van-field v-model="leaves.l_Job" type="text" label="职务" placeholder="请输入临时负责人员职位" required />
+            <van-field v-model="leaves.l_Link_Phone" type="text" @blur="wathchTel(leaves.l_Link_Phone)" label="联系电话" placeholder="请输入临时负责人员电话" required />
             <div class="bts">
                 <van-button type="primary" @click="applyForLeave" size="large">提交</van-button>
                 <van-button type="default" @click="$router.back(-1)" size="large">返回</van-button>
@@ -61,6 +61,8 @@ export default {
             wleaveTime:new Date(),
             minDate:new Date(),
             leaves:{
+                autoID:0,
+                auditStatus:0,
                 leave_People:'',
                 link_Phone:'',
                 dep:'',
@@ -72,7 +74,9 @@ export default {
                 trip:'',
                 l_Name:'',
                 l_Job:'',
-                l_Link_Phone:''
+                l_Link_Phone:'',
+                isArchive:0,
+                createUser:0,
             }
         }
     },
@@ -129,6 +133,24 @@ export default {
             timeList = e.getValues()
             this.leaves.return_Time = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
             console.log(this.leaves.return_Time );
+        },
+        wathchTel(tel){
+            console.log(tel);
+            let yz = /^[1][3,4,5,7,8][0-9]{9}$/;
+            if(!yz.test(tel)||tel==''||!tel){
+                this.$toast.fail({
+                    duration:3000,
+                    message:'请输入正确的电话号码'
+                })
+            }
+            // var yanzhengTel = /^[1][3,4,5,7,8][0-9]{9}$/;
+            // let daqian = tel;
+            // if(!/^[1][3,4,5,7,8][0-9]{9}$/.text(daqian)){
+            //     this.$toast.fail({
+            //         duration:1000,
+            //         message:'取消删除人员'
+            //     })
+            // }
         },
         backSure(){
              this.backTimeShow =  false;
