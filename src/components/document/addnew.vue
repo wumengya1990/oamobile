@@ -31,9 +31,7 @@
         <div class="addBox">
           <em>拟办人</em>
           <div class="rightCon">
-            <div class="peolist">
-              <span v-for="(a,index) in zpeoList" @click="dropPeo(index)" :key="index">{{a}}</span>
-            </div>
+            <div class="peolist"><span v-for="(a,index) in zpeoList" @click="dropPeo(index)" :key="index">{{a.userName}}</span></div>
             <p>点击人员名称可删除</p>
             <a class="appendPeo" @click="choPeo">
               <van-icon name="friends"/>添加拟办人
@@ -88,19 +86,11 @@
               v-for="(peo,index) in choPeoList"
               :key="index"
             >
-              <div style="margin:10px 0;"></div>
-              <el-checkbox
-                :indeterminate="peo.isIndeterminate"
-                v-model="peo.checkAll"
-                @change="handleCheckAllChange($event,index)"
-              >全选</el-checkbox>
-              <div style="margin:10px 0;"></div>
-              <el-checkbox-group
-                v-model="peo.checkedCities"
-                @change="handleCheckedCitiesChange($event,index)"
-              >
-                <el-checkbox v-for="ry in peo.userList" :label="ry" :key="ry">{{ry}}</el-checkbox>
-              </el-checkbox-group>
+             <ul class="peoList">
+                  <li :class="{on:peoN.ched}" @click="xzPeo(index,indexn)" v-for="(peoN,indexn) in peo.userList" :key="indexn">
+                      {{peoN.userName}}<van-icon name="checked" />
+                  </li>
+              </ul>
             </van-collapse-item>
           </van-collapse>
         </div>
@@ -134,72 +124,7 @@ export default {
       checkedCities: [],
       cities: cityOptions,
       isIndeterminate: true,
-      choPeoList: [
-        {
-          deptName: "徐州市第一中学",
-          checkAll: false,
-          isIndeterminate: false,
-          checkedCities: [],
-          userList: [
-            "张三",
-            "李四",
-            "王五",
-            "丁三",
-            "杨四",
-            "钱五",
-            "孙六",
-            "陈七"
-          ]
-        },
-        {
-          deptName: "徐州市第二中学",
-          checkAll: false,
-          isIndeterminate: false,
-          checkedCities: [],
-          userList: [
-            "张三",
-            "李四",
-            "王五王五",
-            "丁三",
-            "杨四",
-            "钱五",
-            "孙六",
-            "陈七"
-          ]
-        },
-        {
-          deptName: "徐州市第三中学",
-          checkAll: false,
-          isIndeterminate: false,
-          checkedCities: [],
-          userList: [
-            "张三",
-            "李四",
-            "王五",
-            "丁三",
-            "杨四",
-            "钱五",
-            "孙六",
-            "陈七"
-          ]
-        },
-        {
-          deptName: "徐州市第四中学",
-          checkAll: false,
-          isIndeterminate: false,
-          checkedCities: [],
-          userList: [
-            "张三",
-            "李四",
-            "王五",
-            "丁三",
-            "杨四",
-            "钱五",
-            "孙六",
-            "陈七"
-          ]
-        }
-      ],
+      choPeoList: [],
       zpeoList: [],                 //暂存的人员列表
       zfujian: [],                  //暂存的附件列表
       dzList: [],                   //暂时存放燕来的数据
@@ -220,67 +145,59 @@ export default {
     choPeo() {
       this.layerShow = true;
       this.loadpeo();
-      this.loadpeoyuan();
+      // this.loadpeoyuan();
+    },
+    xzPeo(wIndex,nIndex){
+        let me = this;
+        me.choPeoList[wIndex-1].userList[nIndex].ched =! me.choPeoList[wIndex-1].userList[nIndex].ched;
+        console.log(me.choPeoList[wIndex-1].userList[nIndex].ched);
     },
     loadpeo() {
       let me = this;
-      let url = "/api/user/select";
-      let params = {};
-      me.$api.get(url, params, res => {
-        // console.log(res);
-        let jieshou = [];
-        jieshou = res.data;
-        for (let n = 0, lenn = jieshou.length; n < lenn; n++) {
-          jieshou[n].checkAll = false;
-          jieshou[n].isIndeterminate = false;
-          jieshou[n].checkedCities = [];
-          for (let m = 0, lennn = jieshou[n].userList.length; m < lennn; m++) {
-            jieshou[n].userList[m] = jieshou[n].userList[m].userName;
+      let url = '/api/user/select';
+      let params={};
+      me.$api.get(url,params,res=>{
+          console.log("加载人员成功");
+          console.log(res);
+          let jieshou = [];
+          jieshou = res.data;
+          for(let n =0, lenn = jieshou.length; n<lenn; n++){
+              for(let m=0, lennn=jieshou[n].userList.length;m<lennn;m++){
+                  jieshou[n].userList[m].ched=false;
+              }
           }
-        }
-        me.choPeoList = jieshou;
-        // console.log(me.choPeoList);
+      me.choPeoList =jieshou;
+      // console.log(me.choPeoList);
       });
     },
-    loadpeoyuan() {
-      let me = this;
-      let url = "/api/user/select";
-      let params = {};
-      me.$api.get(url, params, res => {
-        // console.log(res);
-        me.dzList = res.data;
-        console.log(me.dzList);
-      });
-    },
+    // loadpeoyuan() {
+    //   let me = this;
+    //   let url = "/api/user/select";
+    //   let params = {};
+    //   me.$api.get(url, params, res => {
+    //     // console.log(res);
+    //     me.dzList = res.data;
+    //     console.log(me.dzList);
+    //   });
+    // },
     validationScreening() {
       let me = this;
-      let sd = [];
-      for (let i = 0, peolen = me.choPeoList.length; i < peolen; i++) {
-        for (
-          let j = 0, peolenN = me.choPeoList[i].checkedCities.length;
-          j < peolenN;
-          j++
-        ) {
-          sd.push(me.choPeoList[i].checkedCities[j]);
-        }
-      }
-      let sz = new Set(sd);
-      me.zpeoList.push(...sz);
-      console.log(me.zpeoList);
-      if (me.zpeoList.length > 1) {
-        me.$toast("拟办人只能选择一个");
-        me.zpeoList = [];
-        return false;
-      } else {
-        for (let m = 0; m < me.dzList.length; m++) {
-          for (let n = 0; n < me.dzList[m].userList.length; n++) {
-            if (me.zpeoList[0] == me.dzList[m].userList[n].userName) {
-              me.gongwen.sendPro = me.dzList[m].userList[n].autoID;
-              console.log(me.gongwen.sendPro);
-            }
+      let obg = JSON.stringify(me.choPeoList)
+      obg = JSON.parse(obg);
+      me.zpeoList=[];
+      for(let i=0, peolen=obg.length;i<peolen;i++){
+          for(let j=0, peolenN=obg[i].userList.length;j<peolenN;j++){
+              if(obg[i].userList[j].ched == true){
+                  me.zpeoList.push(obg[i].userList[j]);
+              }
           }
-        }
-        me.layerShow = false;
+      }
+      if(me.zpeoList.length>1){
+          me.$toast("只能选择一个拟办人");
+          me.zpeoList=[];
+      }else{
+          console.log(me.zpeoList);
+          me.layerShow = false;
       }
     },
     onSearch() {
@@ -293,10 +210,10 @@ export default {
       this.$dialog
         .confirm({
           title: "删除提示",
-          message: "您确定要删除已选拟办人" + this.gongwen.peoList[suoyin]
+          message: "您确定要删除已选拟办人" + this.zpeoList[suoyin].userName
         })
         .then(() => {
-          this.gongwen.peoList.splice(suoyin, 1);
+          this.zpeoList.splice(suoyin, 1);
           this.$toast.success({
             duration: 1000,
             message: "人员已删除"
@@ -323,33 +240,9 @@ export default {
           me.zfujian.push(filed);
         }
       });
-
-      // let sd = new Set(newList);
-      // this.gongwen.fileList.push(...sd);
-      // console.log(this.gongwen.fileList);
     },
     dropFile(suoyin) {
       this.gongwen.fileList.splice(suoyin, 1);
-    },
-    // 选择全部人员
-    handleCheckAllChange(event, suoyin) {
-      let me = this;
-      suoyin = suoyin - 1;
-      me.choPeoList[suoyin].checkedCities = event
-        ? me.choPeoList[suoyin].userList
-        : [];
-      me.choPeoList[suoyin].isIndeterminate = false;
-    },
-    // 修改选择人
-    handleCheckedCitiesChange(event, suoyin) {
-      let me = this;
-      suoyin = suoyin - 1;
-      let checkedCount = event.length;
-      me.choPeoList[suoyin].checkAll =
-        checkedCount === me.choPeoList[suoyin].userList.length;
-      me.choPeoList[suoyin].isIndeterminate =
-        checkedCount > 0 &&
-        checkedCount < me.choPeoList[suoyin].userList.length;
     },
     release() {
       let me = this;
@@ -359,11 +252,11 @@ export default {
       let obg = JSON.stringify(me.gongwen);
       obg = JSON.parse(obg);
       obg.bumfMode = obg.bumfMode ? 1 : 0;
-
+      obg.sendPro = me.zpeoList[0].autoID;
       let url = "/api/Office";
-      // let params = {bumf:me.gongwen};
       let params = obg;
       me.$api.post(url, params, res => {
+      console.log(res);
         if (res.code == 200) {
           me.$router.push({
             name: "gwnoticeListS"

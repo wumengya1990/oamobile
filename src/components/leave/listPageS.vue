@@ -19,23 +19,28 @@
                         <dd><p>暂无数据内容请刷新重试</p></dd>
                     </dl>
                     <div class="listBox">
+                        <van-pull-refresh v-model="isRefresh" @refresh="onRefresh">
+                        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="shuaxin" :offset="100">
                         <ul>
                             <li v-for="(n,index) in qjUnHaveList" :key="index" @click="enterDetailed(n.autoID)">
                                 <van-swipe-cell :right-width="50">
                                 <h3>请假人、{{n.leave_People}}</h3>
                                 <p>
                                     <span>所属部门：{{n.dep}}</span>
-                                    <time>{{n.createAt}}</time></p>
+                                    <time>{{n.createAt|newCreateAt}}</time></p>
                                 <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                                 </van-swipe-cell>
                             </li>
                         </ul>
+                        </van-list>
+                        </van-pull-refresh>
                     </div>
                 </div>
             
         <div class="xuanfu">
             <span @click="addnew"><van-icon name="add-o" /></span>
             <span @click="backTop"><van-icon name="arrow-up" /></span>
+            <span @click="$router.push({path:'/menuAll'})"><van-icon name="apps-o" /></span>
         </div>
         
     </div>
@@ -70,7 +75,19 @@ export default {
         }
     },
     mounted() {
-        this.loadList();
+        this.loadList(true);
+    },
+    filters:{
+        newCreateAt:function(mes){
+            if(mes){
+                let nr = mes.toString();
+                let result = nr.replace("T"," ");
+                result = result.substring(0,19);
+                return result;
+            }else{
+                return mes;
+            }
+        }
     },
     methods:{
         onSearch:function(){
@@ -85,13 +102,46 @@ export default {
         validationScreening(){
             this.loadList();
         },
-        loadList(){
+        //下拉重新加载
+        onRefresh(){
+            let me = this;                   
+            me.loading = false;
+            me.loadList(true);
+        },
+         //上滑刷新
+         shuaxin(){
+             let me = this;
+              me.loadList();
+         },
+        loadList(isInit){
             let me = this;
+            if(me.isLoading == false){            //判断列表是否处于加载状态
+                me.isLoading = true;
+            }else{
+                return false
+            }
+            if (isInit == true) {               //是否需要清空当前列表
+                me.finished = false;
+                me.pageIndex = 1;
+                me.qjUnHaveList = [];
+            }
             let url = '/api/Leave/todolist';
             let params={pageSize:me.pageSize,pageIndex:me.pageIndex}
             me.$api.get(url,params,res=>{
                 console.log(res);
-                me.qjUnHaveList = res.data;
+                let resCount = res.data.length;
+                if(isInit == true){
+                     me.qjUnHaveList = res.data;
+                }else{
+                    me.qjUnHaveList = me.qjUnHaveList.concat(res.data);
+                }
+                me.pageIndex++;
+                me.loading = false;
+                me.isLoading =false;
+                me.isRefresh = false;
+                if (resCount < 10) {
+                    me.finished = true;
+                }
             })
         },
         enterDetailed:function(nq){

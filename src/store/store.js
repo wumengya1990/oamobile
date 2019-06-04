@@ -11,6 +11,7 @@ const store = new Vuex.Store({
     tzAuthority:0,           //通知
     gwAuthority:0,           //公文
     qjAuthority:0,           //请假
+    userName:'',           //当前登录用户姓名
     userRole: 0,
     haveLogin:false,
     apiUrl: window.localStorage.ApiUrl
@@ -56,7 +57,12 @@ const store = new Vuex.Store({
       window.localStorage.setItem("qjAuthority", data);
       console.log("qjAuthority写入Store与localStorage中：" + data);
     },
-    
+    // 保存用户名称
+    saveUserName(state, data) {
+      state.userName = data;
+      window.localStorage.setItem("userName", data);
+      console.log("qjAuthority写入Store与localStorage中：" + data);
+    },
     saveRole(state, data) {
       state.userRole = data;
       window.localStorage.setItem("userRole", data);

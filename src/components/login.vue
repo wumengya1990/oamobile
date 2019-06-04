@@ -59,6 +59,7 @@ methods: {
                 me.$store.commit("saveToken", res.token);      //保存 token
                 me.$store.commit("saveLogin", true);           //保存登录状态
                 me.$store.commit("saveUid", res.data.autoID);
+                me.$store.commit("saveUserName", res.data.userName);
                 me.getAuthority();
                 me.$router.push({
                     name:'menuAll',

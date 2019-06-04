@@ -61,7 +61,6 @@ export default {
             wleaveTime:new Date(),
             minDate:new Date(),
             leaves:{
-                autoID:0,
                 auditStatus:0,
                 leave_People:'',
                 link_Phone:'',
@@ -92,12 +91,12 @@ export default {
         applyForLeave(){
             let me = this;
             let url='/api/Leave';
-            let params = {entity:me.leaves};
+            let params = me.leaves;
             me.$api.post(url,params,res=>{
                 console.log(res);
                 if(res.code==200){
                     me.$router.push({
-                        name:'qjTodoList'
+                        name:'myApplyFor'
                     })
                 }
             })

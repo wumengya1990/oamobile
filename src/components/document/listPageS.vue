@@ -19,7 +19,7 @@
                     <h3>{{index++}}、{{n.title}}</h3>
                     <p>
                         <span>发送人：{{n.userName}}</span>
-                        <time>{{n.beginDate}}</time></p>
+                        <time>{{n.beginDate|newBeginDate}}</time></p>
                     <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                     </van-swipe-cell>
                 </li>
@@ -71,6 +71,18 @@ export default {
     },
     mounted() {
         this.loadList(true);
+    },
+    filters:{
+        newBeginDate:function(mes){
+            if(mes){
+                let nr = mes.toString();
+                let result = nr.replace("T"," ");
+                result = result.substring(0,19);
+                return result;
+            }else{
+                return mes;
+            }
+        }
     },
     methods:{
         

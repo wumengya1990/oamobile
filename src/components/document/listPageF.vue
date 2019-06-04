@@ -13,10 +13,10 @@
             <ul>
                 <li v-for="(n,index) in documentList" :key="index" @click="enterDetailed(n.autoID)">
                     <van-swipe-cell :right-width="50">
-                    <h3>{{index++}}、{{n.title}}</h3>
+                    <h3>{{n.title}}<em class="point" v-if="n.gd==1"></em></h3>
                     <p>
-                        <span>发送人：{{n.userName}}</span>
-                        <time>{{n.beginDate}}</time></p>
+                        <span>发送人：{{$store.state.userName}}</span>
+                        <time>{{n.beginDate|newBeginDate}}</time></p>
                     <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                     </van-swipe-cell>
                 </li>
@@ -59,6 +59,18 @@ export default {
                     hasN:true
                 }
             ]
+        }
+    },
+    filters:{
+        newBeginDate:function(mes){
+            if(mes){
+                let nr = mes.toString();
+                let result = nr.replace("T"," ");
+                result = result.substring(0,19);
+                return result;
+            }else{
+                return mes;
+            }
         }
     },
     mounted() {
@@ -104,11 +116,9 @@ export default {
                 console.log(res);
                 let resCount = res.data.length;
                 if(isInit == true){
-                     me.documentList = res.data;
-                     me.setTime();
+                    me.documentList = res.data;
                 }else{
                     me.documentList = me.documentList.concat(res.data);
-                    me.setTime();
                 }
                 me.pageIndex++;
                 me.loading = false;
@@ -119,13 +129,6 @@ export default {
                 }
             })
             
-        },
-        setTime(){
-            let me = this;
-            for(let i=0, len=me.documentList.length;i<len;i++){
-                let timen = me.documentList[i].beginDate;
-                me.documentList[i].beginDate  = timen.replace(/T/g," ");
-            }
         },
         enterDetailed:function(nq){
             let me = this;

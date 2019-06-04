@@ -23,7 +23,7 @@
                             <span>发送人：{{n.senduserName}}</span>
                             <span v-if="n.notice_Type==0">普通通知</span>
                             <span style="color:#F30;" v-else>会议通知</span>
-                            <time>{{ n.beginDate}}</time></p>
+                            <time>{{ n.beginDate | newBeginDate}}</time></p>
                         <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
                         </van-swipe-cell>
                     </li>
@@ -75,6 +75,18 @@ export default {
     mounted() {
         this.loadReadList(true);
     },
+    filters:{
+        newBeginDate:function(mes){
+            if(mes){
+                let nr = mes.toString();
+                let result = nr.replace("T"," ");
+                result = result.substring(0,19);
+                return result;
+            }else{
+                return mes;
+            }
+        }
+    },
     methods:{
         // 已读未读修改
         changeState(zhuangtai){
@@ -114,10 +126,8 @@ export default {
                 let resCount = res.data.length;
                 if(isInit == true){
                      me.noticeMessList = res.data;
-                     me.setTime();
                 }else{
                     me.noticeMessList = me.noticeMessList.concat(res.data);
-                    me.setTime();
                 }
                 me.pageIndex++;
                 me.loading = false;
@@ -127,13 +137,6 @@ export default {
                     me.finished = true;
                 }
             })
-        },
-        setTime(){
-            let me = this;
-            for(let i=0, len=me.noticeMessList.length;i<len;i++){
-                let timen = me.noticeMessList[i].beginDate;
-                me.noticeMessList[i].beginDate  = timen.replace(/T/g," ");
-            }
         },
         // 进入详情详情页面传参
         enterDetailed:function(tzid,liebiaoType,xinxiType){

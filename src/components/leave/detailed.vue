@@ -6,8 +6,8 @@
             <li><em>联系电话</em><div class="rightCon">{{leaves.link_Phone}}</div></li>
             <li><em>所属部门</em><div class="rightCon">{{leaves.dep}}</div></li>
             <li><em>职务</em><div class="rightCon">{{leaves.job}}</div></li>
-            <li><em>离开时间</em><div class="rightCon">{{leaves.leave_Time}}</div></li>
-            <li><em>返回时间</em><div class="rightCon">{{leaves.return_Time}}</div></li>
+            <li><em>离开时间</em><div class="rightCon">{{leaves.leave_Time|newleave_Time}}</div></li>
+            <li><em>返回时间</em><div class="rightCon">{{leaves.return_Time|newreturn_Time}}</div></li>
             <li><em>外出地点</em><div class="rightCon">{{leaves.destination}}</div></li>
             <li><em>外出事由</em><div class="rightCon">{{leaves.reason}}</div></li>
             <li><em>行程安排</em><div class="rightCon">{{leaves.trip}}</div></li>
@@ -28,7 +28,7 @@
             <h3>领导审批</h3>
             <div class="ApprovalBox">
                 <div>
-                <van-radio-group v-model="opinion.opinionRadio">
+                <van-radio-group v-model="opinion.isArchive">
                     <van-radio name="1">同意</van-radio>
                     <van-radio name="2">不同意</van-radio>
                 </van-radio-group>
@@ -37,7 +37,7 @@
                 <div>
                     <van-cell-group>
                     <van-field
-                        v-model="opinion.opinionMessage"
+                        v-model="opinion.remarks"
                         label="审批意见"
                         type="textarea"
                         placeholder="请输入审批意见"
@@ -55,10 +55,12 @@
             <h3>转发分管领导批示</h3>
         <ul class="addBox">
             <li><em>姓名</em><div class="rightCon">
-                    <div class="peolist"><span v-for="(a,index) in zpeoList" @click="dropPeo(index)" :key="index">{{a}}</span></div>
+                    <div class="choPeoList">
+                    <div class="peolist"><span v-for="(a,index) in zpeoList" @click="dropPeo(index)" :key="index">{{a.userName}}</span></div>
                     <p>点击人员名称可删除</p>
                     <a class="appendPeo" @click="choPeo"><van-icon name="friends" />添加拟办人</a>
                     <span class="duanxin">手机端短信提醒<van-switch v-model="bumfMode" size="14px" /></span>
+                    </div>
                 </div>
             </li>
         </ul>
@@ -73,7 +75,7 @@
                 <p><span>{{n.name}}</span></p>
                 <p>
                     <span v-if="n.state=='已转发'||n.state=='同意'" style="color:#1ac138">{{n.state}}</span>
-                    <span v-else-if="n.state=='待审核'" style="color:#e4ab04">{{n.state}}</span>
+                    <span v-else-if="n.state=='待审核'||n.state=='待转发'" style="color:#e4ab04">{{n.state}}</span>
                     <span v-else>{{n.state}}</span>
                 </p>
                 <p><span>{{n.time}}</span></p>
@@ -99,12 +101,17 @@
                 <div class="layerBoxScroll">
                 <van-collapse v-model="activeNames">
                     <van-collapse-item :title="peo.deptName" :name="index++" v-for="(peo,index) in choPeoList" :key="index">
-                        <div style="margin:10px 0;"></div>
+                        <!-- <div style="margin:10px 0;"></div>
                         <el-checkbox :indeterminate="peo.isIndeterminate" v-model="peo.checkAll" @change="handleCheckAllChange($event,index)">全选</el-checkbox>
-                        <div style="margin:10px 0;"></div>
-                        <el-checkbox-group v-model="peo.checkedCities" @change="handleCheckedCitiesChange($event,index)">
+                        <div style="margin:10px 0;"></div> -->
+                        <!-- <el-checkbox-group v-model="peo.checkedCities" @change="handleCheckedCitiesChange($event,index)">
                             <el-checkbox v-for="ry in peo.userList" :label="ry" :key="ry">{{ry}}</el-checkbox>
-                        </el-checkbox-group>
+                        </el-checkbox-group> -->
+                        <ul class="peoList">
+                            <li :class="{on:peoN.ched}" @click="xzPeo(index,indexn)" v-for="(peoN,indexn) in peo.userList" :key="indexn">
+                                {{peoN.userName}}<van-icon name="checked" />
+                            </li>
+                        </ul>
                     </van-collapse-item>
                 </van-collapse>
                 </div>
@@ -130,8 +137,10 @@ export default {
             neiHeight:'',
             peoRole:0,                       //角色权限
             opinion:{
-                opinionRadio:'1',            //领导意见
-                opinionMessage:''
+                autoID:this.$route.params.autoID,
+                state:0,
+                isArchive:'1',            //领导意见
+                remarks:''
             },
             leaves:{
                 peoName:'张洋',
@@ -158,30 +167,63 @@ export default {
             
         }
     },
+    filters:{
+        newleave_Time:function(mes){
+            if(mes){
+                let nr = mes.toString();
+                let result = nr.replace("T"," ");
+                return result;
+            }else{
+                return mes;
+            }
+        },
+        newreturn_Time:function(mes){
+            if(mes){
+                let nr = mes.toString();
+                let result = nr.replace("T"," ");
+                return result;
+            }else{
+                return mes;
+            }
+        }
+    },
     mounted() {
         console.log(this.$route.params.autoID);
         this.loadDetailed();
     },
     methods:{
+        xzPeo(wIndex,nIndex){
+            let me = this;
+            me.choPeoList[wIndex-1].userList[nIndex].ched =! me.choPeoList[wIndex-1].userList[nIndex].ched;
+            console.log(me.choPeoList[wIndex-1].userList[nIndex].ched);
+        },
         setHeight(){
             let me = this;
             let layerHeight = window.getComputedStyle(me.$refs.layerHeight).height;
             let nHeight = parseInt(layerHeight)-100+"px";
             me.neiHeight = nHeight;
         },
+        // 提交选择的人员
         validationScreening(){
             let me = this;
-            let sd = []
-            for(let i=0, peolen=me.choPeoList.length;i<peolen;i++){
-                
-                for(let j=0, peolenN=me.choPeoList[i].checkedCities.length;j<peolenN;j++){
-                    sd.push(me.choPeoList[i].checkedCities[j]);
+            let obg = JSON.stringify(me.choPeoList)
+            obg = JSON.parse(obg);
+            me.zpeoList=[];
+            for(let i=0, peolen=obg.length;i<peolen;i++){
+                for(let j=0, peolenN=obg[i].userList.length;j<peolenN;j++){
+                    if(obg[i].userList[j].ched == true){
+                        me.zpeoList.push(obg[i].userList[j]);
+                    }
                 }
             }
-            let sz = new Set(sd);
-            me.zpeoList.push(...sz);
-            console.log(me.zpeoList);
-            me.layerShow = false;
+            if(me.zpeoList.length>1){
+                me.$toast("只能选择一人");
+                me.zpeoList=[];
+            }else{
+                console.log(me.zpeoList);
+                me.layerShow = false;
+            }
+            
         },
         // 加载详情
         loadDetailed(){
@@ -189,13 +231,14 @@ export default {
             let url = '/api/Leave';
             let params={autoID:me.$route.params.autoID};
             me.$api.get(url,params,res=>{
-                console.log(res);
+                console.log("加载详情成功");
+                // console.log(res);
                 me.leaves = res.data;
                 me.liuchengList = res.flowList;
                 me.peoRole = res.state;
-                console.log(me.leaves);
-                console.log(me.liuchengList);
-                
+                // console.log(me.leaves);
+                // console.log(me.liuchengList);
+
             })
         },
         choPeo(){
@@ -216,49 +259,55 @@ export default {
                 let jieshou = [];
                 jieshou = res.data;
                 for(let n =0, lenn = jieshou.length; n<lenn; n++){
-                    jieshou[n].checkAll = false;
-                    jieshou[n].isIndeterminate = false;
-                    jieshou[n].checkedCities=[];
+                //     jieshou[n].checkAll = false;
+                //     jieshou[n].isIndeterminate = false;
+                //     jieshou[n].checkedCities=[];
                     for(let m=0, lennn=jieshou[n].userList.length;m<lennn;m++){
-                        jieshou[n].userList[m]=jieshou[n].userList[m].autoID;
+                        jieshou[n].userList[m].ched=false;
                     }
                 }
                 me.choPeoList =jieshou;
                 console.log(me.choPeoList);
             })
         },
-        // 选择全部人员
-        handleCheckAllChange(event,suoyin) {
-            let me = this;
-            suoyin = suoyin-1;
-            me.choPeoList[suoyin].checkedCities = event ? me.choPeoList[suoyin].userList : [];
-            me.choPeoList[suoyin].isIndeterminate = false;
-        },
-        // 修改选择人
-        handleCheckedCitiesChange(event,suoyin) {
-            let me = this;
-            suoyin = suoyin-1;
-            let checkedCount = event.length;
-            me.choPeoList[suoyin].checkAll = checkedCount ===  me.choPeoList[suoyin].userList.length;
-            me.choPeoList[suoyin].isIndeterminate = checkedCount > 0 && checkedCount < me.choPeoList[suoyin].userList.length;
+        dropPeo(suoyin){
+            this.zpeoList.splice(suoyin,1)
         },
         // 提交返回
         submit(){
             let me = this;
-
-            if(peoRole==1){
-                url ='/api/Leave/audititng';
-            }else if(peoRole==2){
-                url ='/api/Leave/forward';
-            }else if(peoRole==3){
-                url ='/api/Leave/file';
+            if(me.peoRole==1){
+                let url ='/api/Leave/audititng';
+                let obg = JSON.stringify(me.opinion);
+                obg = JSON.parse(obg);
+                obg.bumfMode =="1" ? 1 : 0;
+                obg.state = me.peoRole;
+                let params = obg
+                me.$api.post(url,params,res=>{
+                    console.log(res);
+                })
+            }else if(me.peoRole==2){
+                let url ='/api/Leave/forward';
+                let obg = new Object();
+                obg.autoID = me.$route.params.autoID;
+                obg.isArchive = me.bumfMode == true? 1:0;
+                obg.auditor = me.zpeoList[0].autoID;
+                let params = obg;
+                me.$api.post(url,params,res=>{
+                    console.log(res);
+                })
+                
+            }else if(me.peoRole==3){
+                let param = {AutoID:me.$route.params.autoID};
+                let url ='/api/Leave/file?'+me.$qs.stringify(param);
+                let params ={};
+                me.$api.post(url,params,res=>{
+                    console.log(res);
+                })
             }else{
                 return false;
             }
-            let params = {}
-            me.$api.post(url,params,res=>{
-                console.log(res);
-            })
+            
         }
     }
 }
