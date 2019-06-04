@@ -8,7 +8,7 @@
                     <li><em>文件编号：</em><div class="rightCon"><p>{{fileDetails.bumfcode}}</p></div></li>
                     <li><em>内部文号：</em><div class="rightCon"><p>{{fileDetails.bumftop}}</p></div></li>
                     <li><em>发送人：</em><div class="rightCon"><p>{{fileDetails.sendPro}}</p></div></li>
-                    <li><em>收文日期：</em><div class="rightCon"><p>{{fileDetails.beginDate}}</p></div></li>
+                    <li><em>收文日期：</em><div class="rightCon"><p>{{fileDetails.beginDate|newBeginDate}}</p></div></li>
                     <li><em>通知详情：</em>
                         <div class="rightConNoOver">
                             <p>{{fileDetails.contentDetail}}</p>
@@ -34,7 +34,7 @@
                                 <p></p>
                                 <dl>
                                     <dt><a :href="fujianURL[index]"><i class="icon iconfont iconxiazai"></i></a></dt>
-                                    <dd>200K</dd>
+                                    <dd></dd>
                                 </dl>
                             </div>
                         </li>
@@ -96,10 +96,7 @@
             <div v-if="fileDetails.state==3" class="detailsBox department">
                  <h4><span>处室办理</span></h4>
                  <ul class="departmentList">
-                     <li><span>徐州市第一中学</span><span>已阅</span><span>2019-03-22&nbsp;&nbsp;15:00</span></li>
-                     <li><span>徐州市第一中学</span><span>已阅</span><span>2019-03-22&nbsp;&nbsp;15:00</span></li>
-                     <li><span>徐州市第一中学</span><span>已阅</span><span>2019-03-22&nbsp;&nbsp;15:00</span></li>
-                     <li><span>徐州市第一中学</span><span>已阅</span><span>2019-03-22&nbsp;&nbsp;15:00</span></li>
+                     <li v-for="(cs,indexn) in fujiaList" :key="indexn"><span>{{cs.userName}}</span><span>{{cs.feedBackIdea}}</span><span>{{cs.feedtime|newBeginDate}}</span></li>
                  </ul>
             </div>
             <!-- 处室办理结束 -->
@@ -229,6 +226,18 @@ export default {
         console.log(this.$route.params.type);
         this.loadxaingqing();
     },
+    filters:{
+        newBeginDate:function(mes){
+            if(mes){
+                let nr = mes.toString();
+                let result = nr.replace("T"," ");
+                result = result.substring(0,19);
+                return result;
+            }else{
+                return mes;
+            }
+        }
+    },
     methods:{
         // 设置高度
         setHeight(){
@@ -248,12 +257,14 @@ export default {
                 me.fujiaList = res.list;
                 //me.replyList = res.replyList;
                 let file = res.data.fjPath;
-                let fileUrl = res.data.path;
+                //let fileUrl = res.data.path;
                 if(file==""||file==null||file==undefined){
                         me.fujianName=[];
                 }else{
                     me.fujianName = file.split(",");
-                    me.fujianURL = fileUrl.split(",");
+                    me.fujianName.splice(me.fujianName.length-1,1);
+                    console.log(me.fujianName);
+                    //me.fujianURL = fileUrl.split(",");
                 }
                 // console.log(me.fujianName);
             })

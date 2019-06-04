@@ -101,12 +101,6 @@
                 <div class="layerBoxScroll">
                 <van-collapse v-model="activeNames">
                     <van-collapse-item :title="peo.deptName" :name="index++" v-for="(peo,index) in choPeoList" :key="index">
-                        <!-- <div style="margin:10px 0;"></div>
-                        <el-checkbox :indeterminate="peo.isIndeterminate" v-model="peo.checkAll" @change="handleCheckAllChange($event,index)">全选</el-checkbox>
-                        <div style="margin:10px 0;"></div> -->
-                        <!-- <el-checkbox-group v-model="peo.checkedCities" @change="handleCheckedCitiesChange($event,index)">
-                            <el-checkbox v-for="ry in peo.userList" :label="ry" :key="ry">{{ry}}</el-checkbox>
-                        </el-checkbox-group> -->
                         <ul class="peoList">
                             <li :class="{on:peoN.ched}" @click="xzPeo(index,indexn)" v-for="(peoN,indexn) in peo.userList" :key="indexn">
                                 {{peoN.userName}}<van-icon name="checked" />

@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="detailsBox replyBox">
+            <div class="detailsBox replyBox" v-if="replyList.length>0">
                 <h4><span>回复内容</span></h4>
                 <div class="replyBoxCon">
                     <ul v-if="$route.params.listType==1">
@@ -108,42 +108,56 @@
                 <van-tab title="参会人员信息">
                     <div class="layerBox">
                     <div class="stateBar">
-                        <span>已报机构:{{10}}</span>
-                        <span>未报机构:{{5}}</span>
+                        <span>已报机构:{{submittedNum.attendNum}}</span>
+                        <span>未报机构:{{submittedNum.leaveNum}}</span>
                     </div>
-                    <table class="tableStyle" style="margin:10px 0 0;" width="100%" cellpadding="0" cellspacing="0">
+                    <div style="margin:10px 0 0; height:90%; overflow-y:auto;">
+                    <table class="tableStyle"  width="100%" cellpadding="0" cellspacing="0">
                         <thead>
                         <tr><th width="35%">所属机构</th><th>姓名</th><th width="35%">职务</th></tr>
                         </thead>
-                        <tbody v-for="a in submitted.attendList" :key="a.jigouID">
+                        <tr v-for="(a,index) in  submitted.attendList" :key="index">
+                            <td>{{a.school_Guid}}</td>
+                            <td>{{a.userName}}</td>
+                            <td>{{a.post}}</td>
+                        </tr>
+                        <!-- <tbody v-for="a in submitted.attendList" :key="a.jigouID">
                             <tr v-for="(b,index) in a.peoList" :key="b.peoID">
                                 <td v-if="index==0" :rowspan="a.peoList.length" align="center">{{a.jigou}}</td>
                                 <td>{{b.peoName}}</td>
                                 <td>{{b.zhiwu}}</td>
                             </tr>
-                        </tbody>
+                        </tbody> -->
                     </table>
+                    </div>
                     </div>
                 </van-tab>
                 <van-tab title="请假人员信息">
                      <div class="layerBox">
-                         <table class="tableStyle" style="margin:10px 0 0;" width="100%" cellpadding="0" cellspacing="0">
+                         <div style="margin:10px 0 0; height:90%; overflow-y:auto;">
+                         <table class="tableStyle" style="margin:10px 0 0" width="100%" cellpadding="0" cellspacing="0">
                         <thead>
                         <tr><th width="35%">所属机构</th><th>姓名</th><th width="35%">职务</th></tr>
                         </thead>
-                        <tbody v-for="a in submitted.attendList" :key="a.jigouID">
+                        <tr v-for="(a,index) in  submitted.leaveList" :key="index">
+                            <td>{{a.school_Guid}}</td>
+                            <td>{{a.userName}}</td>
+                            <td>{{a.post}}</td>
+                        </tr>
+                        <!-- <tbody v-for="a in submitted.attendList" :key="a.jigouID">
                             <tr v-for="(b,index) in a.peoList" :key="b.peoID">
                                 <td v-if="index==0" :rowspan="a.peoList.length" align="center">{{a.jigou}}</td>
                                 <td>{{b.peoName}}</td>
                                 <td>{{b.zhiwu}}</td>
                             </tr>
-                        </tbody>
+                        </tbody> -->
                     </table>
+                         </div>
                      </div>
                 </van-tab>
             </van-tabs>
-            <div class="bts">
-                <van-button @click="submittedShow=false" hairline size="small" style="width:120px;">确定</van-button>
+            <div class="btss" style="text-align:center;padding:10px 0;">
+                <van-button @click="submittedShow=false" hairline size="small" type="info" style="width:120px;">确定</van-button>
             </div>
         </van-popup>
         <!-- 报送详情弹层结束 -->
@@ -153,7 +167,7 @@
             <div class="remarksBox">
                 <p><span style="color:#F30; padding:0 5px 0 0;">备注:</span>报送时间为<span style="color:#F30; padding:0 5px">{{fileDetails.sign_Up_EndTime}}</span>,在此时间点前可进行报送修改</p>
             </div>
-            <van-collapse v-model="activeNames">
+            <van-collapse style="height:90%; overflow:hidden; overflow-y:auto;" v-model="activeNames">
                 <van-collapse-item title="参会人员名单" icon="friends" name="1">
                      <table class="tableStyle" width="100%" cellpadding="0" cellspacing="0">
                          <thead>
@@ -184,7 +198,7 @@
             </van-collapse>
             <div class="bts">
                 <van-button @click="shangbaoShow=false" hairline size="small" style="width:120px;">取消</van-button>
-                <van-button @click="baosongSure" hairline size="small" type='info' style="width:120px;">确定111</van-button>
+                <van-button @click="baosongSure" hairline size="small" type='info' style="width:120px;">确定</van-button>
             </div>
         </van-popup>
         <!-- 参会人员输入 -->
@@ -272,54 +286,25 @@ export default {
             fujianName:[],
             fujianURL:[],
             replyList:[],
-            readList:{                          //弹层阅读详情内容
-                haveRead:[
-                    {peoName:'张三',peoID:'u0001'},
-                    {peoName:'李四',peoID:'u0002'},
-                    {peoName:'王五',peoID:'u0003'}
-                ],
-                unHaveRead:[
-                    {peoName:'赵六',peoID:'u0004'},
-                    {peoName:'孙琪',peoID:'u0005'},
-                    {peoName:'张弛',peoID:'u0006'}
-                ]
+            // readList:{                          //弹层阅读详情内容
+            //     haveRead:[
+            //         {peoName:'张三',peoID:'u0001'},
+            //         {peoName:'李四',peoID:'u0002'},
+            //         {peoName:'王五',peoID:'u0003'}
+            //     ],
+            //     unHaveRead:[
+            //         {peoName:'赵六',peoID:'u0004'},
+            //         {peoName:'孙琪',peoID:'u0005'},
+            //         {peoName:'张弛',peoID:'u0006'}
+            //     ]
+            // },
+            submittedNum:{              //查看报送详情已报机构和未报机构的数量
+                attendNum:0,
+                leaveNum:0,
             },
             submitted:{                 //参会情况弹层内容
-                attendList:[
-                    {
-                        jigou:'徐州一中',
-                        jigouID:'jg001',
-                        peoList:[
-                            {peoName:'张三',peoID:'u0001',zhiwu:'办公式主任办公式主任办公式主任'},
-                            {peoName:'李四',peoID:'u0002',zhiwu:'教研组组长'},
-                            {peoName:'王五',peoID:'u0003',zhiwu:'语文组组长'}
-                        ]
-                    },
-                    {
-                        jigou:'徐州二中',
-                        jigouID:'jg002',
-                        peoList:[
-                            {peoName:'张三',peoID:'u0001',zhiwu:'办公式主任'},
-                            {peoName:'李四',peoID:'u0002',zhiwu:'教研组组长'},
-                            {peoName:'王五',peoID:'u0003',zhiwu:'语文组组长'}
-                        ]
-                    },
-                    {
-                        jigou:'徐州三中',
-                        jigouID:'jg003',
-                        peoList:[
-                            {peoName:'张三',peoID:'u0001',zhiwu:'办公式主任'},
-                            {peoName:'李四',peoID:'u0002',zhiwu:'教研组组长'},
-                            {peoName:'王五',peoID:'u0003',zhiwu:'语文组组长'}
-                        ]
-                    }
-                    
-                ],
-                leaveList:[
-                    {peoName:'张三',peoID:'u0001'},
-                    {peoName:'李四',peoID:'u0002'},
-                    {peoName:'王五',peoID:'u0003'}
-                ]
+                attendList:[],
+                leaveList:[]
             }
         }
     },
@@ -427,9 +412,23 @@ export default {
             let me = this;
             let url = '/api/Notic/reportview';
             let params = {autoID:me.$route.params.tzid};
+            me.submitted.attendList=[];
+            me.submitted.leaveList=[];
             me.$api.get(url,params,res=>{
                 console.log("加载上报详情查看");
                 console.log(res);
+                me.submittedNum.attendNum = res.data.leLen;
+                me.submittedNum.leaveNum = res.data.upLen;
+                let xqList = new Array();
+                xqList = res.data.list;
+                for(let x=0,xqlen = xqList.length;x<xqlen;x++){
+                    if(xqList[x].s_Type==0||xqList[x].s_Type==null){
+                        me.submitted.attendList.push(xqList[x]);
+                    }else{
+                        me.submitted.leaveList.push(xqList[x]);
+                    }
+                }
+                console.log(me.submitted);
             })
         },
         // 打开上报人员弹层加载上报详情
