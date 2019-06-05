@@ -24,7 +24,7 @@
         </div>
 
         <!-- 领导审核 -->
-        <div v-if="peoRole==1" class="leaveDetaileBox">
+        <div v-if="peoRole==1&&$route.params.listType!=1" class="leaveDetaileBox">
             <h3>领导审批</h3>
             <div class="ApprovalBox">
                 <div>
@@ -161,6 +161,10 @@ export default {
             
         }
     },
+    mounted() {
+        console.log(this.$route.params.autoID);
+        this.loadDetailed();
+    },
     filters:{
         newleave_Time:function(mes){
             if(mes){
@@ -180,10 +184,6 @@ export default {
                 return mes;
             }
         }
-    },
-    mounted() {
-        console.log(this.$route.params.autoID);
-        this.loadDetailed();
     },
     methods:{
         xzPeo(wIndex,nIndex){
@@ -226,7 +226,7 @@ export default {
             let params={autoID:me.$route.params.autoID};
             me.$api.get(url,params,res=>{
                 console.log("加载详情成功");
-                // console.log(res);
+                console.log(res);
                 me.leaves = res.data;
                 me.liuchengList = res.flowList;
                 me.peoRole = res.state;

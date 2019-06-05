@@ -61,6 +61,7 @@ methods: {
                 me.$store.commit("saveUid", res.data.autoID);
                 me.$store.commit("saveUserName", res.data.userName);
                 me.getAuthority();
+                me.getPeoSet();
                 me.$router.push({
                     name:'menuAll',
                     params:{
@@ -73,13 +74,23 @@ methods: {
     getAuthority(){
         let me = this;
         let url='/api/user/author';
-        let params=""
+        let params="";
         me.$api.get(url,params,res=>{
             console.log(res);
             if(res.code==200){
                 me.$store.commit("saveTZauthority", res.data.bumf_Droit);      //保存 token
                 me.$store.commit("saveGWauthority", res.data.bumflz_Droit);           //保存登录状态
                 me.$store.commit("saveQJauthority", res.data.leave);
+            }
+        })
+    },
+    getPeoSet(){
+        let me = this;
+        let url='/api/user/config';
+        let params=""
+        me.$api.get(url,params,res=>{
+            if(res.code==200){
+                me.$store.commit("saveGWniban", res.data.default_Enlisted_Person);
             }
         })
     }

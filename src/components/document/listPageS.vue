@@ -16,7 +16,7 @@
             <ul>
                 <li v-for="(n,index) in documentList" :key="index" @click="enterDetailed(n.autoID)">
                     <van-swipe-cell :right-width="50">
-                    <h3>{{index++}}、{{n.title}}</h3>
+                    <h3>{{n.title}}</h3>
                     <p>
                         <span>发送人：{{n.userName}}</span>
                         <time>{{n.beginDate|newBeginDate}}</time></p>
@@ -155,7 +155,8 @@ export default {
                 name:'gwdetailed',
                 params:{
                     id:nq,
-                    type:1
+                    type:1,
+                    zt:me.btState
                 }
             })
         },

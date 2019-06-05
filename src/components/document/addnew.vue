@@ -6,7 +6,7 @@
         <van-field
           v-model="gongwen.bumfcode"
           type="text"
-          label="文件编码"
+          label="文件编号"
           placeholder="请输入文件编码"
           required
         />
@@ -140,11 +140,14 @@ export default {
       }
     };
   },
-  mounted() {},
+  mounted(){
+    this.getdefaulePeo();
+  },
   methods: {
     choPeo() {
       this.layerShow = true;
       this.loadpeo();
+      
       // this.loadpeoyuan();
     },
     xzPeo(wIndex,nIndex){
@@ -170,16 +173,18 @@ export default {
       // console.log(me.choPeoList);
       });
     },
-    // loadpeoyuan() {
-    //   let me = this;
-    //   let url = "/api/user/select";
-    //   let params = {};
-    //   me.$api.get(url, params, res => {
-    //     // console.log(res);
-    //     me.dzList = res.data;
-    //     console.log(me.dzList);
-    //   });
-    // },
+    // 默认拟办人
+    getdefaulePeo(){
+      let peomes = this.$store.state.gwNibanren;
+      let obg = new Object();
+      let arr = new Array();
+      arr = peomes.split(",");
+      obg.autoID = arr[0];
+      obg.userName = arr[1];
+      obg.ched = true;
+      this.zpeoList.push(obg);
+      console.log(this.zpeoList);
+    },
     validationScreening() {
       let me = this;
       let obg = JSON.stringify(me.choPeoList)

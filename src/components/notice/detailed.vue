@@ -7,7 +7,7 @@
                 <ul>
                     <li><em>通知类型：</em><div class="rightCon"><p><span :style="{color:outFileDetails.notice_Type=='会议通知'?'#F30':'#333'}">{{$route.params.listType==0 ? fileDetails.notice_Type : outFileDetails.notice_Type }}</span></p></div></li>
                     <li><em>发送人：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.userName : outFileDetails.userName }}</p></div></li>
-                    <li><em>发送日期：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.beginDate : outFileDetails.beginDate}}</p></div></li>
+                    <li><em>发送日期：</em><div class="rightCon"><p>{{$route.params.listType==0 ? fileDetails.beginDate : outFileDetails.beginDate|newBeginDate}}</p></div></li>
                     <li><em>通知详情：</em>
                         <div class="rightConNoOver">
                             <!-- <p>{{fileDetails.particulars}}</p> -->
@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="detailsBox replyBox" v-if="replyList.length>0">
+            <div class="detailsBox replyBox">
                 <h4><span>回复内容</span></h4>
                 <div class="replyBoxCon">
                     <ul v-if="$route.params.listType==1">
@@ -108,8 +108,8 @@
                 <van-tab title="参会人员信息">
                     <div class="layerBox">
                     <div class="stateBar">
-                        <span>已报机构:{{submittedNum.attendNum}}</span>
-                        <span>未报机构:{{submittedNum.leaveNum}}</span>
+                        <span>已报机构:{{submittedNum.leaveNum}}</span>
+                        <span>未报机构:{{submittedNum.attendNum}}</span>
                     </div>
                     <div style="margin:10px 0 0; height:90%; overflow-y:auto;">
                     <table class="tableStyle"  width="100%" cellpadding="0" cellspacing="0">
@@ -165,7 +165,7 @@
         <!-- 报送弹层 -->
         <van-popup v-model="shangbaoShow" position="right">
             <div class="remarksBox">
-                <p><span style="color:#F30; padding:0 5px 0 0;">备注:</span>报送时间为<span style="color:#F30; padding:0 5px">{{fileDetails.sign_Up_EndTime}}</span>,在此时间点前可进行报送修改</p>
+                <p><span style="color:#F30; padding:0 5px 0 0;">备注:</span>报送截止时间为<span style="color:#F30; padding:0 5px">{{fileDetails.sign_Up_EndTime|newsign_Up_EndTime}}</span>,在此时间点前可进行报送修改</p>
             </div>
             <van-collapse style="height:90%; overflow:hidden; overflow-y:auto;" v-model="activeNames">
                 <van-collapse-item title="参会人员名单" icon="friends" name="1">
@@ -314,6 +314,28 @@ export default {
         console.log(this.$route.params.mesType);
         this.setReadState();
         this.loadxaingqing();
+    },
+    filters:{
+        newBeginDate:function(mes){
+            if(mes){
+                let nr = mes.toString();
+                let result = nr.replace("T"," ");
+                result = result.substring(0,19);
+                return result;
+            }else{
+                return mes;
+            }
+        },
+        newsign_Up_EndTime:function(mes){
+            if(mes){
+                let nr = mes.toString();
+                let result = nr.replace("T"," ");
+                result = result.substring(0,19);
+                return result;
+            }else{
+                return mes;
+            }
+        }
     },
     methods:{
         setHeight(){

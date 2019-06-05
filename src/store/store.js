@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     gwAuthority:0,           //公文
     qjAuthority:0,           //请假
     userName:'',           //当前登录用户姓名
+    gwNibanren:'',
     userRole: 0,
     haveLogin:false,
     apiUrl: window.localStorage.ApiUrl
@@ -62,6 +63,12 @@ const store = new Vuex.Store({
       state.userName = data;
       window.localStorage.setItem("userName", data);
       console.log("qjAuthority写入Store与localStorage中：" + data);
+    },
+    // 保存公文默认拟办人
+    saveGWniban(state, data) {
+      state.gwNibanren = data;
+      window.localStorage.setItem("gwNibanren", data);
+      console.log("gwNibanren写入Store与localStorage中：" + data);
     },
     saveRole(state, data) {
       state.userRole = data;

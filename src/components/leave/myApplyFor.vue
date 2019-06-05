@@ -2,7 +2,7 @@
     
     <div class="listPage">
         <h3 style="text-align:center; background:#FFF; border-bottom:1px solid #eaeaea; height:40px; line-height:40px; font-weight:normal;">我的申请</h3>
-                <van-search
+                <!-- <van-search
                     v-model="value"
                     placeholder="请输入搜索关键词"
                     show-action
@@ -10,7 +10,7 @@
                     @search="onSearch"
                     >
                 <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
-                </van-search>
+                </van-search> -->
                  <div class="List">
                     <dl class="noMessage" v-if="myLeaveList.length == 0">
                         <dt>OA</dt>
@@ -21,7 +21,7 @@
                         <van-pull-refresh v-model="isRefresh" @refresh="onRefresh">
                         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="shuaxin" :offset="100">
                         <ul>
-                            <li v-for="(n,index) in myLeaveList" :key="index" @click="enterDetailed(n.title)">
+                            <li v-for="(n,index) in myLeaveList" :key="index" @click="enterDetailed(n.autoID)">
                                 <van-swipe-cell :right-width="50">
                                 <h3>
                                     外出事由：{{n.reason}}
@@ -146,9 +146,9 @@ export default {
         enterDetailed:function(nq){
             let me = this;
             me.$router.push({
-                name:'leaveDetailed',
+                name:'qjDetails',
                 params:{
-                    id:nq
+                    autoID:nq
                 }
             })
         },
