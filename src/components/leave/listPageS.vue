@@ -3,7 +3,7 @@
     <div class="listPage">
         <qjTop></qjTop>
         
-                <van-search
+                <!-- <van-search
                     v-model="searchValue"
                     placeholder="请输入搜索关键词"
                     show-action
@@ -11,7 +11,7 @@
                     @search="onSearch"
                     >
                 <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
-                </van-search>
+                </van-search> -->
                  <div class="List">
                     <dl class="noMessage" v-if="qjUnHaveList.length == 0">
                         <dt>OA</dt>
@@ -24,7 +24,7 @@
                         <ul>
                             <li v-for="(n,index) in qjUnHaveList" :key="index" @click="enterDetailed(n.autoID)">
                                 <van-swipe-cell :right-width="50">
-                                <h3>请假人、{{n.leave_People}}</h3>
+                                <h3>请假人：{{n.leave_People}}</h3>
                                 <p>
                                     <span>所属部门：{{n.dep}}</span>
                                     <time>{{n.createAt|newCreateAt}}</time></p>

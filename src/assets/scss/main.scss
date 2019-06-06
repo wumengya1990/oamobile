@@ -244,7 +244,7 @@ nav{
         .opinionBoxList{
             padding:5px 10px;
             li{
-                .message{ width: 100%; padding: 10px; font-size: 15px; box-sizing: border-box; min-height:60px; max-height:150px; overflow: hidden; overflow-y: auto; background: #F5F5F5;}
+                .message{ width: 100%; padding: 10px; font-size: 15px; box-sizing: border-box; max-height:150px; overflow: hidden; overflow-y: auto; background: #F5F5F5;}
                 dl{text-align: right; padding: 5px 0; border-bottom: 1px dashed #eaeaea; margin: 0 0 10px;}
             }
         }
@@ -298,6 +298,7 @@ nav{
         p{ 
             display: block; flex: 1; box-sizing:border-box; padding: 0 10px; position: relative;
             span{ display:block; position: relative;  padding: 5px 0;}
+            em{ background: #F5f5f5; color: #777; font-size: 12px; padding: 8px;}
             &:nth-child(1){ 
                 flex:1.5; text-align: center;
                 span{ display:block; position: relative; background: #dceefb; padding: 5px; color:#228dda; margin: 0 0 5px;}
@@ -321,6 +322,17 @@ nav{
         .van-radio{ padding:5px 10px; float: left;}
     }
 }
+
+// 底部按钮
+.selfBt{
+    width: 95%; margin: 0 auto; display: flex; border-radius:3px; overflow: hidden;
+    a{
+        flex: 1; text-align: center; padding: 10px 0;
+        &.doBt{ background: #228dda; color: #FFF;}
+        &.upBt{flex:2; background:#07c160; color: #FFF;}
+    }
+}
+
 
 // 登陆样式
 

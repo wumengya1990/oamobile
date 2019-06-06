@@ -2,7 +2,7 @@
     
     <div class="listPage">
         <qjTop></qjTop>
-                <van-search
+                <!-- <van-search
                     v-model="searchValue"
                     placeholder="请输入搜索关键词"
                     show-action
@@ -10,7 +10,7 @@
                     @search="onSearch"
                     >
                 <van-button slot="action" type="info" round size="small" @click="onSearch">搜索</van-button>
-                </van-search>
+                </van-search> -->
                  <div class="List">
                     <dl class="noMessage" v-if="qjHaveList.length == 0">
                         <dt>OA</dt>
@@ -24,13 +24,18 @@
                             <li v-for="(n,index) in qjHaveList" :key="index" @click="enterDetailed(n.autoID)">
                                 <van-swipe-cell :right-width="50">
                                 <h3>
-                                    请假人、{{n.leave_People}}
+                                    请假人：{{n.leave_People}}
                                     <span v-if="listPeorole==1" style="float:right;">我的审批：
                                         <em v-if="n.state==0" style="color:#e4ab04;">未审批</em>
                                         <em v-else-if="n.state==1" style="color:#1ac138;">同意</em>
                                         <em v-else style="color:#F30">不同意</em>
                                     </span>
-                                    <span v-else>流程状态{{}}</span>
+                                    <span v-else style="float:right;">
+                                        流程状态：
+                                        <em v-if="n.isArchive==4||n.isArchive==5" style="color:#F30;">未归档</em>
+                                        <em v-else-if="n.isArchive==6" style="color:#1ac138;">已归档</em>
+                                        <em v-else style="color:#e4ab04;">审核中</em>
+                                    </span>
                                     </h3>
                                 <p>
                                     <span>所属部门：{{n.dep}}</span>
@@ -138,7 +143,7 @@ export default {
             let params={pageSize:me.pageSize,pageIndex:me.pageIndex}
             me.$api.get(url,params,res=>{
                 console.log("加载列表成功");
-                // console.log(res);
+                console.log(res);
                 let resCount = res.data.length;
                 if(isInit == true){
                      me.qjHaveList = res.data;

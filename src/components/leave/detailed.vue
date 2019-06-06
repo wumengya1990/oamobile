@@ -24,11 +24,11 @@
         </div>
 
         <!-- 领导审核 -->
-        <div v-if="peoRole==1&&$route.params.listType!=1" class="leaveDetaileBox">
+        <div v-if="peoRole==1&&$route.params.listType!=1&&caozuoState!=6&&$route.params.listType!=2" class="leaveDetaileBox">
             <h3>领导审批</h3>
             <div class="ApprovalBox">
                 <div>
-                <van-radio-group v-model="opinion.isArchive">
+                <van-radio-group v-model="opinion.state">
                     <van-radio name="1">同意</van-radio>
                     <van-radio name="2">不同意</van-radio>
                 </van-radio-group>
@@ -51,14 +51,17 @@
         <!-- 领导审核结束 -->
 
         <!-- 转发分管领导 -->
-        <div v-if="peoRole==2" class="leaveDetaileBox">
-            <h3>转发分管领导批示</h3>
+        <div v-if="peoRole==2&&caozuoState!=6&&$route.params.listType!=1&&$route.params.listType!=2" class="leaveDetaileBox">
+            <h3>转发
+                <em v-if="caozuoState==0">分管</em>
+                <em v-if="caozuoState==4">主要</em>
+                领导批示</h3>
         <ul class="addBox">
             <li><em>姓名</em><div class="rightCon">
                     <div class="choPeoList">
                     <div class="peolist"><span v-for="(a,index) in zpeoList" @click="dropPeo(index)" :key="index">{{a.userName}}</span></div>
                     <p>点击人员名称可删除</p>
-                    <a class="appendPeo" @click="choPeo"><van-icon name="friends" />添加拟办人</a>
+                    <a class="appendPeo" @click="choPeo"><van-icon name="friends" />选择人员</a>
                     <span class="duanxin">手机端短信提醒<van-switch v-model="bumfMode" size="14px" /></span>
                     </div>
                 </div>
@@ -77,12 +80,13 @@
                     <span v-if="n.state=='已转发'||n.state=='同意'" style="color:#1ac138">{{n.state}}</span>
                     <span v-else-if="n.state=='待审核'||n.state=='待转发'" style="color:#e4ab04">{{n.state}}</span>
                     <span v-else>{{n.state}}</span>
+                    <em v-if="n.remarks!=''||n.remarks!=null">{{n.remarks}}</em>
                 </p>
                 <p><span>{{n.time}}</span></p>
             </div>
         </div>
 
-        <div class="bts">
+        <div class="bts" v-if="caozuoState!=6&&$route.params.listType!=1">
             <van-button type="primary" @click="submit" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">提交</van-button>
         </div>
 
@@ -130,10 +134,11 @@ export default {
             submittedShow:false,
             neiHeight:'',
             peoRole:0,                       //角色权限
+            caozuoState:0,                  //当前操作状态
             opinion:{
                 autoID:this.$route.params.autoID,
-                state:0,
-                isArchive:'1',            //领导意见
+                state:'1',
+                isArchive:0,            //领导意见
                 remarks:''
             },
             leaves:{
@@ -230,7 +235,8 @@ export default {
                 me.leaves = res.data;
                 me.liuchengList = res.flowList;
                 me.peoRole = res.state;
-                // console.log(me.leaves);
+                me.caozuoState = res.data.isArchive;
+                console.log(me.caozuoState);
                 // console.log(me.liuchengList);
 
             })
@@ -274,21 +280,32 @@ export default {
                 let url ='/api/Leave/audititng';
                 let obg = JSON.stringify(me.opinion);
                 obg = JSON.parse(obg);
-                obg.bumfMode =="1" ? 1 : 0;
-                obg.state = me.peoRole;
-                let params = obg
+                obg.state = obg.state=='1' ? 1 : 2;
+                obg.isArchive = me.caozuoState;
+                console.log(obg);
+                let params = obg;
                 me.$api.post(url,params,res=>{
                     console.log(res);
+                    if(res.code == 200){
+                        me.$router.push({
+                            name:'qjTodoList'
+                        })
+                    }
                 })
             }else if(me.peoRole==2){
                 let url ='/api/Leave/forward';
                 let obg = new Object();
                 obg.autoID = me.$route.params.autoID;
-                obg.isArchive = me.bumfMode == true? 1:0;
+                obg.isArchive = me.caozuoState;
                 obg.auditor = me.zpeoList[0].autoID;
                 let params = obg;
                 me.$api.post(url,params,res=>{
                     console.log(res);
+                    if(res.code == 200){
+                        me.$router.push({
+                            name:'qjTodoList'
+                        })
+                    }
                 })
                 
             }else if(me.peoRole==3){
@@ -297,6 +314,11 @@ export default {
                 let params ={};
                 me.$api.post(url,params,res=>{
                     console.log(res);
+                    if(res.code == 200){
+                        me.$router.push({
+                            name:'qjTodoList'
+                        })
+                    }
                 })
             }else{
                 return false;

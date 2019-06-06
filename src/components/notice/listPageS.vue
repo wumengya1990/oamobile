@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="xuanfu">
-            <span @click="backTop"><van-icon name="arrow-up" /></span>
+            <span @click="backTop" v-show="backTopShow"><van-icon name="arrow-up" /></span>
             <span @click="$router.push({path:'/menuAll'})"><van-icon name="apps-o" /></span>
         </div>
         
@@ -42,11 +42,13 @@
 
 <script>
 import top from './top'
+import mixni from './../../mixins/mixin'
 export default {
     name:'listPage',
     components:{
         'tzTop':top
     },
+    mixins:[mixni],
     data() {
         return {
             btState:0,              //已读未读状态
@@ -74,6 +76,9 @@ export default {
     
     mounted() {
         this.loadReadList(true);
+        //监听滚动条事件
+        // let zhumain = document.getElementsByClassName("listPage")[0];
+        // zhumain.addEventListener('scroll', this.handleScroll);
     },
     filters:{
         newBeginDate:function(mes){
@@ -88,6 +93,16 @@ export default {
         }
     },
     methods:{
+        // 向下滑动显示隐藏返回顶部按钮
+        // handleScroll(){
+        //     let z = document.getElementsByClassName("listPage")[0];
+        //     var t = z.scrollTop;
+        //     if(t>200){
+        //         this.backTopShow = true;
+        //     }else{
+        //         this.backTopShow = false;
+        //     }
+        // },
         // 已读未读修改
         changeState(zhuangtai){
             this.btState = zhuangtai;

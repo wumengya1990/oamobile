@@ -148,7 +148,8 @@ export default {
             me.$router.push({
                 name:'qjDetails',
                 params:{
-                    autoID:nq
+                    autoID:nq,
+                    listType:2
                 }
             })
         },

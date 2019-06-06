@@ -8,14 +8,14 @@
           type="text"
           label="文件编号"
           placeholder="请输入文件编码"
-          required
+          
         />
         <van-field
           v-model="gongwen.bumftop"
           type="text"
           label="内部文号"
           placeholder="请输入内部文号"
-          required
+          
         />
         <van-field
           v-model="gongwen.contentDetail"
@@ -24,6 +24,7 @@
           rows="5"
           placeholder="请输入公文内容"
           autosize
+          required
         />
       </van-cell-group>
 

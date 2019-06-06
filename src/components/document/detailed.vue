@@ -7,7 +7,7 @@
                 <ul>
                     <li><em>文件编号：</em><div class="rightCon"><p>{{fileDetails.bumfcode}}</p></div></li>
                     <li><em>内部文号：</em><div class="rightCon"><p>{{fileDetails.bumftop}}</p></div></li>
-                    <li><em>发送人：</em><div class="rightCon"><p>{{fileDetails.sendPro}}</p></div></li>
+                    <li><em>发送人：</em><div class="rightCon"><p>{{fileDetails.userName}}</p></div></li>
                     <li><em>收文日期：</em><div class="rightCon"><p>{{fileDetails.beginDate|newBeginDate}}</p></div></li>
                     <li><em>通知详情：</em>
                         <div class="rightConNoOver">
@@ -86,7 +86,7 @@
                          </dl>
                      </li>
                  </ul>
-                 <div v-if="fileDetails.state==2">
+                 <div v-if="fileDetails.state==2&&$route.params.zt!=1">
                  <van-cell-group>
                     <van-field v-model="songyuMes" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
                 </van-cell-group>
@@ -94,7 +94,7 @@
                     <van-button type="primary" @click="lingdaoSunmit" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">回复</van-button>
                 </div>
                 </div>
-                 <div v-if="fileDetails.state!=2&&$route.params.zt!=1">
+                 <div v-if="fileDetails.state!=2&&$route.params.zt!=1&&$route.params.type!=1">
                      <van-cell-group>
                         <div class="addBox">
                         <em>选择人员</em>
@@ -127,7 +127,7 @@
                         <span>{{cs.feedtime|newBeginDate}}</span>
                      </li>
                  </ul>
-                 <div v-if="fileDetails.state==0&&$route.params.zt!=1">
+                 <div v-if="fileDetails.state==0&&$route.params.zt!=1&&$route.params.type!=1">
                      <van-cell-group>
                         <div class="addBox">
                         <em>选择人员</em>
@@ -149,8 +149,13 @@
 
             </div>
             <!-- 处室办理结束 -->
-            <div class="bts" v-if="fileDetails.state!=2&&$route.params.zt!=1">
-                <van-button type="primary" @click="release" size="large">提交</van-button>
+            <div class="bts" v-if="fileDetails.state!=2&&$route.params.zt!=1&&$route.params.type!=1">
+                <div class="selfBt">
+                    <a class="doBt" @click="chuli">我已办理</a>
+                    <a class="upBt"  @click="release">提交</a>
+                </div>
+                <!-- <van-button type="primary" @click="release" style="margin:10px auto; display:block; height:40px; line-height:40px; width:95%;">提交</van-button>
+                <van-button @click="chuli" type="info" style="margin:10px auto; display:block; height:40px; line-height:40px; width:95%;">我已办理</van-button> -->
             </div>
 
             <!-- <div class="detailsBox replyBox">
@@ -249,7 +254,7 @@ export default {
         return {
             searcgValue:'',
             message:'',
-            songyuMes:'',                       //宋悦意见
+            songyuMes:'',                       //送阅意见
             watchShow:false,
             submittedShow:false,
             songyueyijian:'cacacacacacacaca',
@@ -320,6 +325,7 @@ export default {
             activeNames:[],
             layerShow:false,
             mks:1,                       //模块弹层操作选择
+            caozuoStep:0,                   //操作步骤
             choPeoList: [],
             zpeoList: [],                 //暂存的人员列表(领导)
             zpeoList1:[],                   //暂存的人员列表(处室)
@@ -452,6 +458,7 @@ export default {
                 console.log(res);
                 me.fileDetails = res.data;
                 me.fujiaList = res.list;
+                me.caozuoStep = res.state
 
                 for(let  p = 0; p < me.fujiaList.length; p++){
                     let fz = me.fujiaList[p].indexs;
@@ -503,6 +510,7 @@ export default {
             let me = this;
             let url = '/api/Office/reply';
             let params = {autoID:me.$route.params.id,feedBackIdea:me.songyuMes,indexs:2};
+            
             me.$api.post(url,params,res=>{
                 console.log(res);
                 if(res.code==200){
@@ -532,11 +540,34 @@ export default {
             lingdaoTel = me.bumfMode == true ? 1 : 0;
             chushiTel = me.bumfMode1 == true ? 1 : 0;
             let url = '/api/Office/forward';
-            let params = {autoID:this.$route.params.id,ldps:lingdaoList,ldpsMobile:lingdaoTel,csbl:chushiList,csblMobile:chushiTel};
+            let params = {autoID:me.$route.params.id,ldps:lingdaoList,ldpsMobile:lingdaoTel,csbl:chushiList,csblMobile:chushiTel};
             console.log(params);
             me.$api.post(url,params,res=>{
                 console.log(res);
+                if(res.code==200){
+                    me.haveDone();
+                    me.$router.push({
+                        name: "gwnoticeListF"
+                    });
+                }else{
+                    me.$toast(res.msg);
+                }
             })
+        },
+        // 点击处理红点
+        chuli(){
+            this.haveDone();
+        },
+        // 我已处理
+        haveDone(){
+            let me = this;
+            let param = {AutoID:me.$route.params.id};
+            let url ='/api/Office/handle?'+me.$qs.stringify(param);
+            let params={};
+            me.$api.post(url,params,res=>{
+                console.log(res);
+            })
+
         }
     }
 }

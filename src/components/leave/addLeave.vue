@@ -8,9 +8,9 @@
             <van-field v-model="leaves.job" type="text" label="职务" placeholder="请输入职务" required />
             <van-field v-model="leaves.leave_Time" @focus="choLeaveTime" type="text" label="离开时间" placeholder="请输入离开时间" required />
             <van-field v-model="leaves.return_Time" @focus="choBackTime" type="text" label="返回时间" placeholder="请输入返回时间" required />
-            <van-field v-model="leaves.destination" type="textarea" label="外出地点" rows="5" placeholder="请输入外出地点" autosize />
-            <van-field v-model="leaves.reason" type="textarea" label="外出事由" rows="5" placeholder="请输入外出事由" autosize />
-            <van-field v-model="leaves.trip" type="textarea" label="行程安排" rows="5" placeholder="请输入行程安排" autosize />
+            <van-field v-model="leaves.destination" type="textarea" label="外出地点" rows="5" placeholder="请输入外出地点" required autosize />
+            <van-field v-model="leaves.reason" type="textarea" label="外出事由" rows="5" placeholder="请输入外出事由" required autosize />
+            <van-field v-model="leaves.trip" type="textarea" label="行程安排" rows="5" placeholder="请输入行程安排" required autosize />
         </van-cell-group>
         <van-cell-group>
             <h2>临时主持工作的负责同志</h2>
