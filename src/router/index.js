@@ -4,7 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode:"history",
   routes: [
     {
@@ -13,6 +13,10 @@ export default new Router({
       component: HelloWorld,
       redirect:'/login'     //路由重定向
     },{
+      path: '/singleLogin',
+      name: 'singleLogin',
+      component: resolve => require(['@/components/singleSignOn'],resolve),
+    },{
       path: '/login',
       name: 'login',
       component: resolve => require(['@/components/login'],resolve),
@@ -20,6 +24,10 @@ export default new Router({
       path: '/menuAll',
       name: 'menuAll',
       component: resolve => require(['@/components/menuAll'],resolve),
+    },{
+      path: '/errorPage',
+      name: 'errorPage',
+      component: resolve => require(['@/components/errorPage'],resolve),
     },
     {
       path: '/tzMain',
@@ -110,3 +118,36 @@ export default new Router({
     }
   ]
 })
+
+//添加路由过滤
+router.beforeEach((to, from, next) => {
+  if (to.meta.Authorize) {
+    // 判断该路由是否需要登录权限
+    if (window.localStorage.Token) {
+      // 通过vuex state获取当前的token是否存在
+      let uRole = Number(window.localStorage.userRole);
+      if (uRole <= to.meta.userRole) {
+        next();
+      } else {
+        next({
+          path: "/menuAll",
+          query: {
+            redirect: to.fullPath
+          } // 将跳转的路由path作为参数，登录成功后跳转到该路由
+        });
+      }
+    } else {
+      window.localStorage.setItem("Token", "");
+      next({
+        path: "/login",
+        query: {
+          redirect: to.fullPath
+        } // 将跳转的路由path作为参数，登录成功后跳转到该路由
+      });
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;

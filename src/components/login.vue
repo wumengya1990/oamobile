@@ -37,7 +37,7 @@ data() {
         loginForm:{
             username:'',
             pwd:'',
-            
+            uId:this.$route.params.uid
         },
         loginRule:{
             username:[

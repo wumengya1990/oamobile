@@ -28,7 +28,7 @@
        
         <div class="xuanfu">
             <span @click="addnew"><van-icon name="add-o" /></span>
-            <span @click="backTop"><van-icon name="arrow-up" /></span>
+            <span @click="backTop" v-show="backTopShow"><van-icon name="arrow-up" /></span>
             <span @click="$router.push({path:'/menuAll'})"><van-icon name="apps-o" /></span>
         </div>
         
@@ -37,11 +37,13 @@
 
 <script>
 import top from './top'
+import mixni from './../../mixins/mixin'
 export default {
     name:'listPage',
     components:{
         'gwTop':top
     },
+    mixins:[mixni],
     data() {
         return {
             pageIndex:1,
