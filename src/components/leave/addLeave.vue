@@ -60,7 +60,7 @@ function levTime(){
     let c = nd.getDate();
     let d = nd.getHours();
     let e = nd.toTimeString();
-    let n = a+"/"+(b+1)+"/"+c;
+    let n = a+"/"+(b+1)+"/"+c+" "+e.substring(0,5);
     return n;
 }
 function bcTime(){
@@ -70,7 +70,7 @@ function bcTime(){
     let c = nd.getDate();
     let d = nd.getHours();
     let e = nd.toTimeString();
-    let n = a+"/"+(b+1)+"/"+c;
+    let n = a+"/"+(b+1)+"/"+c+" "+e.substring(0,5);
     return n;
 }
 export default {
@@ -146,15 +146,19 @@ export default {
         // 选择离开时间
         leaveChange(e){
              let timeList =[];
-             timeList = e.getValues()
+             timeList = e.getValues();
              this.leaves.leave_Time = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
              this.timeBg = timeList[0]+timeList[1]+timeList[2]+timeList[3]+timeList[4];
+             let kaishi = parseInt(this.timeBg);
+            let jieshu = parseInt(this.timeNd);
+            if((jieshu-kaishi)<0){
+                this.$toast("不能选择大于结束时间");
+            }
             //  console.log(this.leaves.leave_Time );
         },
         // 确定选择离开时间
         leaveSure(){
             this.leaveTimeShow =  false;
-            
         },
         // 取消选择离开时间
         leaveNo(){
@@ -162,11 +166,16 @@ export default {
         },
         // 选择返回时间
         backChange(e){
-           let timeList =[];
-            timeList = e.getValues()
+            let timeList =[];
+            timeList = e.getValues();
             this.leaves.return_Time = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
             // console.log(this.leaves.return_Time );
             this.timeNd = timeList[0]+timeList[1]+timeList[2]+timeList[3]+timeList[4];
+            let kaishi = parseInt(this.timeBg);
+            let jieshu = parseInt(this.timeNd);
+            if((jieshu-kaishi)<0){
+                this.$toast("不能选择小于开始时间");
+            }
         },
         // 内容验证
         kjiance(timu,mes){
