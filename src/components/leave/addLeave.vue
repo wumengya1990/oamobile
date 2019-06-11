@@ -51,6 +51,28 @@
 </template>
 
 <script>
+const lt = levTime();
+const bt = bcTime();
+function levTime(){
+    let nd = new Date();
+    let a = nd.getFullYear();
+    let b = nd.getMonth();
+    let c = nd.getDate();
+    let d = nd.getHours();
+    let e = nd.toTimeString();
+    let n = a+"/"+(b+1)+"/"+c;
+    return n;
+}
+function bcTime(){
+    let nd = new Date();
+    let a = nd.getFullYear();
+    let b = nd.getMonth();
+    let c = nd.getDate();
+    let d = nd.getHours();
+    let e = nd.toTimeString();
+    let n = a+"/"+(b+1)+"/"+c;
+    return n;
+}
 export default {
     name:'gwaddnew',
     data() {
@@ -68,8 +90,8 @@ export default {
                 link_Phone:'',
                 dep:'',
                 job:'',
-                leave_Time:'',
-                return_Time:'',
+                leave_Time:lt,
+                return_Time:bt,
                 destination:'',
                 reason:'',
                 trip:'',
@@ -83,6 +105,9 @@ export default {
     },
     mounted(){
         
+        
+    },
+    computed: {
         
     },
     methods: {
@@ -169,13 +194,7 @@ export default {
             // }
         },
         backSure(){
-            let n = parseInt(this.timeBg)-parseInt(this.timeNd);
-            if(n < 0){
-                return false;
-            }else{
                 this.backTimeShow =  false;
-            }
-             
         },
         backNo(){
             this.backTimeShow =  false;
