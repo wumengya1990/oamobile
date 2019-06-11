@@ -90,7 +90,7 @@ function apiAxios(method, url, params, success, failure) {
       url: url,
       data: method === "POST" || method === "PUT" ? params : null,
       params: method === "GET" || method === "DELETE" ? params : null,
-      //baseURL: root,
+      // baseURL: root,
       // `headers` 是即将被发送的自定义请求头
       withCredentials: false
     })
@@ -157,7 +157,7 @@ function downloadFile(url, params) {
       url: url,
       params: params,
       responseType: "blob",
-      //baseURL: root, //"http://192.168.0.112:8086",
+      // baseURL: root, //"http://192.168.0.112:8086",
       // `headers` 是即将被发送的自定义请求头
       withCredentials: false
     })
@@ -223,5 +223,5 @@ export default {
   openFile: function (name, path) {
     return openFile(name, path);
   },
-  //apiUrl: root
+  // apiUrl: root
 };

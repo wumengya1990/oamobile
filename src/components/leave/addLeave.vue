@@ -2,20 +2,20 @@
     <div class="gwaddnew bgMain posA posCenter">
         <div class="addForm">
         <van-cell-group>
-            <van-field v-model="leaves.leave_People" type="text" label="请假人" placeholder="请输入请假人" required />
+            <van-field v-model="leaves.leave_People" @blur="kjiance('请假人',leaves.leave_People)" type="text" label="请假人" placeholder="请输入请假人" required />
             <van-field v-model="leaves.link_Phone" @blur="wathchTel(leaves.link_Phone)" type="text" label="联系电话" placeholder="请输入联系电话" required />
-            <van-field v-model="leaves.dep" type="text" label="所属部门" placeholder="请输入所属部门" required />
-            <van-field v-model="leaves.job" type="text" label="职务" placeholder="请输入职务" required />
-            <van-field v-model="leaves.leave_Time" @focus="choLeaveTime" type="text" label="离开时间" placeholder="请输入离开时间" required />
-            <van-field v-model="leaves.return_Time" @focus="choBackTime" type="text" label="返回时间" placeholder="请输入返回时间" required />
-            <van-field v-model="leaves.destination" type="textarea" label="外出地点" rows="5" placeholder="请输入外出地点" required autosize />
-            <van-field v-model="leaves.reason" type="textarea" label="外出事由" rows="5" placeholder="请输入外出事由" required autosize />
-            <van-field v-model="leaves.trip" type="textarea" label="行程安排" rows="5" placeholder="请输入行程安排" required autosize />
+            <van-field v-model="leaves.dep" type="text" label="所属部门" @blur="kjiance('所属部门',leaves.dep)" placeholder="请输入所属部门" required />
+            <van-field v-model="leaves.job" type="text" label="职务" @blur="kjiance('职务',leaves.job)" placeholder="请输入职务" required />
+            <van-field v-model="leaves.leave_Time" @focus="choLeaveTime" type="text" @blur="kjiance('离开时间',leaves.leave_Time)" label="离开时间" placeholder="请输入离开时间" required />
+            <van-field v-model="leaves.return_Time" @focus="choBackTime" type="text" @blur="kjiance('返回时间',leaves.return_Time)" label="返回时间" placeholder="请输入返回时间" required />
+            <van-field v-model="leaves.destination" type="textarea" label="外出地点" @blur="kjiance('外出地点',leaves.destination)" rows="5" placeholder="请输入外出地点" required autosize />
+            <van-field v-model="leaves.reason" type="textarea" label="外出事由" @blur="kjiance('外出事由',leaves.reason)" rows="5" placeholder="请输入外出事由" required autosize />
+            <van-field v-model="leaves.trip" type="textarea" label="行程安排" @blur="kjiance('行程安排',leaves.trip)" rows="5" placeholder="请输入行程安排" required autosize />
         </van-cell-group>
         <van-cell-group>
             <h2>临时主持工作的负责同志</h2>
-            <van-field v-model="leaves.l_Name" type="text" label="姓名" placeholder="请输入临时负责人员姓名" required />
-            <van-field v-model="leaves.l_Job" type="text" label="职务" placeholder="请输入临时负责人员职位" required />
+            <van-field v-model="leaves.l_Name" type="text" label="姓名" @blur="kjiance('临时负责人员姓名',leaves.l_Name)" placeholder="请输入临时负责人员姓名" required />
+            <van-field v-model="leaves.l_Job" type="text" label="职务" @blur="kjiance('临时负责人员职位',leaves.l_Job)" placeholder="请输入临时负责人员职位" required />
             <van-field v-model="leaves.l_Link_Phone" type="text" @blur="wathchTel(leaves.l_Link_Phone)" label="联系电话" placeholder="请输入临时负责人员电话" required />
             <div class="bts">
                 <van-button type="primary" @click="applyForLeave" size="large">提交</van-button>
@@ -60,6 +60,8 @@ export default {
             wbackTime:new Date(),
             wleaveTime:new Date(),
             minDate:new Date(),
+            timeBg:'',
+            timeNd:'',
             leaves:{
                 auditStatus:0,
                 leave_People:'',
@@ -90,6 +92,12 @@ export default {
         // 提交申请
         applyForLeave(){
             let me = this;
+            for(let key in me.leaves){
+                if(me.leaves[key]===''){
+                    this.$toast("请完善必填选项");
+                    return false;
+                }
+            }
             let url='/api/Leave';
             let params = me.leaves;
             me.$api.post(url,params,res=>{
@@ -115,7 +123,8 @@ export default {
              let timeList =[];
              timeList = e.getValues()
              this.leaves.leave_Time = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
-             console.log(this.leaves.leave_Time );
+             this.timeBg = timeList[0]+timeList[1]+timeList[2]+timeList[3]+timeList[4];
+            //  console.log(this.leaves.leave_Time );
         },
         // 确定选择离开时间
         leaveSure(){
@@ -131,8 +140,16 @@ export default {
            let timeList =[];
             timeList = e.getValues()
             this.leaves.return_Time = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
-            console.log(this.leaves.return_Time );
+            // console.log(this.leaves.return_Time );
+            this.timeNd = timeList[0]+timeList[1]+timeList[2]+timeList[3]+timeList[4];
         },
+        // 内容验证
+        kjiance(timu,mes){
+        if(!mes){
+            this.$toast(timu+"不能为空");
+        }
+        },
+        // 检查手机号
         wathchTel(tel){
             console.log(tel);
             let yz = /^[1][3,4,5,7,8][0-9]{9}$/;
@@ -152,7 +169,13 @@ export default {
             // }
         },
         backSure(){
-             this.backTimeShow =  false;
+            let n = parseInt(this.timeBg)-parseInt(this.timeNd);
+            if(n < 0){
+                return false;
+            }else{
+                this.backTimeShow =  false;
+            }
+             
         },
         backNo(){
             this.backTimeShow =  false;

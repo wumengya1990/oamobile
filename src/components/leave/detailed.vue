@@ -80,13 +80,13 @@
                     <span v-if="n.state=='已转发'||n.state=='同意'" style="color:#1ac138">{{n.state}}</span>
                     <span v-else-if="n.state=='待审核'||n.state=='待转发'" style="color:#e4ab04">{{n.state}}</span>
                     <span v-else>{{n.state}}</span>
-                    <em v-if="n.remarks!=''||n.remarks!=null">{{n.remarks}}</em>
+                    <em v-if="n.remarks!=''">{{n.remarks}}</em>
                 </p>
                 <p><span>{{n.time}}</span></p>
             </div>
         </div>
 
-        <div class="bts" v-if="caozuoState!=6&&$route.params.listType!=1">
+        <div class="bts" v-if="caozuoState!=6&&$route.params.listType!=1&&$route.params.myApply!=1">
             <van-button type="primary" @click="submit" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">提交</van-button>
         </div>
 

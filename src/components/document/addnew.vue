@@ -2,13 +2,12 @@
   <div class="gwaddnew bgMain posA posCenter">
     <div class="addForm">
       <van-cell-group>
-        <van-field v-model="gongwen.title" type="text" label="公文标题" placeholder="请输入公文标题" required/>
+        <van-field v-model="gongwen.title" type="text" label="公文标题" @blur="kjiance('公文标题',gongwen.title)" placeholder="请输入公文标题" required/>
         <van-field
           v-model="gongwen.bumfcode"
           type="text"
           label="文件编号"
           placeholder="请输入文件编码"
-          
         />
         <van-field
           v-model="gongwen.bumftop"
@@ -21,6 +20,7 @@
           v-model="gongwen.contentDetail"
           type="textarea"
           label="公文内容"
+          @blur="kjiance('公文内容',gongwen.contentDetail)"
           rows="5"
           placeholder="请输入公文内容"
           autosize
@@ -156,6 +156,7 @@ export default {
         me.choPeoList[wIndex-1].userList[nIndex].ched =! me.choPeoList[wIndex-1].userList[nIndex].ched;
         console.log(me.choPeoList[wIndex-1].userList[nIndex].ched);
     },
+    // 加载人员
     loadpeo() {
       let me = this;
       let url = '/api/user/select';
@@ -186,6 +187,7 @@ export default {
       this.zpeoList.push(obg);
       console.log(this.zpeoList);
     },
+    // 提交选择拟办人
     validationScreening() {
       let me = this;
       let obg = JSON.stringify(me.choPeoList)
@@ -212,6 +214,7 @@ export default {
     toggle(index) {
       this.$refs.checkboxes[index].toggle();
     },
+    // 删除拟办人员
     dropPeo(suoyin) {
       this.$dialog
         .confirm({
@@ -247,9 +250,17 @@ export default {
         }
       });
     },
+    // 删除附件
     dropFile(suoyin) {
       this.gongwen.fileList.splice(suoyin, 1);
     },
+    // 内容验证
+    kjiance(timu,mes){
+      if(!mes){
+        this.$toast(timu+"不能为空");
+      }
+    },
+    // 提交创建公文
     release() {
       let me = this;
       for (let z = 0; z < me.zfujian.length; z++) {
@@ -259,6 +270,10 @@ export default {
       obg = JSON.parse(obg);
       obg.bumfMode = obg.bumfMode ? 1 : 0;
       obg.sendPro = me.zpeoList[0].autoID;
+      if(!obg.title||!obg.contentDetail||obg.sendPro){
+         me.$toast("请完善必填选项");
+         return false;
+      }else{
       let url = "/api/Office";
       let params = obg;
       me.$api.post(url, params, res => {
@@ -271,6 +286,7 @@ export default {
           me.$toast(res.msg);
         }
       });
+      }
     }
   }
 };

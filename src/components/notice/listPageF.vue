@@ -24,7 +24,12 @@
                 <ul>
                     <li v-for="(n,index) in outboxList" :key="index" @click="enterDetailed(n.autoID,1,n.notice_Type)">
                         <van-swipe-cell :right-width="50">
-                        <h3><span class="" :style="{color:n.typebf=='紧急'? '#F30' : '#333'}">[{{n.typebf}}]</span>{{n.title}}</h3>
+                        <h3>
+                            <span v-if="n.typebf=='重要'" style="color:#f3a30e;"><i class="icon iconfont iconjingshigantanhao2"></i></span>
+                            <span v-if="n.typebf=='保密'" style="color:#6daf18;"><i class="icon iconfont iconmima"></i></span>
+                            <span v-if="n.typebf=='紧急'" style="color:#F30;"><i class="icon iconfont iconyingjiguangbo"></i></span>
+                            {{n.title}}
+                            </h3>
                         <p>
                             <span>发送人：{{n.senduserName}}</span>
                             <span>{{n.notice_Type}}</span>

@@ -43,8 +43,13 @@ export default {
             if(dataList!=null){
                 let url = '/api/user/sso';
                 that.$api.get(url,dataList,res=>{
-                    alert(JSON.stringify(res));
                     if(res.code == 200){
+                        that.$store.commit("saveToken", res.token);      //保存 token
+                        that.$store.commit("saveLogin", true);           //保存登录状态
+                        that.$store.commit("saveUid", res.data.autoID);
+                        that.$store.commit("saveUserName", res.data.userName);
+                        that.getAuthority();
+                        that.getPeoSet();
                         that.$router.push({
                             name:'menuAll'
                         })
@@ -56,7 +61,7 @@ export default {
                             }
                         })
                     }else{
-                        
+                        that.$toast("认证错误请从新登录");
                         that.$router.push({
                             name:'login'
                         })
@@ -67,6 +72,29 @@ export default {
                     name:'login'
                 })
             }
+        },
+        getAuthority(){
+            let me = this;
+            let url='/api/user/author';
+            let params="";
+            me.$api.get(url,params,res=>{
+                // console.log(res);
+                if(res.code==200){
+                    me.$store.commit("saveTZauthority", res.data.bumf_Droit);      //保存 token
+                    me.$store.commit("saveGWauthority", res.data.bumflz_Droit);           //保存登录状态
+                    me.$store.commit("saveQJauthority", res.data.leave);
+                }
+            })
+        },
+        getPeoSet(){
+            let me = this;
+            let url='/api/user/config';
+            let params=""
+            me.$api.get(url,params,res=>{
+                if(res.code==200){
+                    me.$store.commit("saveGWniban", res.data.default_Enlisted_Person);
+                }
+            })
         }
     }
 }

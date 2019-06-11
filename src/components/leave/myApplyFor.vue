@@ -151,7 +151,8 @@ export default {
                 name:'qjDetails',
                 params:{
                     autoID:nq,
-                    listType:2
+                    listType:2,
+                    myApply:1,
                 }
             })
         },

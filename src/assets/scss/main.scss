@@ -56,7 +56,10 @@ nav{
             h3{ 
                 text-align: justify; font-weight: normal; color: #333;
                 
-                span{ font-size:14px; padding: 5px 0 0;}
+                span{ 
+                    font-size:14px; padding: 5px 0 0;
+                    i{ font-size: 20px; vertical-align:middle; margin:-3px 5px 0 0; float: left;}
+                }
                 .point{ padding: 0; width: 10px; height: 10px; margin: 7px 0 0; float: right; border-radius: 50%; overflow: hidden; background: #F30;}
                 &.haveN{ 
                     position: relative; padding: 0 20px 0 0;

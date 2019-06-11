@@ -54,7 +54,6 @@ methods: {
         let me = this;
         let url='/api/user/login';
         me.$api.get(url,me.loginForm,res=>{
-            console.log(res);
             if(res.code==200){
                 me.$store.commit("saveToken", res.token);      //保存 token
                 me.$store.commit("saveLogin", true);           //保存登录状态
@@ -76,7 +75,7 @@ methods: {
         let url='/api/user/author';
         let params="";
         me.$api.get(url,params,res=>{
-            console.log(res);
+            // console.log(res);
             if(res.code==200){
                 me.$store.commit("saveTZauthority", res.data.bumf_Droit);      //保存 token
                 me.$store.commit("saveGWauthority", res.data.bumflz_Droit);           //保存登录状态
