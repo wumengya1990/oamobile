@@ -6,26 +6,36 @@
     </router-link> -->
     <router-link v-if="$store.state.tzAuthority==1" to="/tzMain">
     <em><i class="icon iconfont icontongzhi1"></i></em>
-    <span>通知列表</span>
+    <span>系统内通知</span>
     </router-link>
     <router-link v-if="$store.state.gwAuthority==1" to="/gwMain">
     <em><i class="icon iconfont iconai-briefcase"></i></em>
-    <span>公文列表</span>
+    <span>公文流转</span>
     </router-link>
     <router-link v-if="$store.state.qjAuthority==1" to="/qjMain">
     <em><i class="icon iconfont iconZ"></i></em>
-    <span>请假列表</span>
+    <span>请假管理</span>
     </router-link>
     <router-link v-if="$store.state.qjAuthority==0" to="/qjMain/myApplyFor">
     <em><i class="icon iconfont iconZ"></i></em>
     <span>我的请假申请</span>
     </router-link>
+
+    
     </div>
 </template>
 
 <script>
 export default {
     name:'menuAll',
+    beforeCreate() {
+        this.$toast.loading({
+            mask: true,
+            forbidClick:false,
+            duration:0,
+            message:'加载中...'
+        });
+    },
     mounted() {
         this.getLogin();
     },
@@ -39,6 +49,11 @@ export default {
         },
         getLogin(){
             let that = this;
+            if(that.$store.state.haveLogin){
+                that.$toast.clear();
+                return;
+            }
+
             let mySource = that.getQueryString("source");
             let myuId = that.getQueryString("uId");
             let mytoken = that.getQueryString("token");
@@ -56,6 +71,7 @@ export default {
                 let url = '/api/user/sso';
                 that.$api.get(url,dataList,res=>{
                     if(res.code == 200){
+                        that.$toast.clear();
                         that.$store.commit("saveToken", res.token);      //保存 token
                         that.$store.commit("saveLogin", true);           //保存登录状态
                         that.$store.commit("saveUid", res.data.autoID);
@@ -67,6 +83,7 @@ export default {
                         //     name:'menuAll'
                         // })
                     }else if(res.code==302){
+                        that.$toast.clear();
                         that.$router.push({
                             name:'login',
                             params:{
@@ -74,6 +91,7 @@ export default {
                             }
                         })
                     }else{
+                        that.$toast.clear();
                         that.$toast("认证错误请从新登录");
                         that.$router.push({
                             name:'login'

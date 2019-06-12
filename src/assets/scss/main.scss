@@ -11,7 +11,8 @@ li {list-style-type: none;}
 img {text-align: center; vertical-align: middle;}
 address, cite, dfn, em, var { font-style: normal;}
 a { text-decoration: none; color:#444; cursor:pointer; transition: all 0.4s; -webkit-transition:all 0.4s; -moz-transition: all 0.4s;}
-a:hover { text-decoration: underline;color:#f30;}
+a:hover { text-decoration:none;}
+a:active{ text-decoration:none;}
 img{border:0px;}
 .clear{ clear: both; padding: 0; margin: 0; line-height: 0;}
 

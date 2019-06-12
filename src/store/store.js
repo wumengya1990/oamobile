@@ -8,9 +8,9 @@ const store = new Vuex.Store({
     rightLayerEstate: false,
     token: '',
     uid:'',
-    tzAuthority:0,           //通知
-    gwAuthority:0,           //公文
-    qjAuthority:0,           //请假
+    tzAuthority:2,           //通知
+    gwAuthority:2,           //公文
+    qjAuthority:2,           //请假
     userName:'',           //当前登录用户姓名
     gwNibanren:'',
     userRole: 0,
