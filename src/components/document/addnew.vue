@@ -270,7 +270,8 @@ export default {
       obg = JSON.parse(obg);
       obg.bumfMode = obg.bumfMode ? 1 : 0;
       obg.sendPro = me.zpeoList[0].autoID;
-      if(!obg.title||!obg.contentDetail||obg.sendPro){
+      console.log(obg);
+      if(!obg.title||!obg.contentDetail||!obg.sendPro){
          me.$toast("请完善必填选项");
          return false;
       }else{

@@ -25,7 +25,6 @@ export default {
             return null;
         },
         getLogin(){
-            debugger;
             let that = this;
             let mySource = that.getQueryString("source");
             let myuId = that.getQueryString("uId");
