@@ -274,7 +274,7 @@ export default {
             },
             canhuiPeoList:[],                   //参会人员列表
             qingjiaPeoList:[],
-            backMessage:'',                     //回复内容
+            backMessage:'同意',                     //回复内容
             filePath:'',
             watchShow:false,                    //人员查看弹层
             submittedShow:false,                //提交情况弹层
@@ -421,7 +421,7 @@ export default {
             let params = {autoID:me.$route.params.tzid,path:me.filePath,feedBackIdea:me.backMessage};
             me.$api.post(url,params,res=>{
                 console.log(res);
-                me.backMessage="";
+                me.backMessage="同意";
             })
         },
         // 上报详情查看
@@ -452,6 +452,10 @@ export default {
                 }
                 console.log(me.submitted);
             })
+        },
+        zhenghe(){
+            let Crenyuan = new Array();
+            let Arenyuan = new Array();
         },
         // 打开上报人员弹层加载上报详情
         openSBLayer(){

@@ -4,11 +4,11 @@
     <em><i class="icon iconfont icontongzhi1"></i></em>
     <span>通知列表</span>
     </router-link> -->
-    <router-link v-if="$store.state.tzAuthority==1" to="/tzMain">
+    <router-link to="/tzMain">
     <em><i class="icon iconfont icontongzhi1"></i></em>
     <span>系统内通知</span>
     </router-link>
-    <router-link v-if="$store.state.gwAuthority==1" to="/gwMain">
+    <router-link to="/gwMain">
     <em><i class="icon iconfont iconai-briefcase"></i></em>
     <span>公文流转</span>
     </router-link>
