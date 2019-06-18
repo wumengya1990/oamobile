@@ -23,7 +23,7 @@
                     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="shuaxin" :offset="100">
                 <ul>
                     <li v-for="(n,index) in outboxList" :key="index" @click="enterDetailed(n.autoID,1,n.notice_Type)">
-                        <van-swipe-cell :right-width="50">
+                        <!-- <van-swipe-cell :right-width="50"> -->
                         <h3>
                             <span v-if="n.typebf=='重要'" style="color:#f3a30e;"><i class="icon iconfont iconjingshigantanhao2"></i></span>
                             <span v-if="n.typebf=='保密'" style="color:#6daf18;"><i class="icon iconfont iconmima"></i></span>
@@ -35,8 +35,8 @@
                             <span>{{n.notice_Type}}</span>
                             <time>{{n.beginDate}}</time>
                         </p>
-                        <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
-                        </van-swipe-cell>
+                        <!-- <span class="drop" slot="right"><van-icon name="delete"></van-icon></span> -->
+                        <!-- </van-swipe-cell> -->
                     </li>
                 </ul>
                     </van-list>

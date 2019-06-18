@@ -15,13 +15,13 @@
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="shuaxin" :offset="100">
             <ul>
                 <li v-for="(n,index) in documentList" :key="index" @click="enterDetailed(n.autoID)">
-                    <van-swipe-cell :right-width="50">
+                    <!-- <van-swipe-cell :right-width="50"> -->
                     <h3>{{n.title}}</h3>
                     <p>
                         <span>发送人：{{n.userName}}</span>
                         <time>{{n.beginDate|newBeginDate}}</time></p>
-                    <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
-                    </van-swipe-cell>
+                    <!-- <span class="drop" slot="right"><van-icon name="delete"></van-icon></span> -->
+                    <!-- </van-swipe-cell> -->
                 </li>
             </ul>
             </van-list>
@@ -30,7 +30,7 @@
     </div>
         
         <div class="xuanfu">
-            <span @click="addnew"><van-icon name="add-o" /></span>
+            <span @click="addnew" v-if="$store.state.gwAuthority==1"><van-icon name="add-o" /></span>
             <span @click="backTop" v-show="backTopShow"><van-icon name="arrow-up" /></span>
             <span @click="$router.push({path:'/menuAll'})"><van-icon name="apps-o" /></span>
         </div>

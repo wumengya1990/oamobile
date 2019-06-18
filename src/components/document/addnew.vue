@@ -30,7 +30,7 @@
 
       <van-cell-group>
         <div class="addBox">
-          <em>拟办人</em>
+          <em><i style="color:#F30; margin:0 0 0 -5px;  padding:0 5px 0 0;">*</i>拟办人</em>
           <div class="rightCon">
             <div class="peolist"><span v-for="(a,index) in zpeoList" @click="dropPeo(index)" :key="index">{{a.userName}}</span></div>
             <p>点击人员名称可删除</p>
@@ -70,7 +70,7 @@
 
     <van-popup v-model="layerShow" position="right">
       <div class="layerBox">
-        <van-search
+        <!-- <van-search
           v-model="searcgValue"
           placeholder="请输入搜索关键词"
           show-action
@@ -78,7 +78,7 @@
           @search="onSearch"
         >
           <div slot="action" @click="onSearch">搜索</div>
-        </van-search>
+        </van-search> -->
         <div class="layerBoxScroll">
           <van-collapse v-model="activeNames">
             <van-collapse-item
@@ -269,9 +269,9 @@ export default {
       let obg = JSON.stringify(me.gongwen);
       obg = JSON.parse(obg);
       obg.bumfMode = obg.bumfMode ? 1 : 0;
-      obg.sendPro = me.zpeoList[0].autoID;
+      obg.sendPro = me.zpeoList.length > 0 ? me.zpeoList[0].autoID : "";
       console.log(obg);
-      if(!obg.title||!obg.contentDetail||!obg.sendPro){
+      if(!obg.title||!obg.contentDetail||!obg.sendPro||obg.sendPro==undefined){
          me.$toast("请完善必填选项");
          return false;
       }else{

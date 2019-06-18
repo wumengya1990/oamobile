@@ -509,7 +509,7 @@ export default {
                     me.$api.post(url,params,res=>{
                         console.log(res);
                         if(res.code==200){
-                            me.$toast("添加请假人员成功!");
+                            me.$toast("添加参会人员成功!");
                             me.loadPeo();
                             // let newobg = {}
                             // newobg.username = me.luruRenyuan.username;

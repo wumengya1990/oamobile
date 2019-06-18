@@ -17,7 +17,7 @@
                 <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="shuaxin" :offset="100">
                 <ul>
                     <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID,0,n.notice_Type)">
-                        <van-swipe-cell :right-width="50">
+                        <!-- <van-swipe-cell :right-width="50"> -->
                         <h3>
                             <span v-if="n.typebf=='重要'" style="color:#f3a30e;"><i class="icon iconfont iconjingshigantanhao2"></i></span>
                             <span v-if="n.typebf=='保密'" style="color:#6daf18;"><i class="icon iconfont iconmima"></i></span>
@@ -29,8 +29,8 @@
                             <span v-if="n.notice_Type==0">普通通知</span>
                             <span style="color:#F30;" v-else>会议通知</span>
                             <time>{{ n.beginDate | newBeginDate}}</time></p>
-                        <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
-                        </van-swipe-cell>
+                        <!-- <span class="drop" slot="right"><van-icon name="delete"></van-icon></span> -->
+                        <!-- </van-swipe-cell> -->
                     </li>
                 </ul>
                 </van-list>

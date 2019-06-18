@@ -565,7 +565,14 @@ export default {
             let url ='/api/Office/handle?'+me.$qs.stringify(param);
             let params={};
             me.$api.post(url,params,res=>{
-                console.log(res);
+                if(res.code==200){
+                    me.$toast(res.msg)
+                     me.$router.push({
+                        name: "gwnoticeListS"
+                    });
+                }else{
+                    me.$toast(res.msg)
+                }
             })
 
         }
