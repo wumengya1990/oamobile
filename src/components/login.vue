@@ -53,22 +53,31 @@ methods: {
     submitForm(){
         let me = this;
         let url='/api/user/login';
-        me.$api.get(url,me.loginForm,res=>{
-            if(res.code==200){
-                me.$store.commit("saveToken", res.token);      //保存 token
-                me.$store.commit("saveLogin", true);           //保存登录状态
-                me.$store.commit("saveUid", res.data.autoID);
-                me.$store.commit("saveUserName", res.data.userName);
-                me.getAuthority();
-                me.getPeoSet();
-                me.$router.push({
-                    name:'menuAll',
-                    params:{
-                        uid:res.data.autoID
-                    }
-                }) 
-            }
-        })
+        if(!me.loginForm.username||!me.loginForm.pwd){
+            me.$toast("请完善登录信息")
+            return false;
+        }else{
+            me.$api.get(url,me.loginForm,res=>{
+                console.log(res);
+                if(res.code==200){
+                    me.$store.commit("saveToken", res.token);      //保存 token
+                    me.$store.commit("saveLogin", true);           //保存登录状态
+                    me.$store.commit("saveUid", res.data.autoID);
+                    me.$store.commit("saveUserName", res.data.userName);
+                    me.getAuthority();
+                    me.getPeoSet();
+                    me.$router.push({
+                        name:'menuAll',
+                        params:{
+                            uid:res.data.autoID
+                        }
+                    }) 
+                }else{
+                   me.$toast(res.msg);
+                }
+            })
+        }
+        
     },
     getAuthority(){
         let me = this;

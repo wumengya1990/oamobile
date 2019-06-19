@@ -84,6 +84,7 @@ export default {
                         // })
                     }else if(res.code==302){
                         that.$toast.clear();
+                        that.$toast("未绑定，请重新登录自动绑定");
                         that.$router.push({
                             name:'login',
                             params:{
@@ -92,7 +93,7 @@ export default {
                         })
                     }else{
                         that.$toast.clear();
-                        that.$toast("认证错误请从新登录");
+                        that.$toast("认证错误请重新登录");
                         that.$router.push({
                             name:'login'
                         })

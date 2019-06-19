@@ -34,7 +34,7 @@
                                 <h5>{{fj}}</h5>
                                 <p></p>
                                 <dl>
-                                    <dt><a :href="fujianURL[index]"><i class="icon iconfont iconxiazai"></i></a></dt>
+                                    <dt><a :href="fujianURL[index]" target="_blank" :download="fj"><i class="icon iconfont iconxiazai"></i></a></dt>
                                     <dd>200K</dd>
                                 </dl>
                             </div>
@@ -382,13 +382,15 @@ export default {
                     me.readNumbeState.unread = res.unread;
                     //me.replyList = res.replyList;
                     let file = res.data.fjPath;
-                    let fileUrl = res.data.pathBase;
-                    
+                    let furl = res.data.pathBase;
                     if(file==""||file==null||file==undefined){
                          me.fujianName=[];
                     }else{
                         me.fujianName = file.split(",");
-                        me.fujianURL = fileUrl.split(",");
+                        for(let f=0,fl = me.fujianName.length;f<fl;f++){
+                            me.fujianURL.push(furl+"/"+me.fujianName[f]);
+                        }
+                        console.log(me.fujianURL);
                     }
                     // console.log(me.fujianName);
                 })
@@ -403,12 +405,16 @@ export default {
                     me.readNumbeState.unread = res.unread;
                     //me.replyList = res.replyList;
                     let file = me.outFileDetails.fjPath;
-                    //let fileUrl = me.outFileDetails.PathBase;
-                    //me.fujianURL = fileUrl.split(",");
+                    let furl = res.data.pathBase;
                     if(file==""||file==null||file==undefined){
                          me.fujianName=[];
                     }else{
                         me.fujianName = file.split(",");
+                        for(let f=0,fl = me.fujianName.length;f<fl;f++){
+                             me.fujianURL.push(furl+"/"+me.fujianName[f]);
+                        }
+                        console.log(me.fujianURL);
+
                     }
                     // console.log(me.fujianName);
                 })
@@ -422,6 +428,14 @@ export default {
             me.$api.post(url,params,res=>{
                 console.log(res);
                 me.backMessage="同意";
+                if(res.code==200){
+                    me.$toast(res.msg);
+                    me.$router.push({
+                        name:'tzMain'
+                    })
+                }else{
+                    me.$toast(res.msg)
+                }
             })
         },
         // 上报详情查看
@@ -570,6 +584,13 @@ export default {
             }else{
                 done(true);
             }
+        },
+        // 下载文件
+        downloadfile(files){
+            var elemIF = document.createElement('iframe')
+            elemIF.src = files;
+            elemIF.style.display = 'none';
+            document.body.appendChild(elemIF);
         }
     }
 }

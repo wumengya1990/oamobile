@@ -48,7 +48,8 @@
           <div class="rightCon">
             <div class="fileAdd">
               <label class="upButton">
-                <input @change="readyFile($event)" type="file">
+                <!-- <input @change="readyFile($event)" type="file"> -->
+                <input type="file" accept="*" @change="readyFile($event)" capture="camera" alt="" custom-on-change="takePicture"  />
                 <van-icon name="send-gift-o"/>选择上传文件
               </label>
               <ul class="fileList">

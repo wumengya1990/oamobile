@@ -33,7 +33,7 @@
                                 <h5>{{fj}}</h5>
                                 <p></p>
                                 <dl>
-                                    <dt><a :href="fujianURL[index]"><i class="icon iconfont iconxiazai"></i></a></dt>
+                                    <dt><a :href="fujianURL[index]" target="_blank" :download="fj"><i class="icon iconfont iconxiazai"></i></a></dt>
                                     <dd></dd>
                                 </dl>
                             </div>
@@ -88,7 +88,7 @@
                  </ul>
                  <div v-if="fileDetails.state==2&&$route.params.zt!=1">
                  <van-cell-group>
-                    <van-field v-model="songyuMes" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
+                    <van-field v-model="songyuMes1" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
                 </van-cell-group>
                 <div class="bts">
                     <van-button type="primary" @click="lingdaoSunmit" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">回复</van-button>
@@ -206,7 +206,7 @@
 
         <van-popup v-model="layerShow" position="right">
       <div class="layerBox">
-        <van-search
+        <!-- <van-search
           v-model="searcgValue"
           placeholder="请输入搜索关键词"
           show-action
@@ -214,7 +214,7 @@
           @search="onSearch"
         >
           <div slot="action" @click="onSearch">搜索</div>
-        </van-search>
+        </van-search> -->
         <div class="layerBoxScroll">
           <van-collapse v-model="activeNames">
             <van-collapse-item
@@ -254,7 +254,8 @@ export default {
         return {
             searcgValue:'',
             message:'',
-            songyuMes:'',                       //送阅意见
+            songyuMes:'同意',                       //送阅意见
+            songyuMes1:'已阅',
             watchShow:false,
             submittedShow:false,
             songyueyijian:'cacacacacacacaca',
@@ -472,15 +473,17 @@ export default {
                     }
                 }
                 let file = res.data.fjPath;
+                let furl = res.pathBase;
                 if(file==""||file==null||file==undefined){
                         me.fujianName=[];
                 }else{
                     me.fujianName = file.split(",");
                     me.fujianName.splice(me.fujianName.length-1,1);
-                    console.log(me.fujianName);
-                    //me.fujianURL = fileUrl.split(",");
+                    for(let f=0,fl = me.fujianName.length;f<fl;f++){
+                            me.fujianURL.push(furl+"/"+me.fujianName[f]);
+                    }
+                    console.log(me.fujianURL);
                 }
-                // console.log(me.fujianName);
             })
         },
         //回复
@@ -509,16 +512,18 @@ export default {
         lingdaoSunmit(){
             let me = this;
             let url = '/api/Office/reply';
-            let params = {autoID:me.$route.params.id,feedBackIdea:me.songyuMes,indexs:2};
+            let params = {autoID:me.$route.params.id,feedBackIdea:me.songyuMes1,indexs:2};
             
             me.$api.post(url,params,res=>{
                 console.log(res);
                 if(res.code==200){
+                    me.$toast("回复成功");
                     me.$router.push({
                         name: "gwnoticeListS"
                     });
                 }else{
-                    me.$toast(res.msg);
+                    me.$toast("回复失败");
+                    return false;
                 }
             })
         },
@@ -575,6 +580,13 @@ export default {
                 }
             })
 
+        },
+        // 下载文件
+        downloadfile(files){
+            var elemIF = document.createElement('iframe')
+            elemIF.src = files;
+            elemIF.style.display = 'none';
+            document.body.appendChild(elemIF);
         }
     }
 }

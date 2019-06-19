@@ -117,11 +117,16 @@ export default {
         // 提交申请
         applyForLeave(){
             let me = this;
+            let yz = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+            //debugger;
             for(let key in me.leaves){
                 if(me.leaves[key]===''){
                     this.$toast("请完善必填选项");
                     return false;
                 }
+            }
+            if( me.endWathchTel(me.leaves.link_Phone)==false||me.endWathchTel(me.leaves.l_Link_Phone)==false){
+                return false;
             }
             let url='/api/Leave';
             let params = me.leaves;
@@ -186,21 +191,26 @@ export default {
         // 检查手机号
         wathchTel(tel){
             console.log(tel);
-            let yz = /^[1][3,4,5,7,8][0-9]{9}$/;
+            let yz = /^[1][3,4,5,7,8,9][0-9]{9}$/;
             if(!yz.test(tel)||tel==''||!tel){
                 this.$toast.fail({
                     duration:3000,
                     message:'请输入正确的电话号码'
                 })
             }
-            // var yanzhengTel = /^[1][3,4,5,7,8][0-9]{9}$/;
-            // let daqian = tel;
-            // if(!/^[1][3,4,5,7,8][0-9]{9}$/.text(daqian)){
-            //     this.$toast.fail({
-            //         duration:1000,
-            //         message:'取消删除人员'
-            //     })
-            // }
+        },
+        endWathchTel(tel){
+            console.log(tel);
+            let yz = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+            if(!yz.test(tel)||tel==''||!tel){
+                this.$toast.fail({
+                    duration:3000,
+                    message:'请输入正确的电话号码'
+                })
+                return false;
+            }else{
+                return true
+            }
         },
         backSure(){
                 this.backTimeShow =  false;
