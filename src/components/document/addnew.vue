@@ -282,7 +282,7 @@ export default {
       console.log(res);
         if (res.code == 200) {
           me.$router.push({
-            name: "gwnoticeListS"
+            name: "gwnoticeListF"
           });
         } else {
           me.$toast(res.msg);

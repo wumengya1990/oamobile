@@ -47,6 +47,7 @@ export default {
     data() {
         return {
             pageIndex:1,
+            pageSize:10,
             loading:false,
             isLoading:false,
             isRefresh:false,

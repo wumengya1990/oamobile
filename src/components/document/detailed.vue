@@ -14,12 +14,6 @@
                             <p>{{fileDetails.contentDetail}}</p>
                         </div>
                     </li>
-                    <!-- <li>
-                        <div class="detailsState">
-                            <van-button type="info" plain hairline size="small" @click="watchShow=true"><van-icon name="eye" />阅读情况100/200</van-button>
-                            <van-button type="info" plain hairline size="small" @click="submittedShow=true"><van-icon name="column" />查看报送情况</van-button>
-                        </div>
-                    </li> -->
                 </ul>
             </div>
 
@@ -47,20 +41,20 @@
             <!-- <div v-if="fileDetails.state==1" class="detailsBox opinionBox"> -->
             <div class="detailsBox opinionBox">
                  <h4><span>送阅意见</span></h4>
-                 <ul v-if="fileDetails.state!=1" class="opinionBoxList">
+                 <ul v-if="shoufaStyle!=1||fileDetails.state==2||fileDetails.state==3||(shoufaStyle==1&&daibanyiban==1)" class="opinionBoxList">
                      <li v-for="(sy,indexs) in songyueList" :key="indexs">
                          <div class="message">
-                             <p v-if="sy.feedBackIdea==null||sy.feedBackIdea==''" style="color:#F30">未回复</p>
+                             <p v-if="sy.look==0" style="color:#F30">未回复</p>
                              <p v-else>{{sy.feedBackIdea}}</p>
                              
                          </div>
                          <dl>
                              <dt>{{sy.userName}}</dt>
-                             <dd v-if="sy.feedBackIdea!=null || sy.feedBackIdea!=''">{{sy.feedtime|newFeedtime}}</dd>
+                             <dd v-if="sy.look!=0">{{sy.feedtime|newFeedtime}}</dd>
                          </dl>
                      </li>
                  </ul>
-                 <div v-if="fileDetails.state==1">
+                 <div v-if="fileDetails.state==1&&shoufaStyle==1">
                  <van-cell-group>
                     <van-field v-model="songyuMes" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
                 </van-cell-group>
@@ -71,10 +65,10 @@
             </div>
             <!-- 送阅意见结束 -->
 
-            <!-- 领导批示 -->
-            <div v-if="fileDetails.state==0||fileDetails.state==2" class="detailsBox opinionBox">
+            <!-- 领导批示 收件箱发件箱都能看, -->
+            <div class="detailsBox opinionBox" v-if="(fileDetails.state==0&&shoufaStyle==1&&daibanyiban==1)||(fileDetails.state!=0&&shoufaStyle==0)||fileDetails.state==2||fileDetails.state==3">
                  <h4><span>领导批示</span></h4>
-                 <ul class="opinionBoxList">
+                 <ul class="opinionBoxList" v-if="fileDetails.state!=2||(fileDetails.state==2&&shoufaStyle==0)">
                      <li v-for="(n,index) in lingdaopishi" :key="index">
                          <div class="message">
                              <p v-if="n.feedBackIdea==null||n.feedBackIdea==''" style="color:#F30">未回复</p>
@@ -82,11 +76,12 @@
                          </div>
                          <dl>
                              <dt>{{n.userName}}</dt>
-                             <dd>{{n.feedtime|newFeedtime}}</dd>
+                             <dd v-if="n.feedBackIdea!=''">{{n.feedtime|newFeedtime}}</dd>
                          </dl>
                      </li>
                  </ul>
-                 <div v-if="fileDetails.state==2&&$route.params.zt!=1">
+
+                 <div v-if="fileDetails.state==2&&shoufaStyle==1&&shoufaStyle==1">
                  <van-cell-group>
                     <van-field v-model="songyuMes1" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
                 </van-cell-group>
@@ -94,7 +89,8 @@
                     <van-button type="primary" @click="lingdaoSunmit" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">回复</van-button>
                 </div>
                 </div>
-                 <div v-if="fileDetails.state!=2&&$route.params.zt!=1&&$route.params.type!=1">
+
+                 <div v-if="fileDetails.state!=0&&shoufaStyle==0">
                      <van-cell-group>
                         <div class="addBox">
                         <em>选择人员</em>
@@ -117,17 +113,18 @@
             <!-- 领导批示结束 -->
 
             <!-- 处室办理 -->
-            <div v-if="fileDetails.state==3||fileDetails.state==0" class="detailsBox department">
+            <div v-if="(fileDetails.state==0&&shoufaStyle==1&&daibanyiban==1)||(fileDetails.state!=0&&shoufaStyle==0)||fileDetails.state==3" class="detailsBox department">
                  <h4><span>处室办理</span></h4>
                  <ul class="departmentList">
                      <li v-for="(cs,indexn) in chishibanli" :key="indexn">
                         <span>{{cs.userName}}</span>
                         <span v-if="cs.look==0" style="color:#F30;">未读</span>
                         <span v-else>已读</span>
-                        <span>{{cs.feedtime|newBeginDate}}</span>
+                        <span v-if="cs.look!=0">{{cs.feedtime|newBeginDate}}</span>
+                        <span v-else></span>
                      </li>
                  </ul>
-                 <div v-if="fileDetails.state==0&&$route.params.zt!=1&&$route.params.type!=1">
+                 <div v-if="fileDetails.state!=0&&shoufaStyle==0">
                      <van-cell-group>
                         <div class="addBox">
                         <em>选择人员</em>
@@ -148,58 +145,18 @@
                 </div>
 
             </div>
+
+
+
             <!-- 处室办理结束 -->
-            <div class="bts" v-if="fileDetails.state!=2&&$route.params.zt!=1&&$route.params.type!=1">
+            <div class="bts"  v-if="fileDetails.state!=0&&shoufaStyle==0">
                 <div class="selfBt">
                     <a class="doBt" @click="chuli">我已办理</a>
-                    <a class="upBt"  @click="release">提交</a>
+                    <a class="upBt" @click="release">提交</a>
                 </div>
                 <!-- <van-button type="primary" @click="release" style="margin:10px auto; display:block; height:40px; line-height:40px; width:95%;">提交</van-button>
                 <van-button @click="chuli" type="info" style="margin:10px auto; display:block; height:40px; line-height:40px; width:95%;">我已办理</van-button> -->
             </div>
-
-            <!-- <div class="detailsBox replyBox">
-                <h4><span>回复内容</span></h4>
-                <div class="replyBoxCon">
-                    <ul>
-                        <li>
-                            <div class="peo">张洋</div>
-                            <div class="rightCon">
-                                <div class="replyBoxMes">
-                                    <div class="replyBoxMes_1">
-                                    <p>啊大大大大大大大大大大大大大大大大大</p>
-                                    </div>
-                                    <div class="fileBar">
-                                        <span><i class="icon iconfont iconfujian"></i></span>
-                                        <p>文件名称</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="peo">张洋</div>
-                            <div class="rightCon">
-                                <div class="replyBoxMes">
-                                    <div class="replyBoxMes_1">
-                                    <p>啊大大大大大大大大大大大大大大大大大</p>
-                                    </div>
-                                    <div class="fileBar">
-                                        <span><i class="icon iconfont iconfujian"></i></span>
-                                        <p>文件名称</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <van-cell-group>
-                    <van-field v-model="message" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
-                </van-cell-group>
-                <div class="bts">
-                    <van-button type="primary" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">回复</van-button>
-                </div>
-            </div> -->
-            
 
         </div>
 
@@ -254,7 +211,7 @@ export default {
         return {
             searcgValue:'',
             message:'',
-            songyuMes:'同意',                       //送阅意见
+            songyuMes:'已阅',                       //送阅意见
             songyuMes1:'已阅',
             watchShow:false,
             submittedShow:false,
@@ -287,41 +244,8 @@ export default {
                 ]
             },
             submitted:{                 //参会情况弹层内容
-                attendList:[
-                    {
-                        jigou:'徐州一中',
-                        jigouID:'jg001',
-                        peoList:[
-                            {peoName:'张三',peoID:'u0001',zhiwu:'办公式主任办公式主任办公式主任'},
-                            {peoName:'李四',peoID:'u0002',zhiwu:'教研组组长'},
-                            {peoName:'王五',peoID:'u0003',zhiwu:'语文组组长'}
-                        ]
-                    },
-                    {
-                        jigou:'徐州二中',
-                        jigouID:'jg002',
-                        peoList:[
-                            {peoName:'张三',peoID:'u0001',zhiwu:'办公式主任'},
-                            {peoName:'李四',peoID:'u0002',zhiwu:'教研组组长'},
-                            {peoName:'王五',peoID:'u0003',zhiwu:'语文组组长'}
-                        ]
-                    },
-                    {
-                        jigou:'徐州三中',
-                        jigouID:'jg003',
-                        peoList:[
-                            {peoName:'张三',peoID:'u0001',zhiwu:'办公式主任'},
-                            {peoName:'李四',peoID:'u0002',zhiwu:'教研组组长'},
-                            {peoName:'王五',peoID:'u0003',zhiwu:'语文组组长'}
-                        ]
-                    }
-                    
-                ],
-                leaveList:[
-                    {peoName:'张三',peoID:'u0001'},
-                    {peoName:'李四',peoID:'u0002'},
-                    {peoName:'王五',peoID:'u0003'}
-                ]
+                attendList:[],
+                leaveList:[]
             },
             activeNames:[],
             layerShow:false,
@@ -333,14 +257,17 @@ export default {
             bumfMode:false,                 //领导是否发送短信
             bumfMode1:false,                //处室是否发送短信
             zfujian: [],                  //暂存的附件列表
-            dzList: []                   //暂时存放燕来的数据
-            
+            dzList: [],                   //暂时存放燕来的数据
+            shoufaStyle:1,                 //收件箱发件箱状态  0：发件箱  1：收件箱
+            daibanyiban:0,                 //待办已办状态    0：待办      1：已办
         }
     },
     mounted() {
         console.log(this.$route.params.id);
         console.log(this.$route.params.type);
         console.log(this.$route.params.zt);
+        this.shoufaStyle = this.$route.params.type;
+        this.daibanyiban = this.$route.params.zt;
         this.loadxaingqing();
     },
     filters:{
@@ -571,7 +498,7 @@ export default {
             let params={};
             me.$api.post(url,params,res=>{
                 if(res.code==200){
-                    me.$toast(res.msg)
+                    me.$toast("提交成功")
                      me.$router.push({
                         name: "gwnoticeListS"
                     });

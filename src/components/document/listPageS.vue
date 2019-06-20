@@ -55,6 +55,7 @@ export default {
                 {name:'已办',state:1}
             ],
             pageIndex:1,
+            pageSize:10,
             loading:false,
             isLoading:false,
             isRefresh:false,
@@ -123,8 +124,8 @@ export default {
             }
             let url='/api/Office/inbox';
             let params = { pageSize:me.pageSize, pageIndex:me.pageIndex, State:me.btState};
+            console.log(params);
             me.$api.get(url, params,res=>{
-                console.log("收件箱");
                 console.log(res);
                 let resCount = res.data.length;
                 if(isInit == true){
