@@ -38,6 +38,7 @@ export default {
     },
     mounted() {
         this.getLogin();
+        
     },
     methods: {
         //是否请求用户登录
