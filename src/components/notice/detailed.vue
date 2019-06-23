@@ -355,6 +355,7 @@ export default {
             me.$api.post(url,params,res=>{
                 console.log(res);
                 if(res.code==200){
+                    this.$toast("人员报送成功")
                     me.shangbaoShow=false;
                 }
             })

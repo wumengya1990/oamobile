@@ -361,7 +361,7 @@ export default {
                 this.$dialog
                     .confirm({
                     title: "删除提示",
-                    message: "您确定要删除已选拟办人" + this.zpeoList[suoyin].userName
+                    message: "您确定要删除已选人员" + this.zpeoList[suoyin].userName
                     })
                     .then(() => {
                     this.zpeoList.splice(suoyin, 1);
@@ -498,7 +498,7 @@ export default {
             let params={};
             me.$api.post(url,params,res=>{
                 if(res.code==200){
-                    me.$toast("提交成功")
+                    me.$toast("办理成功！")
                      me.$router.push({
                         name: "gwnoticeListS"
                     });
