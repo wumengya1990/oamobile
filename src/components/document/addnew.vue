@@ -49,7 +49,7 @@
             <div class="fileAdd">
               <label class="upButton">
                 <!-- <input @change="readyFile($event)" type="file"> -->
-                <input type="file" accept="*" @change="readyFile($event)" capture="camera" alt="" custom-on-change="takePicture"  />
+                <input type="file" accept="images/*" @change="readyFile($event)" alt="" />
                 <van-icon name="send-gift-o"/>选择上传文件
               </label>
               <ul class="fileList">
@@ -253,7 +253,7 @@ export default {
     },
     // 删除附件
     dropFile(suoyin) {
-      this.gongwen.fileList.splice(suoyin, 1);
+      this.zfujian.splice(suoyin, 1);
     },
     // 内容验证
     kjiance(timu,mes){
@@ -281,6 +281,7 @@ export default {
       me.$api.post(url, params, res => {
       console.log(res);
         if (res.code == 200) {
+          me.$toast("公文创建成功");
           me.$router.push({
             name: "gwnoticeListF"
           });

@@ -83,7 +83,7 @@
 
                  <div v-if="fileDetails.state==2&&shoufaStyle==1&&shoufaStyle==1">
                  <van-cell-group>
-                    <van-field v-model="songyuMes1" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
+                    <van-field v-model="songyuMes1" @focus="anzhuoSet" @blur="anzhuoSetN" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
                 </van-cell-group>
                 <div class="bts">
                     <van-button type="primary" @click="lingdaoSunmit" style="height:40px; font-size:1.1rem; width:95%; display:block; margin:0 auto;">回复</van-button>
@@ -473,10 +473,17 @@ export default {
             chushiTel = me.bumfMode1 == true ? 1 : 0;
             let url = '/api/Office/forward';
             let params = {autoID:me.$route.params.id,ldps:lingdaoList,ldpsMobile:lingdaoTel,csbl:chushiList,csblMobile:chushiTel};
-            console.log(params);
+            // console.log(params);
+            me.$toast.loading({
+                mask: true,
+                forbidClick:false,
+                duration:0,
+                message:'提交中...'
+            });
             me.$api.post(url,params,res=>{
                 console.log(res);
                 if(res.code==200){
+                    me.$toast.clear();
                     me.haveDone();
                     me.$router.push({
                         name: "gwnoticeListF"
@@ -514,7 +521,29 @@ export default {
             elemIF.src = files;
             elemIF.style.display = 'none';
             document.body.appendChild(elemIF);
-        }
+        },
+        //输入框怎么的
+        anzhuoSet(){
+            var u = navigator.userAgent;
+            if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {//安卓手机
+                let resBox =  document.getElementsByClassName("replyBox")[0];
+                let zhanwei = document.createElement('div');
+                zhanwei.className = "zhanweibox";
+                zhanwei.style.height = 400+"px";
+                resBox.appendChild(zhanwei);
+            }     
+        },
+        anzhuoSetN(){
+            var u = navigator.userAgent;
+             if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+                let resBox =  document.getElementsByClassName("replyBox")[0];
+                let zhanwei = document.getElementsByClassName('zhanweibox')[0];
+                resBox.removeChild(zhanwei);
+             }
+           
+        },
+        //点击附件附件查看
+        
     }
 }
 </script>

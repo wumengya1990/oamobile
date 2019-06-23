@@ -386,7 +386,7 @@ nav{
         label{ margin: 0 30px 10px 0;}
     }
     .peoList li{ 
-        display:block; height: 35px; line-height: 35px; border-bottom: 1px dashed #dedede; color: #333;
+        display:block; height: 35px; line-height: 35px; border-bottom: 1px dashed #dedede; color: #666; padding:0 0 0 20px; box-sizing:border-box;
         i{font-size:18px; float: right; margin:8px 0 0; display: none;}
         &.on{
             i{ color: #0084e4; display: block;}

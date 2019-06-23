@@ -298,6 +298,10 @@ export default {
                 obg.autoID = me.$route.params.autoID;
                 obg.isArchive = me.caozuoState;
                 obg.auditor = me.zpeoList[0].autoID;
+                if(obg.auditor==''||obg.auditor==null||obg.auditor==undefined){
+                    me.$toast("未选择相关人员");
+                    return false;
+                }
                 let params = obg;
                 me.$api.post(url,params,res=>{
                     console.log(res);
@@ -324,6 +328,26 @@ export default {
                 return false;
             }
             
+        },
+        //输入框怎么的
+        anzhuoSet(){
+            var u = navigator.userAgent;
+            if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {//安卓手机
+                let resBox =  document.getElementsByClassName("replyBox")[0];
+                let zhanwei = document.createElement('div');
+                zhanwei.className = "zhanweibox";
+                zhanwei.style.height = 400+"px";
+                resBox.appendChild(zhanwei);
+            }     
+        },
+        anzhuoSetN(){
+            var u = navigator.userAgent;
+             if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+                let resBox =  document.getElementsByClassName("replyBox")[0];
+                let zhanwei = document.getElementsByClassName('zhanweibox')[0];
+                resBox.removeChild(zhanwei);
+             }
+           
         }
     }
 }
