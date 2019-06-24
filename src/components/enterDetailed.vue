@@ -13,7 +13,8 @@ export default {
         }
     },
     mounted() {
-        
+        alert(123);
+        this.getLogin();
     },
     methods: {
         //是否请求用户登录
@@ -25,16 +26,13 @@ export default {
         },
         getLogin(){
             let that = this;
-            if(that.$store.state.haveLogin){
-                that.$toast.clear();
-                return;
-            }
-
+          
             // let mySource = that.getQueryString("source");
             let mySource = that.getQueryString("datasoure");
             let myuId = that.getQueryString("uId");
             let mytoken = that.getQueryString("token");
-            let wzID  = that.getQueryString("autoID");
+            let  
+              = that.getQueryString("autoid");
             let wzType = that.getQueryString("menu");
             let wzListType = that.getQueryString("type");
             let dataList = new Object();
@@ -56,9 +54,58 @@ export default {
             if (wzListType) {
                 dataList.wListtype = wzListType;
             }
+            // if(dataList!=null){
+            // console.log(wzType);
+            // let shuzi = parseInt(wzType)
+            // switch (shuzi) {
+            //     case 15:
+            //         that.$router.push({
+            //             path:'/tzMain/tzdetailed',
+            //             params:{
+            //                 tzid:wzID,
+            //                 listType:wzListType,
+            //                 mesType:1
+            //             }
+            //         })
+            //         break;
+            //     case 16:
+            //         that.$router.push({
+            //             path:'/gwMain/gwdetailed',
+            //             params:{
+            //                 id:wzID,
+            //                 type:wzListType,
+            //                 zt:1
+            //             }
+            //         })
+            //         break;
+            //     case 9:
+            //         that.$router.push({
+            //             path:'/qjMain/qjDetails',
+            //             params:{
+            //                 autoID:wzID,
+            //                 listType:wzListType
+            //             } 
+            //         })
+            //         break;
+            //     default:
+            //         that.$router.push({
+            //             name:'menuAll'
+            //         })
+            // }
+            // }else{
+            //     that.$router.push({
+            //         name:'login'
+            //     })
+            // }
+            
             if(dataList!=null){
                 let url = '/api/user/sso';
-                alert(that.$qs.stringify(dataList));
+                 this.$toast.loading({
+                    mask: true,
+                    forbidClick:false,
+                    duration:0,
+                    message:'加载中...'
+                });
                 that.$api.get(url,dataList,res=>{
                     if(res.code == 200){
                         that.$toast.clear();
@@ -69,8 +116,9 @@ export default {
                         that.getAuthority();
                         that.getPeoSet();
                         that.$toast("登录成功");
-                        
-                        switch (wzType) {
+                        console.log(wzType);
+                        let shuzi = parseInt(wzType)
+                        switch (shuzi) {
                             case 15:
                                 that.$router.push({
                                     path:'/tzMain/tzdetailed',
@@ -105,12 +153,6 @@ export default {
                                     name:'menuAll'
                                 })
                         }
-
-                        // if(wzType==12){
-                        //     that.$router.push({
-                        //         name:'menuAll'
-                        //     })
-                        // }
                         
                     }else if(res.code==302){
                         that.$toast.clear();

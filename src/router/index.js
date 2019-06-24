@@ -13,9 +13,9 @@ const router = new Router({
       component: HelloWorld,
       redirect:'/login'     //路由重定向
     },{
-      path: '/singleLogin',
-      name: 'singleLogin',
-      component: resolve => require(['@/components/singleSignOn'],resolve),
+      path: '/enterDetailed',
+      name: 'enterDetailed',
+      component: resolve => require(['@/components/enterDetailed'],resolve),
     },{
       path: '/login',
       name: 'login',
