@@ -34,7 +34,8 @@
                                 <h5>{{fj}}</h5>
                                 <p></p>
                                 <dl>
-                                    <dt><a :href="fujianURL[index]" target="_blank" :download="fj"><i class="icon iconfont iconxiazai"></i></a></dt>
+                                    <!-- <dt><a :href="fujianURL[index]" target="_blank" :download="fj"><i class="icon iconfont iconxiazai"></i></a></dt> -->
+                                    <dt><a href="javascript:void(0)" @click="panduanImg(fj,fujianURL[index])"><i class="icon iconfont iconxiazai"></i></a></dt>
                                     <dd>200K</dd>
                                 </dl>
                             </div>
@@ -250,17 +251,20 @@
             </van-cell-group>
         </van-dialog>
         
-
-        
+        <van-image-preview v-model="imgShow" :images="imgListC"></van-image-preview>
 
     </div>
 </template>
 
 <script>
+// import{ImagePreview} from "vant";
 export default {
     name:'detailed',
+    // components:{ImagePreview},
     data() {
         return {
+            imgShow:false,
+            imgListC:[],
             canhuiShow:false,                   //参会人员弹层开关
             qingjiaShow:false,                  //请假人员弹层开关
             luruRenyuan:{                       //弹层添加人员输入内容
@@ -426,6 +430,7 @@ export default {
             let me = this;
             let url = '/api/Notic/reply';
             let params = {autoID:me.$route.params.tzid,path:me.filePath,feedBackIdea:me.backMessage};
+            
             me.$api.post(url,params,res=>{
                 console.log(res);
                 me.backMessage="同意";
@@ -612,6 +617,20 @@ export default {
                 resBox.removeChild(zhanwei);
              }
            
+        },
+        //判断图片
+        panduanImg(imgName,imgUrl){
+            let iml = new Array();
+            iml.push(imgUrl)
+            let extStart = imgName.lastIndexOf(".");
+            let ext = imgName.substring(extStart,imgName.length).toUpperCase();
+            if(ext==".BMP"||ext==".PNG"||ext==".GIF"||ext==".JPG"||ext==".JPEG"){
+                // ImagePreview(iml);
+                this.imgShow = true;
+                this.imgListC=iml;
+            }else{
+                window.open(imgUrl,"_blank");
+            }
         }
     }
 }

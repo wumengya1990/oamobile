@@ -27,7 +27,8 @@
                                 <h5>{{fj}}</h5>
                                 <p></p>
                                 <dl>
-                                    <dt><a :href="fujianURL[index]" target="_blank" :download="fj"><i class="icon iconfont iconxiazai"></i></a></dt>
+                                    <!-- <dt><a :href="fujianURL[index]" target="_blank" :download="fj"><i class="icon iconfont iconxiazai"></i></a></dt> -->
+                                    <dt><a href="javascript:void(0)" @click="panduanImg(fj,fujianURL[index])"><i class="icon iconfont iconxiazai"></i></a></dt>
                                     <dd></dd>
                                 </dl>
                             </div>
@@ -173,6 +174,9 @@
           <div slot="action" @click="onSearch">搜索</div>
         </van-search> -->
         <div class="layerBoxScroll">
+        <div class="noPeople" v-if="choPeoList.length==0||choPeoList.length==null||choPeoList.length==undefined">
+             暂无可选人员
+          </div>
           <van-collapse v-model="activeNames">
             <van-collapse-item
               :title="peo.deptName"
@@ -201,14 +205,21 @@
       </div>
     </van-popup>
 
+    <van-image-preview v-model="imgShow" :images="imgListC"></van-image-preview>
+
     </div>
 </template>
 
 <script>
+// import{ImagePreview} from "vant";
+
 export default {
     name:'gwdetailed',
+    // components:{ImagePreview},
     data() {
         return {
+            imgShow:false,
+            imgListC:[],
             searcgValue:'',
             message:'',
             songyuMes:'已阅',                       //送阅意见
@@ -440,10 +451,16 @@ export default {
             let me = this;
             let url = '/api/Office/reply';
             let params = {autoID:me.$route.params.id,feedBackIdea:me.songyuMes1,indexs:2};
-            
+            me.$toast.loading({
+                mask: true,
+                forbidClick:false,
+                duration:0,
+                message:'提交中...'
+            });
             me.$api.post(url,params,res=>{
-                console.log(res);
+                //console.log(res);
                 if(res.code==200){
+                    me.$toast.clear();
                     me.$toast("回复成功");
                     me.$router.push({
                         name: "gwnoticeListS"
@@ -542,7 +559,20 @@ export default {
              }
            
         },
-        //点击附件附件查看
+        //判断图片
+        panduanImg(imgName,imgUrl){
+            let iml = new Array();
+            iml.push(imgUrl)
+            let extStart = imgName.lastIndexOf(".");
+            let ext = imgName.substring(extStart,imgName.length).toUpperCase();
+            if(ext==".BMP"||ext==".PNG"||ext==".GIF"||ext==".JPG"||ext==".JPEG"){
+                // ImagePreview(iml);
+                this.imgShow = true;
+                this.imgListC=iml;
+            }else{
+                window.open(imgUrl,"_blank");
+            }
+        }
         
     }
 }

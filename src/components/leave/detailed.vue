@@ -62,7 +62,7 @@
                     <div class="peolist"><span v-for="(a,index) in zpeoList" @click="dropPeo(index)" :key="index">{{a.userName}}</span></div>
                     <p>点击人员名称可删除</p>
                     <a class="appendPeo" @click="choPeo"><van-icon name="friends" />选择人员</a>
-                    <span class="duanxin">手机端短信提醒<van-switch v-model="bumfMode" size="14px" /></span>
+                    <!-- <span class="duanxin">手机端短信提醒<van-switch v-model="bumfMode" size="14px" /></span> -->
                     </div>
                 </div>
             </li>
@@ -284,9 +284,16 @@ export default {
                 obg.isArchive = me.caozuoState;
                 console.log(obg);
                 let params = obg;
+                me.$toast.loading({
+                    mask: true,
+                    forbidClick:false,
+                    duration:0,
+                    message:'提交中...'
+                });
                 me.$api.post(url,params,res=>{
                     console.log(res);
                     if(res.code == 200){
+                        me.$toast.clear();
                         me.$router.push({
                             name:'qjTodoList'
                         })
@@ -297,15 +304,26 @@ export default {
                 let obg = new Object();
                 obg.autoID = me.$route.params.autoID;
                 obg.isArchive = me.caozuoState;
-                obg.auditor = me.zpeoList[0].autoID;
-                if(obg.auditor==''||obg.auditor==null||obg.auditor==undefined){
-                    me.$toast("未选择相关人员");
+                if(me.zpeoList.length==0||me.zpeoList.length==null||me.zpeoList.length==undefined){
+                     me.$toast("未选择相关人员");
                     return false;
                 }
+                obg.auditor = me.zpeoList[0].autoID;
+                // if(obg.auditor==''||obg.auditor==null||obg.auditor==undefined||obg.auditor==0){
+                //     me.$toast("未选择相关人员");
+                //     return false;
+                // }
                 let params = obg;
+                me.$toast.loading({
+                    mask: true,
+                    forbidClick:false,
+                    duration:0,
+                    message:'提交中...'
+                });
                 me.$api.post(url,params,res=>{
                     console.log(res);
                     if(res.code == 200){
+                        me.$toast.clear();
                         me.$router.push({
                             name:'qjTodoList'
                         })
@@ -316,9 +334,16 @@ export default {
                 let param = {AutoID:me.$route.params.autoID};
                 let url ='/api/Leave/file?'+me.$qs.stringify(param);
                 let params ={};
+                me.$toast.loading({
+                    mask: true,
+                    forbidClick:false,
+                    duration:0,
+                    message:'提交中...'
+                });
                 me.$api.post(url,params,res=>{
                     console.log(res);
                     if(res.code == 200){
+                        me.$toast.clear();
                         me.$router.push({
                             name:'qjTodoList'
                         })

@@ -81,6 +81,9 @@
           <div slot="action" @click="onSearch">搜索</div>
         </van-search> -->
         <div class="layerBoxScroll">
+          <div class="noPeople" v-if="choPeoList.length==0||choPeoList.length==null||choPeoList.length==undefined">
+             暂无可选人员
+          </div>
           <van-collapse v-model="activeNames">
             <van-collapse-item
               :title="peo.deptName"

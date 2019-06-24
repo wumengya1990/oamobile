@@ -30,7 +30,8 @@ export default {
                 return;
             }
 
-            let mySource = that.getQueryString("source");
+            // let mySource = that.getQueryString("source");
+            let mySource = that.getQueryString("datasoure");
             let myuId = that.getQueryString("uId");
             let mytoken = that.getQueryString("token");
             let wzID  = that.getQueryString("autoID");
@@ -46,8 +47,18 @@ export default {
             if (mytoken) {
                 dataList.token = mytoken;
             }
+            if (wzID) {
+                dataList.wID = wzID;
+            }
+            if (wzType) {
+                dataList.wType = wzType;
+            }
+            if (wzListType) {
+                dataList.wListtype = wzListType;
+            }
             if(dataList!=null){
                 let url = '/api/user/sso';
+                alert(that.$qs.stringify(dataList));
                 that.$api.get(url,dataList,res=>{
                     if(res.code == 200){
                         that.$toast.clear();

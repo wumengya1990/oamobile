@@ -375,6 +375,7 @@ nav{
 // 弹层用样式
 .layerBox{
     .layerBoxScroll{ position: absolute; left: 0; top:0; bottom: 50px; right: 0; overflow-y: auto;}
+    .noPeople{ padding: 40px 0; text-align: center; color: #777;}
     .stateBar{
          text-align: center;padding: .5rem;
          span{ padding: 0 10px;}
