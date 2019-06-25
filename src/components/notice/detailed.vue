@@ -199,7 +199,7 @@
             </van-collapse>
             <div class="bts">
                 <van-button @click="shangbaoShow=false" hairline size="small" style="width:120px;">取消</van-button>
-                <van-button @click="baosongSure" hairline size="small" type='info' style="width:120px;">确定</van-button>
+                <van-button @click="baosongSure" hairline size="small" type='info' style="width:120px;">提交</van-button>
             </div>
         </van-popup>
         <!-- 参会人员输入 -->

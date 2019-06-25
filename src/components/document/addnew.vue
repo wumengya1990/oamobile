@@ -303,7 +303,7 @@ export default {
   box-sizing: border-box;
   padding: 10px;
   &--right {
-    width: 80%;
+    width: 100%;
     height: 100%;
     .bts {
       position: absolute;

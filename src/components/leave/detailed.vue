@@ -271,7 +271,21 @@ export default {
             })
         },
         dropPeo(suoyin){
-            this.zpeoList.splice(suoyin,1)
+            this.$dialog.confirm({
+                title: "删除提示",
+                message: "您确定要删除已选人员" + this.zpeoList[suoyin].userName
+                }).then(() => {
+                this.zpeoList.splice(suoyin, 1);
+                    this.$toast.success({
+                        duration: 1000,
+                        message: "人员已删除"
+                    });
+                }).catch(() => {
+                this.$toast.fail({
+                    duration: 1000,
+                    message: "取消删除人员"
+                });
+            });
         },
         // 提交返回
         submit(){

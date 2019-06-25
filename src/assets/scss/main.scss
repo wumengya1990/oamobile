@@ -73,7 +73,7 @@ nav{
                     padding: 0 25px 0 0;
                     &.huiyi{ color: #F30;}
                 }
-                time{ float: right;}
+                time{ float: right; white-space: nowrap; overflow: hidden;}
             }
         }
     }
@@ -408,3 +408,7 @@ nav{
 }
 // .van-tabs{ @extend .posA, .posCenter;}
 // .van-tabs__content--animated{ position: absolute; left: 0; top: 44px; right: 0; bottom: 0; margin: auto;}
+
+@media screen and (max-width:374px){
+    .List p time{ width: 75px; overflow: hidden; white-space: nowrap; overflow: hidden;}
+}

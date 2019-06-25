@@ -15,7 +15,7 @@
                     <dl class="noMessage" v-if="qjHaveList.length == 0">
                         <dt>OA</dt>
                         <dd><span>办公管理系统</span></dd>
-                        <dd><p>暂无数据内容请刷新重试</p></dd>
+                        <dd><p>暂无数据内容</p></dd>
                     </dl>
                     <div class="listBox">
                         <van-pull-refresh v-model="isRefresh" @refresh="onRefresh">
@@ -97,7 +97,7 @@ export default {
             if(mes){
                 let nr = mes.toString();
                 let result = nr.replace("T"," ");
-                result = result.substring(0,19);
+                result = result.substring(0,16);
                 return result;
             }else{
                 return mes;
@@ -188,7 +188,7 @@ export default {
     box-sizing: border-box;
     padding: 20px;
     &--right{
-        width:70%;
+        width:100%;
         height:100%;
         .bts{ position:absolute; left: 0; top: auto; right: 0; bottom: 0; text-align:center; padding: 10px 0;}
     }

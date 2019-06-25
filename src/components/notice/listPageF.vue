@@ -6,7 +6,7 @@
             <dl class="noMessage" v-if="outboxList.length == 0">
                 <dt>OA</dt>
                 <dd><span>办公管理系统</span></dd>
-                <dd><p>暂无数据内容请刷新重试</p></dd>
+                <dd><p>暂无数据内容</p></dd>
             </dl>
             <div class="listBox">
                 <!--
@@ -33,7 +33,7 @@
                         <p>
                             <span>发送人：{{n.senduserName}}</span>
                             <span>{{n.notice_Type}}</span>
-                            <time>{{n.beginDate}}</time>
+                            <time>{{n.beginDate|newBeginDate}}</time>
                         </p>
                         <!-- <span class="drop" slot="right"><van-icon name="delete"></van-icon></span> -->
                         <!-- </van-swipe-cell> -->
@@ -81,6 +81,18 @@ export default {
     
     mounted() {
         this.loadOutboxList(true);
+    },
+    filters:{
+        newBeginDate:function(mes){
+            if(mes){
+                let nr = mes.toString();
+                let result = nr.replace("T"," ");
+                result = result.substring(0,16);
+                return result;
+            }else{
+                return mes;
+            }
+        }
     },
     methods:{
         onSearch:function(){

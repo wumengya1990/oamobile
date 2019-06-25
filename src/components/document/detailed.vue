@@ -130,7 +130,7 @@
                         <div class="addBox">
                         <em>选择人员</em>
                         <div class="rightCon">
-                            <div class="peolist"><span v-for="(a,index) in zpeoList1" @click="dropPeo(index)" :key="index">{{a.userName}}</span></div>
+                            <div class="peolist"><span v-for="(a,index) in zpeoList1" @click="dropPeo1(index)" :key="index">{{a.userName}}</span></div>
                             <p>点击人员名称可删除</p>
                             <a class="appendPeo" @click="choPeo(2)">
                             <van-icon name="friends"/>选择处室
@@ -369,19 +369,33 @@ export default {
                 me.layerShow = false;
                 },
                 dropPeo(suoyin) {
-                this.$dialog
-                    .confirm({
+                this.$dialog.confirm({
                     title: "删除提示",
                     message: "您确定要删除已选人员" + this.zpeoList[suoyin].userName
-                    })
-                    .then(() => {
+                    }).then(() => {
                     this.zpeoList.splice(suoyin, 1);
                     this.$toast.success({
                         duration: 1000,
                         message: "人员已删除"
                     });
-                    })
-                    .catch(() => {
+                    }).catch(() => {
+                    this.$toast.fail({
+                        duration: 1000,
+                        message: "取消删除人员"
+                    });
+                    });
+                },
+                dropPeo1(suoyin) {
+                this.$dialog.confirm({
+                    title: "删除提示",
+                    message: "您确定要删除已选人员" + this.zpeoList1[suoyin].userName
+                    }).then(() => {
+                    this.zpeoList1.splice(suoyin, 1);
+                    this.$toast.success({
+                        duration: 1000,
+                        message: "人员已删除"
+                    });
+                    }).catch(() => {
                     this.$toast.fail({
                         duration: 1000,
                         message: "取消删除人员"
@@ -411,16 +425,18 @@ export default {
                     }
                 }
                 let file = res.data.fjPath;
+                file = file.substr(0,file.length-1);
                 let furl = res.pathBase;
                 if(file==""||file==null||file==undefined){
                         me.fujianName=[];
                 }else{
                     me.fujianName = file.split(",");
-                    me.fujianName.splice(me.fujianName.length-1,1);
+                    // me.fujianName.splice(me.fujianName.length-1,1);
                     for(let f=0,fl = me.fujianName.length;f<fl;f++){
                             me.fujianURL.push(furl+"/"+me.fujianName[f]);
                     }
-                    console.log(me.fujianURL);
+                    console.log(me.fujianName);
+                    //console.log(me.fujianURL);
                 }
             })
         },

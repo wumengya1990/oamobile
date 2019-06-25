@@ -31,8 +31,7 @@ export default {
             let mySource = that.getQueryString("datasoure");
             let myuId = that.getQueryString("uId");
             let mytoken = that.getQueryString("token");
-            let  
-              = that.getQueryString("autoid");
+            let wzID = that.getQueryString("autoid");
             let wzType = that.getQueryString("menu");
             let wzListType = that.getQueryString("type");
             let dataList = new Object();

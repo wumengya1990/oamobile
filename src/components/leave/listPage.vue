@@ -202,7 +202,7 @@ export default {
     box-sizing: border-box;
     padding: 20px;
     &--right{
-        width:70%;
+        width:100%;
         height:100%;
         .bts{ position:absolute; left: 0; top: auto; right: 0; bottom: 0; text-align:center; padding: 10px 0;}
     }

@@ -9,7 +9,7 @@
             <dl class="noMessage" v-if="noticeMessList.length == 0">
                 <dt>OA</dt>
                 <dd><span>办公管理系统</span></dd>
-                <dd><p>暂无数据内容请刷新重试</p></dd>
+                <dd><p>暂无数据内容</p></dd>
             </dl>
             <!-- 没有内容提示 -->
             <div class="listBox">
@@ -90,7 +90,7 @@ export default {
             if(mes){
                 let nr = mes.toString();
                 let result = nr.replace("T"," ");
-                result = result.substring(0,19);
+                result = result.substring(0,16);
                 return result;
             }else{
                 return mes;
