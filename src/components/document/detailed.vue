@@ -425,7 +425,7 @@ export default {
                     }
                 }
                 let file = res.data.fjPath;
-                file = file.substr(0,file.length-1);
+                file = file.substr(0,file.length);
                 let furl = res.pathBase;
                 if(file==""||file==null||file==undefined){
                         me.fujianName=[];
@@ -433,10 +433,15 @@ export default {
                     me.fujianName = file.split(",");
                     // me.fujianName.splice(me.fujianName.length-1,1);
                     for(let f=0,fl = me.fujianName.length;f<fl;f++){
+                        if(me.fujianName[f]==""||me.fujianName[f]==null||me.fujianName[f]==undefined){
+                            continue
+                        }else{
                             me.fujianURL.push(furl+"/"+me.fujianName[f]);
+                        }
+                            
                     }
                     console.log(me.fujianName);
-                    //console.log(me.fujianURL);
+                    console.log(me.fujianURL);
                 }
             })
         },
@@ -451,9 +456,16 @@ export default {
             let me = this;
             let url = '/api/Office/reply';
             let params = {autoID:me.$route.params.id,feedBackIdea:me.songyuMes,indexs:1};
+            me.$toast.loading({
+                mask: true,
+                forbidClick:false,
+                duration:0,
+                message:'提交中...'
+            });
             me.$api.post(url,params,res=>{
-                console.log(res);
                 if(res.code==200){
+                    me.$toast.clear();
+                    me.$toast("回复成功");
                     me.$router.push({
                         name: "gwnoticeListS"
                     });
@@ -474,7 +486,6 @@ export default {
                 message:'提交中...'
             });
             me.$api.post(url,params,res=>{
-                //console.log(res);
                 if(res.code==200){
                     me.$toast.clear();
                     me.$toast("回复成功");

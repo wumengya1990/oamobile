@@ -130,9 +130,17 @@ export default {
             }
             let url='/api/Leave';
             let params = me.leaves;
+            me.$toast.loading({
+                mask: true,
+                forbidClick:false,
+                duration:0,
+                message:'提交中...'
+            });
             me.$api.post(url,params,res=>{
                 console.log(res);
                 if(res.code==200){
+                    me.$toast.clear();
+                    me.$toast("请假创建成功");
                     me.$router.push({
                         name:'myApplyFor'
                     })
@@ -155,7 +163,7 @@ export default {
              this.leaves.leave_Time = timeList[0]+'\/'+timeList[1]+'\/'+timeList[2]+" "+timeList[3]+':'+timeList[4];
              this.timeBg = timeList[0]+timeList[1]+timeList[2]+timeList[3]+timeList[4];
              let kaishi = parseInt(this.timeBg);
-            let jieshu = parseInt(this.timeNd);
+             let jieshu = parseInt(this.timeNd);
             if((jieshu-kaishi)<0){
                 this.$toast("不能选择大于结束时间");
             }

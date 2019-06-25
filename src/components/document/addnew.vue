@@ -281,9 +281,16 @@ export default {
       }else{
       let url = "/api/Office";
       let params = obg;
+      me.$toast.loading({
+          mask: true,
+          forbidClick:false,
+          duration:0,
+          message:'提交中...'
+      });
       me.$api.post(url, params, res => {
       console.log(res);
         if (res.code == 200) {
+          me.$toast.clear();
           me.$toast("公文创建成功");
           me.$router.push({
             name: "gwnoticeListF"
