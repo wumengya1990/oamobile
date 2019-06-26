@@ -24,7 +24,6 @@
           rows="5"
           placeholder="请输入公文内容"
           autosize
-          required
         />
       </van-cell-group>
 
@@ -275,7 +274,7 @@ export default {
       obg.bumfMode = obg.bumfMode ? 1 : 0;
       obg.sendPro = me.zpeoList.length > 0 ? me.zpeoList[0].autoID : "";
       console.log(obg);
-      if(!obg.title||!obg.contentDetail||!obg.sendPro||obg.sendPro==undefined){
+      if(!obg.title||!obg.sendPro||obg.sendPro==undefined){
          me.$toast("请完善必填选项");
          return false;
       }else{

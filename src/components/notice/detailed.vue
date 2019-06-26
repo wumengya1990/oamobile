@@ -28,14 +28,14 @@
                 <h4><span>附件列表</span></h4>
                 <div class="attachmentList">
                     <ul>
-                        <li v-for="(fj, index) in fujianName" :key="index">
+                        <li v-for="(fj, index) in fujianName" :key="index" @click="panduanImg(fj,fujianURL[index])">
                             <div class="fileImg"><i class="icon iconfont iconfujian"></i></div>
                             <div class="fileMessage">
                                 <h5>{{fj}}</h5>
                                 <p></p>
                                 <dl>
                                     <!-- <dt><a :href="fujianURL[index]" target="_blank" :download="fj"><i class="icon iconfont iconxiazai"></i></a></dt> -->
-                                    <dt><a href="javascript:void(0)" @click="panduanImg(fj,fujianURL[index])"><i class="icon iconfont iconxiazai"></i></a></dt>
+                                    <dt><a href="javascript:void(0)" ><i class="icon iconfont iconxiazai"></i></a></dt>
                                     <dd>200K</dd>
                                 </dl>
                             </div>
@@ -278,7 +278,7 @@ export default {
             },
             canhuiPeoList:[],                   //参会人员列表
             qingjiaPeoList:[],
-            backMessage:'同意',                     //回复内容
+            backMessage:'已阅',                     //回复内容
             filePath:'',
             watchShow:false,                    //人员查看弹层
             submittedShow:false,                //提交情况弹层
@@ -433,7 +433,7 @@ export default {
             
             me.$api.post(url,params,res=>{
                 console.log(res);
-                me.backMessage="同意";
+                me.backMessage="已阅";
                 if(res.code==200){
                     me.$toast(res.msg);
                     me.$router.push({
@@ -630,6 +630,7 @@ export default {
                 this.imgListC=iml;
             }else{
                 window.open(imgUrl,"_blank");
+                // window.location.href = imgUrl;
             }
         }
     }

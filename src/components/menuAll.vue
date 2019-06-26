@@ -5,19 +5,23 @@
     <span>通知列表</span>
     </router-link> -->
     <router-link to="/tzMain">
-    <em><i class="icon iconfont icontongzhi1"></i></em>
+    <!-- <em><i class="icon iconfont icontongzhi1"></i></em> -->
+    <em><img :src="img1"></em>
     <span>系统内通知</span>
     </router-link>
     <router-link to="/gwMain">
-    <em><i class="icon iconfont iconai-briefcase"></i></em>
+    <!-- <em><i class="icon iconfont iconai-briefcase"></i></em> -->
+    <em><img :src="img2"></em>
     <span>公文流转</span>
     </router-link>
     <router-link v-if="$store.state.qjAuthority==1" to="/qjMain">
-    <em><i class="icon iconfont iconZ"></i></em>
+    <!-- <em><i class="icon iconfont iconZ"></i></em> -->
+    <em><img :src="img3"></em>
     <span>请假管理</span>
     </router-link>
     <router-link v-if="$store.state.qjAuthority==0" to="/qjMain/myApplyFor">
-    <em><i class="icon iconfont iconZ"></i></em>
+    <!-- <em><i class="icon iconfont iconZ"></i></em> -->
+    <em><img :src="img3"></em>
     <span>我的请假申请</span>
     </router-link>
 
@@ -28,6 +32,13 @@
 <script>
 export default {
     name:'menuAll',
+    data() {
+        return {
+            img1:require('./../assets/images/notice@3x.png'),
+            img2:require('./../assets/images/officialDounc@3x.png'),
+            img3:require('./../assets/images/leave@3x.png')
+        }
+    },
     beforeCreate() {
         this.$toast.loading({
             mask: true,
@@ -141,6 +152,7 @@ export default {
         em{ 
             padding:5px 0; display: block;
             i{display: block; font-size:40px; color:#1f8bff;}
+            img{ width: 50%; margin: 10px 0 5px;}
         }
         span{ font-size: 12px;}
     }

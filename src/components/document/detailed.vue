@@ -17,18 +17,18 @@
                 </ul>
             </div>
 
-            <div class="detailsBox attachment" v-if="fujianName.length!=0">
+            <div class="detailsBox attachment" v-if="fujianName1.length!=0">
                 <h4><span>附件列表</span></h4>
                 <div class="attachmentList">
                     <ul>
-                        <li v-for="(fj, index) in fujianName" :key="index">
+                        <li v-for="(fj, index) in fujianName1" :key="index" @click="panduanImg(fj,fujianURL[index])">
                             <div class="fileImg"><i class="icon iconfont iconfujian"></i></div>
                             <div class="fileMessage">
                                 <h5>{{fj}}</h5>
                                 <p></p>
                                 <dl>
                                     <!-- <dt><a :href="fujianURL[index]" target="_blank" :download="fj"><i class="icon iconfont iconxiazai"></i></a></dt> -->
-                                    <dt><a href="javascript:void(0)" @click="panduanImg(fj,fujianURL[index])"><i class="icon iconfont iconxiazai"></i></a></dt>
+                                    <dt><a href="javascript:void(0)"><i class="icon iconfont iconxiazai"></i></a></dt>
                                     <dd></dd>
                                 </dl>
                             </div>
@@ -241,6 +241,7 @@ export default {
             lingdaopishi:[],            //领导批示
             chishibanli:[],             //处室办理
             fujianName:[],              //附件名称
+            fujianName1:[],             //附件名称重构
             fujianURL:[],               //附件地址
             readList:{                  //弹层阅读详情内容
                 haveRead:[
@@ -436,6 +437,7 @@ export default {
                         if(me.fujianName[f]==""||me.fujianName[f]==null||me.fujianName[f]==undefined){
                             continue
                         }else{
+                            me.fujianName1.push(me.fujianName[f]);
                             me.fujianURL.push(furl+"/"+me.fujianName[f]);
                         }
                             
@@ -598,6 +600,7 @@ export default {
                 this.imgListC=iml;
             }else{
                 window.open(imgUrl,"_blank");
+                // window.location.href = imgUrl;
             }
         }
         
