@@ -23,13 +23,13 @@
                         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="shuaxin" :offset="100">
                         <ul>
                             <li v-for="(n,index) in qjUnHaveList" :key="index" @click="enterDetailed(n.autoID)">
-                                <!-- <van-swipe-cell :right-width="50"> -->
+                                <van-swipe-cell :right-width="50">
                                 <h3>请假人：{{n.leave_People}}</h3>
                                 <p>
                                     <span>所属部门：{{n.dep}}</span>
                                     <time>{{n.createAt|newCreateAt}}</time></p>
-                                <!-- <span class="drop" slot="right"><van-icon name="delete"></van-icon></span> -->
-                                <!-- </van-swipe-cell> -->
+                                <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
+                                </van-swipe-cell>
                             </li>
                         </ul>
                         </van-list>

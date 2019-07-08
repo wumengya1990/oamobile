@@ -250,8 +250,15 @@
                 />
             </van-cell-group>
         </van-dialog>
-        
+        <!-- 图片预览 -->
         <van-image-preview v-model="imgShow" :images="imgListC"></van-image-preview>
+        <!-- 文档查看 -->
+        <van-popup v-model="wordOnlineWatch" style="padding:0;" position="right">
+            <iframe style="width:100%; height:90%;" :src="wendangUrl"></iframe>
+            <div class="bts">
+            <van-button @click="wordOnlineWatch=false" type="info" hairline size="small" style="width:120px;">确定</van-button>
+            </div>
+        </van-popup>
 
     </div>
 </template>
@@ -267,6 +274,8 @@ export default {
             imgListC:[],
             canhuiShow:false,                   //参会人员弹层开关
             qingjiaShow:false,                  //请假人员弹层开关
+            wordOnlineWatch:false,              //文件在线查看
+            wendangUrl:'https://www.baidu.com/',
             luruRenyuan:{                       //弹层添加人员输入内容
                 username:'',
                 userjob:'',
@@ -629,7 +638,14 @@ export default {
                 this.imgShow = true;
                 this.imgListC=iml;
             }else{
-                window.open(imgUrl,"_blank");
+                console.log(imgName);
+                this.wordOnlineWatch = true;
+                let url='/api/Upload';
+                let params={path:imgName};
+                this.$api.get(url,params,res=>{
+                    console.log(res);
+                })
+                // window.open(imgUrl,"_blank");
                 // window.location.href = imgUrl;
             }
         }

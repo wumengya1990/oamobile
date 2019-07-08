@@ -6,16 +6,19 @@
     </router-link> -->
     <router-link to="/tzMain">
     <!-- <em><i class="icon iconfont icontongzhi1"></i></em> -->
+    <font v-if="NumberS.noticeTotal>0">{{NumberS.noticeTotal|showNumN}}</font>
     <em><img :src="img1"></em>
     <span>系统内通知</span>
     </router-link>
     <router-link to="/gwMain">
     <!-- <em><i class="icon iconfont iconai-briefcase"></i></em> -->
+    <font v-if="NumberS.officeTotal>0">{{NumberS.officeTotal|showNumN}}</font>
     <em><img :src="img2"></em>
     <span>公文流转</span>
     </router-link>
     <router-link v-if="$store.state.qjAuthority==1" to="/qjMain">
     <!-- <em><i class="icon iconfont iconZ"></i></em> -->
+    <font v-if="NumberS.leaveTotal>0">{{NumberS.leaveTotal|showNumN}}</font>
     <em><img :src="img3"></em>
     <span>请假管理</span>
     </router-link>
@@ -36,7 +39,12 @@ export default {
         return {
             img1:require('./../assets/images/notice@3x.png'),
             img2:require('./../assets/images/officialDounc@3x.png'),
-            img3:require('./../assets/images/leave@3x.png')
+            img3:require('./../assets/images/leave@3x.png'),
+            NumberS:{
+                leaveTotal:0,
+                noticeTotal:0,
+                officeTotal:0
+            }
         }
     },
     beforeCreate() {
@@ -46,6 +54,20 @@ export default {
             duration:0,
             message:'加载中...'
         });
+    },
+    filters:{
+        showNumN:function(mes){
+            if(mes){
+                console.log(mes);
+                if(mes>60){
+                    let jieguo = "99";
+                    return jieguo+"+";
+                }
+                return mes;
+            }else{
+                return mes;
+            }
+        }
     },
     mounted() {
         this.getLogin();
@@ -63,6 +85,7 @@ export default {
             let that = this;
             if(that.$store.state.haveLogin){
                 that.$toast.clear();
+                this.getNum();
                 return;
             }
 
@@ -90,6 +113,7 @@ export default {
                         that.$store.commit("saveUserName", res.data.userName);
                         that.getAuthority();
                         that.getPeoSet();
+                        that.getNum();
                         that.$toast("登录成功");
                         // that.$router.push({
                         //     name:'menuAll'
@@ -133,10 +157,25 @@ export default {
         getPeoSet(){
             let me = this;
             let url='/api/user/config';
-            let params=""
+            let params="";
             me.$api.get(url,params,res=>{
                 if(res.code==200){
                     me.$store.commit("saveGWniban", res.data.default_Enlisted_Person);
+                }
+            })
+        },
+        getNum(){
+            let me = this;
+            let url='/api/user/msgtotal';
+            let params="";
+            me.$api.get(url,params,res=>{
+                if(res.code==200){
+                     console.log(res);
+                     me.NumberS.leaveTotal = res.leaveTotal;
+                     me.NumberS.noticeTotal = res.noticeTotal;
+                     me.NumberS.officeTotal = res.officeTotal;
+                }else{
+                    me.$toast("获取文档数量失败");
                 }
             })
         }
@@ -148,7 +187,8 @@ export default {
 .menuAll{
     display: flex; flex-wrap: wrap; width:100%;
     a{ 
-        flex: 1; width:25%; max-width: 25%; min-width: 25%; text-align:center; text-decoration: none; 
+        flex: 1; width:25%; max-width: 25%; min-width: 25%; text-align:center; text-decoration: none; position: relative;
+        font{ position:absolute; padding:0 5px; height:18px; line-height: 18px; font-size: 12px; text-align:center; left:60px; top:8px; border-radius: 50px; overflow: hidden; background:#F30; color:#FFF;}
         em{ 
             padding:5px 0; display: block;
             i{display: block; font-size:40px; color:#1f8bff;}

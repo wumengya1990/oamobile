@@ -23,7 +23,7 @@
                     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="shuaxin" :offset="100">
                 <ul>
                     <li v-for="(n,index) in outboxList" :key="index" @click="enterDetailed(n.autoID,1,n.notice_Type)">
-                        <!-- <van-swipe-cell :right-width="50"> -->
+                        <van-swipe-cell :right-width="50">
                         <h3>
                             <span v-if="n.typebf=='重要'" style="color:#f3a30e;"><i class="icon iconfont iconjingshigantanhao2"></i></span>
                             <span v-if="n.typebf=='保密'" style="color:#6daf18;"><i class="icon iconfont iconmima"></i></span>
@@ -35,8 +35,8 @@
                             <span>{{n.notice_Type}}</span>
                             <time>{{n.beginDate|newBeginDate}}</time>
                         </p>
-                        <!-- <span class="drop" slot="right"><van-icon name="delete"></van-icon></span> -->
-                        <!-- </van-swipe-cell> -->
+                        <span class="drop" @click="dropList(n.autoID)" slot="right"><van-icon name="delete"></van-icon></span>
+                        </van-swipe-cell>
                     </li>
                 </ul>
                     </van-list>
@@ -168,6 +168,29 @@ export default {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
             document.getElementsByClassName("listPage")[0].scrollTop=0;
+        },
+        // 删除列表条目
+        dropList:function(wzID){
+            let me = this;
+            me.$dialog.confirm({
+                title:'删除提示',
+                message:'确定删除本条通知?'
+            }).then(()=>{
+                let url='/api/Notic/out';
+                let params={autoID:wzID};
+                me.$api.delete(url,params,res=>{
+                    //console.log(res);
+                    if(res.code==200){
+                        me.$toast(res.msg);
+                        me.loadReadList(true);
+                    }else{
+                        me.$toast(res.msg);
+                    }
+                    
+                })
+            }).catch(()=>{
+                me.$toast("取消删除");
+            })
         }
     }
 }
