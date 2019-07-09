@@ -58,7 +58,7 @@ export default {
     filters:{
         showNumN:function(mes){
             if(mes){
-                console.log(mes);
+                //console.log(mes);
                 if(mes>60){
                     let jieguo = "99";
                     return jieguo+"+";
@@ -170,7 +170,7 @@ export default {
             let params="";
             me.$api.get(url,params,res=>{
                 if(res.code==200){
-                     console.log(res);
+                     //console.log(res);
                      me.NumberS.leaveTotal = res.leaveTotal;
                      me.NumberS.noticeTotal = res.noticeTotal;
                      me.NumberS.officeTotal = res.officeTotal;

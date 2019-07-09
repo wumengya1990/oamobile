@@ -29,7 +29,7 @@
                             <span v-if="n.typebf=='保密'" style="color:#6daf18;"><i class="icon iconfont iconmima"></i></span>
                             <span v-if="n.typebf=='紧急'" style="color:#F30;"><i class="icon iconfont iconyingjiguangbo"></i></span>
                             {{n.title}}
-                            </h3>
+                        </h3>
                         <p>
                             <span>发送人：{{n.senduserName}}</span>
                             <span>{{n.notice_Type}}</span>
@@ -182,7 +182,7 @@ export default {
                     //console.log(res);
                     if(res.code==200){
                         me.$toast(res.msg);
-                        me.loadReadList(true);
+                        me.loadOutboxList(true);
                     }else{
                         me.$toast(res.msg);
                     }

@@ -17,7 +17,7 @@
                     <p>
                         <span>发送人：{{$store.state.userName}}</span>
                         <time>{{n.beginDate|newBeginDate}}</time></p>
-                    <span class="drop" slot="right"><van-icon name="delete"></van-icon></span>
+                    <span class="drop" @click="dropList(n.autoID)" slot="right"><van-icon name="delete"></van-icon></span>
                     </van-swipe-cell>
                 </li>
             </ul>
@@ -148,6 +148,29 @@ export default {
             document.documentElement.scrollTop = 0;
             document.getElementsByClassName("listPage")[0].scrollTop=0;
             
+        },
+        // 删除列表条目
+        dropList:function(wzID){
+            let me = this;
+            me.$dialog.confirm({
+                title:'删除提示',
+                message:'确定删除本条通知?'
+            }).then(()=>{
+                let url='/api/Office/del';
+                let params={autoID:wzID};
+                me.$api.delete(url,params,res=>{
+                    //console.log(res);
+                    if(res.code==200){
+                        me.$toast(res.msg);
+                        me.loadList(true);
+                    }else{
+                        me.$toast(res.msg);
+                    }
+                    
+                })
+            }).catch(()=>{
+                me.$toast("取消删除");
+            })
         }
     }
 }

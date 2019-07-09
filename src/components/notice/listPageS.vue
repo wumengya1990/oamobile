@@ -19,9 +19,12 @@
                     <li v-for="(n,index) in noticeMessList" :key="index" @click="enterDetailed(n.autoID,0,n.notice_Type)">
                         <van-swipe-cell :right-width="50">
                         <h3>
-                            <span v-if="n.typebf=='重要'" style="color:#f3a30e;"><i class="icon iconfont iconjingshigantanhao2"></i></span>
+                            <span v-if="n.typebf=='重要'" style="color:#FFF; background:#f3a30e;">{{n.typebf}}</span>
+                            <span v-if="n.typebf=='保密'" style="color:#FFF; background:#6daf18;">{{n.typebf}}</span>
+                            <span v-if="n.typebf=='紧急'" style="color:#FFF; background:#F30;">{{n.typebf}}</span>
+                            <!-- <span v-if="n.typebf=='重要'" style="color:#f3a30e;"><i class="icon iconfont iconjingshigantanhao2"></i></span>
                             <span v-if="n.typebf=='保密'" style="color:#6daf18;"><i class="icon iconfont iconmima"></i></span>
-                            <span v-if="n.typebf=='紧急'" style="color:#F30;"><i class="icon iconfont iconyingjiguangbo"></i></span>
+                            <span v-if="n.typebf=='紧急'" style="color:#F30;"><i class="icon iconfont iconyingjiguangbo"></i></span> -->
                             <!-- <span class="" :style="{color:n.typebf=='紧急'? '#F30' : '#333'}">[{{n.typebf}}]</span> -->
                             {{n.title}}</h3>
                         <p>
@@ -29,7 +32,8 @@
                             <span v-if="n.notice_Type==0">普通通知</span>
                             <span style="color:#F30;" v-else>会议通知</span>
                             <time>{{ n.beginDate | newBeginDate}}</time></p>
-                        <span class="drop" @click="dropList(n.autoID)" slot="right"><van-icon name="delete"></van-icon></span>
+                        <span class="drop" v-if="btState==1" @click="dropList(n.autoID)" slot="right"><van-icon name="delete"></van-icon></span>
+                        <span class="drop" v-else slot="right" style="background:#dedede;"><van-icon name="delete"></van-icon></span>
                         </van-swipe-cell>
                     </li>
                 </ul>
@@ -39,7 +43,7 @@
         </div>
         <div class="xuanfu">
             <span @click="backTop" v-show="backTopShow"><van-icon name="arrow-up" /></span>
-            <span @click="$router.push({path:'/menuAll'})"><van-icon name="apps-o" /></span>
+            <span @click="$router.push({path:'/menuAll'})"><van-icon name="wap-home" /></span>
         </div>
         
     </div>

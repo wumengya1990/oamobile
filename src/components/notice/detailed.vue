@@ -259,7 +259,21 @@
             <van-button @click="wordOnlineWatch=false" type="info" hairline size="small" style="width:120px;">确定</van-button>
             </div>
         </van-popup>
-
+        <!-- 查看阅读情况 -->
+        <van-popup v-model="wordOnlineWatch" style="padding:0;" position="right">
+            <article>
+            <h3>未读人员</h3>
+            <ul>
+                <li><em></em><span></span></li>
+            </ul>
+            </article>
+            <article>
+            <h3>已读人员</h3>
+            <ul>
+                <li><em></em><span></span></li>
+            </ul>
+            </article>
+        </van-popup>
     </div>
 </template>
 
