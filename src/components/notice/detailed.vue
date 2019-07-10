@@ -260,7 +260,7 @@
             </div>
         </van-popup>
         <!-- 查看阅读情况 -->
-        <van-popup v-model="wordOnlineWatch" style="padding:0;" position="right">
+        <van-popup v-model="peoWatchShoW" style="padding:0;" position="right">
             <article>
             <h3>未读人员</h3>
             <ul>
@@ -273,6 +273,9 @@
                 <li><em></em><span></span></li>
             </ul>
             </article>
+            <div class="bts">
+            <van-button @click="peoWatchShoW=false" type="info" hairline size="small" style="width:120px;">确定</van-button>
+            </div>
         </van-popup>
     </div>
 </template>
@@ -289,6 +292,7 @@ export default {
             canhuiShow:false,                   //参会人员弹层开关
             qingjiaShow:false,                  //请假人员弹层开关
             wordOnlineWatch:false,              //文件在线查看
+            peoWatchShoW:false,
             wendangUrl:'https://www.baidu.com/',
             luruRenyuan:{                       //弹层添加人员输入内容
                 username:'',
@@ -653,11 +657,12 @@ export default {
                 this.imgListC=iml;
             }else{
                 console.log(imgName);
-                this.wordOnlineWatch = true;
-                let url='/api/Upload';
-                let params={path:imgName};
+                //this.wordOnlineWatch = true;
+                let url='/api/Upload?path='+imgName;
+                let params="";
                 this.$api.get(url,params,res=>{
-                    console.log(res);
+                   window.location.href=url;
+                    
                 })
                 // window.open(imgUrl,"_blank");
                 // window.location.href = imgUrl;

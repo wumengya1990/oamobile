@@ -11,7 +11,7 @@
                     <li><em>收文日期：</em><div class="rightCon"><p>{{fileDetails.beginDate|newBeginDate}}</p></div></li>
                     <li><em>通知详情：</em>
                         <div class="rightConNoOver">
-                            <p>{{fileDetails.contentDetail}}</p>
+                            <p v-html="fileDetails.contentDetail"></p>
                         </div>
                     </li>
                 </ul>
