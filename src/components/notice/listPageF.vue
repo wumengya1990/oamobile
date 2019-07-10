@@ -25,9 +25,9 @@
                     <li v-for="(n,index) in outboxList" :key="index" @click="enterDetailed(n.autoID,1,n.notice_Type)">
                         <van-swipe-cell :right-width="50">
                         <h3>
-                            <span v-if="n.typebf=='重要'" style="color:#f3a30e;"><i class="icon iconfont iconjingshigantanhao2"></i></span>
-                            <span v-if="n.typebf=='保密'" style="color:#6daf18;"><i class="icon iconfont iconmima"></i></span>
-                            <span v-if="n.typebf=='紧急'" style="color:#F30;"><i class="icon iconfont iconyingjiguangbo"></i></span>
+                            <span v-if="n.typebf=='重要'" style="color:#FFF; background:#f3a30e;">{{n.typebf}}</span>
+                            <span v-if="n.typebf=='保密'" style="color:#FFF; background:#6daf18;">{{n.typebf}}</span>
+                            <span v-if="n.typebf=='紧急'" style="color:#FFF; background:#F30;">{{n.typebf}}</span>
                             {{n.title}}
                         </h3>
                         <p>
@@ -47,7 +47,7 @@
            
         <div class="xuanfu">
             <span @click="backTop" v-show="backTopShow"><van-icon name="arrow-up" /></span>
-            <span @click="$router.push({path:'/menuAll'})"><van-icon name="apps-o" /></span>
+            <span @click="$router.push({path:'/menuAll'})"><van-icon name="wap-home" /></span>
         </div>
         
     </div>
@@ -176,9 +176,10 @@ export default {
                 title:'删除提示',
                 message:'确定删除本条通知?'
             }).then(()=>{
-                let url='/api/Notic/out';
-                let params={autoID:wzID};
-                me.$api.delete(url,params,res=>{
+                let param={autoID:wzID};
+                let url='/api/Notic/out?'+me.$qs.stringify(param);
+                let params={};
+                me.$api.post(url,params,res=>{
                     //console.log(res);
                     if(res.code==200){
                         me.$toast(res.msg);

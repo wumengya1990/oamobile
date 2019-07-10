@@ -32,7 +32,7 @@
         <div class="xuanfu">
             <span @click="addnew" v-if="$store.state.gwAuthority==1"><van-icon name="add-o" /></span>
             <span @click="backTop" v-show="backTopShow"><van-icon name="arrow-up" /></span>
-            <span @click="$router.push({path:'/menuAll'})"><van-icon name="apps-o" /></span>
+            <span @click="$router.push({path:'/menuAll'})"><van-icon name="wap-home" /></span>
         </div>
         
     </div>

@@ -59,7 +59,7 @@ export default {
         showNumN:function(mes){
             if(mes){
                 //console.log(mes);
-                if(mes>60){
+                if(mes>99){
                     let jieguo = "99";
                     return jieguo+"+";
                 }

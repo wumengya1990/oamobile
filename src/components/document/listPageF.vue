@@ -29,7 +29,7 @@
         <div class="xuanfu">
             <span @click="addnew"><van-icon name="add-o" /></span>
             <span @click="backTop" v-show="backTopShow"><van-icon name="arrow-up" /></span>
-            <span @click="$router.push({path:'/menuAll'})"><van-icon name="apps-o" /></span>
+            <span @click="$router.push({path:'/menuAll'})"><van-icon name="wap-home" /></span>
         </div>
         
     </div>
@@ -156,9 +156,10 @@ export default {
                 title:'删除提示',
                 message:'确定删除本条通知?'
             }).then(()=>{
-                let url='/api/Office/del';
-                let params={autoID:wzID};
-                me.$api.delete(url,params,res=>{
+                let param={autoID:wzID};
+                let url='/api/Office/del?'+me.$qs.stringify(param);
+                let params={};
+                me.$api.post(url,params,res=>{
                     //console.log(res);
                     if(res.code==200){
                         me.$toast(res.msg);

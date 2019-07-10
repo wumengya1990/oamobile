@@ -186,9 +186,10 @@ export default {
                 title:'删除提示',
                 message:'确定删除本条通知?'
             }).then(()=>{
-                let url='/api/Notic/inbox';
-                let params={autoID:wzID};
-                me.$api.delete(url,params,res=>{
+                let param={autoID:wzID};
+                let url='/api/Notic/inbox?'+me.$qs.stringify(param);
+                let params={};
+                me.$api.post(url,params,res=>{
                     //console.log(res);
                     if(res.code==200){
                         me.$toast(res.msg);
