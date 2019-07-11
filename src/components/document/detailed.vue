@@ -599,7 +599,25 @@ export default {
                 this.imgShow = true;
                 this.imgListC=iml;
             }else{
-                window.open(imgUrl,"_blank");
+                console.log(imgName);
+                //this.wordOnlineWatch = true;
+                let url='/api/Upload?path='+imgName;
+                let params="";
+                this.$api.get(url,params,res=>{
+                    ext = ext.toLowerCase();
+                    let u = navigator.userAgent;
+                    if (!!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {       //IOS端
+                        if(ext==".doc"||ext==".docx"||ext==".ppt"||ext==".pptx"||ext==".txt"||ext==".xls"||ext==".xlsx"){
+                            window.location.href=url;
+                        }else{
+                            this.$toast("手机端不支持此类格式文件查看！")
+                        }
+                        
+                    }else{
+                        window.location.href=url;
+                    }
+                   
+                })
                 // window.location.href = imgUrl;
             }
         }

@@ -117,7 +117,7 @@ export default {
         // 提交申请
         applyForLeave(){
             let me = this;
-            let yz = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+            let yz = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
             //debugger;
             for(let key in me.leaves){
                 if(me.leaves[key]===''){
@@ -199,7 +199,7 @@ export default {
         // 检查手机号
         wathchTel(tel){
             console.log(tel);
-            let yz = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+            let yz = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
             if(!yz.test(tel)||tel==''||!tel){
                 this.$toast.fail({
                     duration:3000,
@@ -209,7 +209,7 @@ export default {
         },
         endWathchTel(tel){
             console.log(tel);
-            let yz = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+            let yz = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
             if(!yz.test(tel)||tel==''||!tel){
                 this.$toast.fail({
                     duration:3000,
