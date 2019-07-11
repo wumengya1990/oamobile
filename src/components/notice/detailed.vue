@@ -18,7 +18,7 @@
                         <div class="detailsState">
                             <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1"><van-icon name="eye" />阅读情况{{readNumbeState.total - readNumbeState.unread}}/{{readNumbeState.total}}</van-button>
                             <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1&&$route.params.mesType=='会议通知'" @click="submitDetails"><van-icon name="column" />查看报送情况</van-button>
-                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==0&&$route.params.mesType==1" @click="openSBLayer"><van-icon name="column" />报送</van-button>
+                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==0&&$route.params.mesType==1&&$route.params.dandu!=1" @click="openSBLayer"><van-icon name="column" />报送</van-button>
                         </div>
                     </li>
                 </ul>
@@ -293,7 +293,7 @@ export default {
             qingjiaShow:false,                  //请假人员弹层开关
             wordOnlineWatch:false,              //文件在线查看
             peoWatchShoW:false,
-            wendangUrl:'https://www.baidu.com/',
+            wendangUrl:'',
             luruRenyuan:{                       //弹层添加人员输入内容
                 username:'',
                 userjob:'',
@@ -657,7 +657,6 @@ export default {
                 this.imgListC=iml;
             }else{
                 console.log(imgName);
-                this.wordOnlineWatch = true;
                 let url='/api/Upload?path='+imgName;
                 let params="";
                 this.$api.get(url,params,res=>{
@@ -674,9 +673,9 @@ export default {
                 //         window.location.href=url;
                 //     }
                     if(ext==".doc"||ext==".docx"||ext==".ppt"||ext==".pptx"||ext==".txt"||ext==".xls"||ext==".xlsx"||ext==".pdf"){
+                        // this.wendangUrl = url;
                         // this.wordOnlineWatch = true;
-                        this.wendangUrl = url
-                        // window.location.href=url;
+                        window.location.href=url;
                         
                     }else{
                         this.$toast("手机端不支持此类格式文件查看！")

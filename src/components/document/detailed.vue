@@ -227,6 +227,7 @@ export default {
         return {
             imgShow:false,
             wordOnlineWatch:false,
+            wendangUrl:'',
             imgListC:[],
             searcgValue:'',
             message:'',
@@ -608,7 +609,6 @@ export default {
                 this.imgListC=iml;
             }else{
                 console.log(imgName);
-                this.wordOnlineWatch = true;
                 let url='/api/Upload?path='+imgName;
                 let params="";
                 this.$api.get(url,params,res=>{
@@ -624,9 +624,9 @@ export default {
                     //     window.location.href=url;
                     // }
                     if(ext==".doc"||ext==".docx"||ext==".ppt"||ext==".pptx"||ext==".txt"||ext==".xls"||ext==".xlsx"||ext==".pdf"){
-                        // window.location.href=url;
+                        window.location.href=url;
                         // this.wordOnlineWatch = true;
-                        this.wendangUrl = url
+                        // this.wendangUrl = url
                     }else{
                         this.$toast("手机端不支持此类格式文件查看！")
                     }
