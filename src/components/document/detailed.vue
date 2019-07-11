@@ -206,6 +206,13 @@
     </van-popup>
 
     <van-image-preview v-model="imgShow" :images="imgListC"></van-image-preview>
+    <!-- 文档查看 -->
+        <van-popup v-model="wordOnlineWatch" style="padding:0;" position="right">
+            <iframe style="width:100%; height:90%;" :src="wendangUrl"></iframe>
+            <div class="bts">
+            <van-button @click="wordOnlineWatch=false" type="info" hairline size="small" style="width:120px;">确定</van-button>
+            </div>
+        </van-popup>
 
     </div>
 </template>
@@ -219,6 +226,7 @@ export default {
     data() {
         return {
             imgShow:false,
+            wordOnlineWatch:false,
             imgListC:[],
             searcgValue:'',
             message:'',
@@ -600,7 +608,7 @@ export default {
                 this.imgListC=iml;
             }else{
                 console.log(imgName);
-                //this.wordOnlineWatch = true;
+                this.wordOnlineWatch = true;
                 let url='/api/Upload?path='+imgName;
                 let params="";
                 this.$api.get(url,params,res=>{
@@ -617,7 +625,7 @@ export default {
                     // }
                     if(ext==".doc"||ext==".docx"||ext==".ppt"||ext==".pptx"||ext==".txt"||ext==".xls"||ext==".xlsx"||ext==".pdf"){
                         // window.location.href=url;
-                        this.wordOnlineWatch = true;
+                        // this.wordOnlineWatch = true;
                         this.wendangUrl = url
                     }else{
                         this.$toast("手机端不支持此类格式文件查看！")

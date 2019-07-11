@@ -657,7 +657,7 @@ export default {
                 this.imgListC=iml;
             }else{
                 console.log(imgName);
-                //this.wordOnlineWatch = true;
+                this.wordOnlineWatch = true;
                 let url='/api/Upload?path='+imgName;
                 let params="";
                 this.$api.get(url,params,res=>{
@@ -674,7 +674,7 @@ export default {
                 //         window.location.href=url;
                 //     }
                     if(ext==".doc"||ext==".docx"||ext==".ppt"||ext==".pptx"||ext==".txt"||ext==".xls"||ext==".xlsx"||ext==".pdf"){
-                        this.wordOnlineWatch = true;
+                        // this.wordOnlineWatch = true;
                         this.wendangUrl = url
                         // window.location.href=url;
                         
