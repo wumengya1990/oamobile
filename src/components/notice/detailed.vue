@@ -18,7 +18,7 @@
                         <div class="detailsState">
                             <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1"><van-icon name="eye" />阅读情况{{readNumbeState.total - readNumbeState.unread}}/{{readNumbeState.total}}</van-button>
                             <van-button type="info" plain hairline size="small" v-if="$route.params.listType==1&&$route.params.mesType=='会议通知'" @click="submitDetails"><van-icon name="column" />查看报送情况</van-button>
-                            <van-button type="info" plain hairline size="small" v-if="$route.params.listType==0&&$route.params.mesType==1&&$route.params.dandu!=1" @click="openSBLayer"><van-icon name="column" />报送</van-button>
+                            <van-button type="info" plain hairline size="small" v-if="($route.params.listType==0&&$route.params.mesType==1)||($route.params.dandu==1&&fileDetails.notice_Type=='会议通知')" @click="openSBLayer"><van-icon name="column" />报送</van-button>
                         </div>
                     </li>
                 </ul>

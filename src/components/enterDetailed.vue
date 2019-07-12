@@ -132,7 +132,7 @@ export default {
                                     params:{
                                         tzid:wzID,
                                         listType:0,
-                                        mesType:1,
+                                        mesType:0,
                                         dandu:1,
                                     }
                                 })
