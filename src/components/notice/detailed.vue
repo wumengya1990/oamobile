@@ -138,12 +138,13 @@
                          <div style="margin:10px 0 0; height:90%; overflow-y:auto;">
                          <table class="tableStyle" style="margin:10px 0 0" width="100%" cellpadding="0" cellspacing="0">
                         <thead>
-                        <tr><th width="35%">所属机构</th><th>姓名</th><th width="35%">职务</th></tr>
+                        <tr><th width="20%">所属机构</th><th width="20%">姓名</th><th width="25%">职务</th><th>请假原因</th></tr>
                         </thead>
                         <tr v-for="(a,index) in  submitted.leaveList" :key="index">
                             <td>{{a.school_Guid}}</td>
                             <td>{{a.userName}}</td>
                             <td>{{a.post}}</td>
+                            <td>{{a.reason}}</td>
                         </tr>
                         <!-- <tbody v-for="a in submitted.attendList" :key="a.jigouID">
                             <tr v-for="(b,index) in a.peoList" :key="b.peoID">
@@ -254,9 +255,11 @@
         <van-image-preview v-model="imgShow" :images="imgListC"></van-image-preview>
         <!-- 文档查看 -->
         <van-popup v-model="wordOnlineWatch" style="padding:0;" position="right">
-            <iframe style="width:100%; height:90%;" :src="wendangUrl"></iframe>
+            <div style="width:100%; height:90%; overflow:auto;">
+            <iframe style="width:100%; height:100%; overflow:auto;" :src="wendangUrl"></iframe>
+            </div>
             <div class="bts">
-            <van-button @click="wordOnlineWatch=false" type="info" hairline size="small" style="width:120px;">确定</van-button>
+            <van-button @click="wordOnlineWatch=false" type="info" hairline size="small" style="width:120px;">返回</van-button>
             </div>
         </van-popup>
         <!-- 查看阅读情况 -->
@@ -661,22 +664,14 @@ export default {
                 let params="";
                 this.$api.get(url,params,res=>{
                    ext = ext.toLowerCase();
-                //     let u = navigator.userAgent;
-                //     if (!!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {       //IOS端
-                //         if(ext==".doc"||ext==".docx"||ext==".ppt"||ext==".pptx"||ext==".txt"||ext==".xls"||ext==".xlsx"){
-                //             window.location.href=url;
-                //         }else{
-                //             this.$toast("手机端不支持此类格式文件查看！")
-                //         }
-                        
-                //     }else{
-                //         window.location.href=url;
-                //     }
                     if(ext==".doc"||ext==".docx"||ext==".ppt"||ext==".pptx"||ext==".txt"||ext==".xls"||ext==".xlsx"||ext==".pdf"){
-                        // this.wendangUrl = url;
-                        // this.wordOnlineWatch = true;
-                        window.location.href=url;
-                        
+                        let u = navigator.userAgent;
+                        if (!!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {       //IOS端
+                            this.wendangUrl = url;
+                            this.wordOnlineWatch = true;
+                        }else{
+                            window.location.href=url;
+                        }
                     }else{
                         this.$toast("手机端不支持此类格式文件查看！")
                     }

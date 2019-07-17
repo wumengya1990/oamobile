@@ -32,7 +32,7 @@
                                     </span>
                                 </h3>
                                 <p>
-                                    <span>请假人：{{$store.state.userName}}</span>
+                                    <span>请假人：{{n.leave_People}}</span>
                                     <time>{{n.createAt|newCreateAt}}</time></p>
                                 <!-- <span class="drop" slot="right"><van-icon name="delete"></van-icon></span> -->
                                 <!-- </van-swipe-cell> -->
@@ -46,7 +46,7 @@
         <div class="xuanfu">
             <span @click="addnew"><van-icon name="add-o" /></span>
             <span @click="backTop" v-show="backTopShow"><van-icon name="arrow-up" /></span>
-            <span @click="$router.push({path:'/menuAll'})"><van-icon name="apps-o" /></span>
+            <span @click="$router.push({path:'/menuAll'})"><van-icon name="wap-home" /></span>
         </div>
         
     </div>
