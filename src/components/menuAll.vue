@@ -27,13 +27,13 @@
     <em><img :src="img3"></em>
     <span>我的请假申请</span>
     </router-link>
-    <van-dropdown-menu>
+    <!-- <van-dropdown-menu>
     <van-dropdown-item v-model="value1" :options="option1" />
     <van-dropdown-item v-model="value2" :options="option2" />
-    </van-dropdown-menu>
+    </van-dropdown-menu> -->
 
 
-    
+
     </div>
 </template>
 
@@ -50,8 +50,8 @@ export default {
                 noticeTotal:0,
                 officeTotal:0
             },
-            value1: 0,
-            value2: 'a',
+            // value1: 0,
+            // value2: 'a',
             option1: [
                 { text: '全部商品', value: 0 },
                 { text: '新款商品', value: 1 },
@@ -88,7 +88,7 @@ export default {
     },
     mounted() {
         this.getLogin();
-        
+
     },
     methods: {
         //是否请求用户登录
@@ -203,10 +203,10 @@ export default {
 <style lang="scss">
 .menuAll{
     display: flex; flex-wrap: wrap; width:100%;
-    a{ 
+    a{
         flex: 1; width:25%; max-width: 25%; min-width: 25%; text-align:center; text-decoration: none; position: relative;
         font{ position:absolute; padding:0 5px; height:18px; line-height: 18px; font-size: 12px; text-align:center; left:60px; top:8px; border-radius: 50px; overflow: hidden; background:#F30; color:#FFF;}
-        em{ 
+        em{
             padding:5px 0; display: block;
             i{display: block; font-size:40px; color:#1f8bff;}
             img{ width: 50%; margin: 10px 0 5px;}

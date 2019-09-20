@@ -33,11 +33,11 @@
                                 </dl>
                             </div>
                         </li>
-                        
+
                     </ul>
                 </div>
             </div>
-            
+
             <!-- 送阅意见 -->
             <!-- <div v-if="fileDetails.state==1" class="detailsBox opinionBox"> -->
             <div class="detailsBox opinionBox">
@@ -47,7 +47,7 @@
                          <div class="message">
                              <p v-if="sy.look==0" style="color:#F30">未回复</p>
                              <p v-else>{{sy.feedBackIdea}}</p>
-                             
+
                          </div>
                          <dl>
                              <dt>{{sy.userName}}</dt>
@@ -69,7 +69,8 @@
             <!-- 领导批示 收件箱发件箱都能看, -->
             <div class="detailsBox opinionBox" v-if="(fileDetails.state==0&&shoufaStyle==1&&daibanyiban==1)||(fileDetails.state!=0&&shoufaStyle==0)||fileDetails.state==2||fileDetails.state==3">
                  <h4><span>领导批示</span></h4>
-                 <ul class="opinionBoxList" v-if="fileDetails.state!=2||(fileDetails.state==2&&shoufaStyle==0)">
+                 <!-- <ul class="opinionBoxList" v-if="fileDetails.state!=2||(fileDetails.state==2&&shoufaStyle==0)"> -->
+                     <ul class="opinionBoxList">
                      <li v-for="(n,index) in lingdaopishi" :key="index">
                          <div class="message">
                              <p v-if="n.feedBackIdea==null||n.feedBackIdea==''" style="color:#F30">未回复</p>
@@ -83,6 +84,7 @@
                  </ul>
 
                  <div v-if="fileDetails.state==2&&shoufaStyle==1&&shoufaStyle==1">
+                  <b style="padding:0 10px;">请输入回复内容</b>
                  <van-cell-group>
                     <van-field v-model="songyuMes1" @focus="anzhuoSet" @blur="anzhuoSetN" type="textarea" placeholder="请输入回复内容"  rows="5" autosize />
                 </van-cell-group>
@@ -107,7 +109,7 @@
                             </span>
                         </div>
                         </div>
-                        
+
                     </van-cell-group>
                 </div>
             </div>
@@ -141,7 +143,7 @@
                             </span>
                         </div>
                         </div>
-                        
+
                     </van-cell-group>
                 </div>
 
@@ -233,6 +235,7 @@ export default {
             imgListC:[],
             searcgValue:'',
             message:'',
+            dpfurl:'',
             songyuMes:'已阅',                       //送阅意见
             songyuMes1:'已阅',
             watchShow:false,
@@ -331,7 +334,7 @@ export default {
             this.layerShow = true;
             this.mks = mk;
             this.loadpeo();
-            
+
             // this.loadpeoyuan();
             },
             xzPeo(wIndex,nIndex){
@@ -377,7 +380,7 @@ export default {
                         }
                     }
                 }
-                
+
                 me.layerShow = false;
                 },
                 dropPeo(suoyin) {
@@ -429,16 +432,18 @@ export default {
                     let fz = me.fujiaList[p].indexs;
                     if(fz==1){
                         me.songyueList.push(me.fujiaList[p]);
-                        
+
                     }else if(fz==2){
                         me.lingdaopishi.push(me.fujiaList[p]);
                     }else{
                         me.chishibanli.push(me.fujiaList[p]);
                     }
                 }
-                let file = res.data.fjPath;
+                let file = res.data.viewPath;
                 file = file.substr(0,file.length);
                 let furl = res.pathBase;
+                let aa=furl.split('/')
+          me.dpfurl=aa[0]+'//'+aa[2]
                 if(file==""||file==null||file==undefined){
                         me.fujianName=[];
                 }else{
@@ -451,10 +456,10 @@ export default {
                             me.fujianName1.push(me.fujianName[f]);
                             me.fujianURL.push(furl+"/"+me.fujianName[f]);
                         }
-                            
+
                     }
                     console.log(me.fujianName);
-                    console.log(me.fujianURL);
+                    console.log("@@"+me.fujianURL);
                 }
             })
         },
@@ -588,7 +593,7 @@ export default {
                 zhanwei.className = "zhanweibox";
                 zhanwei.style.height = 400+"px";
                 resBox.appendChild(zhanwei);
-            }     
+            }
         },
         anzhuoSetN(){
             var u = navigator.userAgent;
@@ -597,8 +602,27 @@ export default {
                 let zhanwei = document.getElementsByClassName('zhanweibox')[0];
                 resBox.removeChild(zhanwei);
              }
-           
+
         },
+        getObjectURL(file) {
+      let url = null;
+      if (window.createObjectURL != undefined) { // basic
+          url = window.createObjectURL(file);
+      } else if (window.webkitURL != undefined) { // webkit or chrome
+          try {
+            url = window.webkitURL.createObjectURL(file);
+          } catch (error) {
+
+          }
+      } else if (window.URL != undefined) { // mozilla(firefox)
+        try {
+          url = window.URL.createObjectURL(file);
+        } catch (error) {
+
+        }
+      }
+      return url;
+    },
         //判断图片
         panduanImg(imgName,imgUrl){
             let iml = new Array();
@@ -609,28 +633,15 @@ export default {
                 // ImagePreview(iml);
                 this.imgShow = true;
                 this.imgListC=iml;
-            }else{
-                console.log(imgName);
-                let url='/api/Upload?path='+imgName;
-                let params="";
-                this.$api.get(url,params,res=>{
-                    ext = ext.toLowerCase();
-                    if(ext==".doc"||ext==".docx"||ext==".ppt"||ext==".pptx"||ext==".txt"||ext==".xls"||ext==".xlsx"||ext==".pdf"){
-                        let u = navigator.userAgent;
-                        if (!!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {       //IOS端
-                            this.wendangUrl = url;
-                            this.wordOnlineWatch = true;
-                        }else{
-                            window.location.href=url;
-                        }
-                    }else{
-                        this.$toast("手机端不支持此类格式文件查看！")
-                    }
-                   
-                })
-            }
+            }else if (ext == ".pdf"||ext == ".PDF") {
+          // console.log(imgUrl)
+        this.wendangUrl =this.dpfurl+"/PDF/web/viewer.html?file=" + imgUrl;
+        this.wordOnlineWatch = true;
+      } else {
+        this.$toast("手机端不支持此类格式文件查看！");
+      }
         }
-        
+
     }
 }
 </script>

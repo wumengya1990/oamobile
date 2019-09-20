@@ -140,8 +140,10 @@ export default {
         contentDetail:"",
         bumfMode: false,
         sendPro: 0,
-        fjPath: ""
-      }
+        fjPath: "",
+        viewPath:''
+      },
+      upFileName:[]
     };
   },
   mounted(){
@@ -240,15 +242,18 @@ export default {
     },
     // 上传图片准备
     readyFile(event) {
+      console.log(event)
       let forms = new FormData();
       let me = this;
-      let url = "/api/Upload";
+      let url = "/up/upload.aspx?op=file";
       forms.append("file", event.target.files[0]);
       me.$api.uploadFile(url, forms, res => {
+        console.log(res);
         if (res.code == 200) {
           let filed = {};
           filed.fileName = res.fileName;
           filed.url = res.url;
+          filed.viewName = res.viewName;
           me.zfujian.push(filed);
         }
       });
@@ -268,6 +273,7 @@ export default {
       let me = this;
       for (let z = 0; z < me.zfujian.length; z++) {
         me.gongwen.fjPath += me.zfujian[z].fileName + ",";
+        me.gongwen.viewPath += me.zfujian[z].viewName + ",";
       }
       let obg = JSON.stringify(me.gongwen);
       obg = JSON.parse(obg);
@@ -280,6 +286,7 @@ export default {
       }else{
       let url = "/api/Office";
       let params = obg;
+      console.log(params);
       me.$toast.loading({
           mask: true,
           forbidClick:false,

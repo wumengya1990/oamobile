@@ -25,43 +25,43 @@ Vue.prototype.$qs = qs;
 
 
 Vue.use(element);
-Vue.use(Vant);          //使用Vant
-Vue.use(Vuex);          //使用Vuex
+Vue.use(Vant); //使用Vant
+Vue.use(Vuex); //使用Vuex
 
 
 //判断是否为空
-let isNullOrEmpty = function (value) {
-  if (value == null || value == undefined || value.toString().Trim() == "") {
-    return true;
-  } else {
-    return false;
-  }
-}
-//判断是否为空或0
-let isNullOrZero = function (value) {
-  if (value == null || value == undefined || value.toString().Trim() == "" || value == 0) {
-    return true;
-  } else {
-    return false; 
-  }
+let isNullOrEmpty = function(value) {
+        if (value == null || value == undefined || value.toString().Trim() == "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //判断是否为空或0
+let isNullOrZero = function(value) {
+    if (value == null || value == undefined || value.toString().Trim() == "" || value == 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 Vue.prototype.$isNull = isNullOrEmpty;
 Vue.prototype.$isZero = isNullOrZero;
 
 //vue初始化
-let initVue = function () {
-  new Vue({
-    el: '#app',
-    router,
-    store,
-    components: { App },
-    mounted() {
-      console.log("开始初始化Vue");
-      this.$store.commit("saveApiUrl", Vue.prototype.apiUrl); //保存 ApiUrl
-    },
-  template: '<App/>'
-  });
+let initVue = function() {
+    new Vue({
+        el: '#app',
+        router,
+        store,
+        components: { App },
+        mounted() {
+            console.log("开始初始化Vue");
+            this.$store.commit("saveApiUrl", Vue.prototype.apiUrl); //保存 ApiUrl
+        },
+        template: '<App/>'
+    });
 }
 
 //app初始化(首先读取配置信息)
